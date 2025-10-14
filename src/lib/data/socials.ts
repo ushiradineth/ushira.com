@@ -29,21 +29,9 @@ export const socials: Social[] = [
 		icon: "mdi:twitter",
 	},
 	{
-		title: "YouTube [SOON]",
-		description: "Technical breakdowns, experiments, and dev videos.",
-		href: requireSocialLink("YouTube"),
-		icon: "mdi:youtube",
-	},
-	{
 		title: "LinkedIn",
 		description: "Professional updates and work history.",
 		href: requireSocialLink("LinkedIn"),
 		icon: "mdi:linkedin",
-	},
-	{
-		title: "Instagram [SOON]",
-		description: "Day-to-day updates from a WFH software engineer.",
-		href: requireSocialLink("Instagram"),
-		icon: "mdi:instagram",
 	},
 ];
