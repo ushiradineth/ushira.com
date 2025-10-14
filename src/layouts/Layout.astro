@@ -22,6 +22,7 @@ const siteURL = Astro.site?.toString() ?? "";
 const site = siteURL[siteURL.length - 1] === "/" ? siteURL.substring(0, siteURL.length - 1) : Astro.site;
 const ogImage = new URL(`/og${pathname}.png`, site).toString();
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const rssURL = new URL("/rss.xml", site).toString();
 const defaultTags = ["Ushira Dineth", "Software Engineer", "Portfolio"];
 
 const { title, description, tags: providedTags, jsonLd: providedJsonLd } = Astro.props;
@@ -59,6 +60,7 @@ const jsonLd =
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="sitemap" href="/sitemap-index.xml" />
 		<link rel="canonical" href={canonicalURL} />
+		<link rel="alternate" type="application/rss+xml" title="Ushira Dineth Blog" href={rssURL} />
 		<script type="application/ld+json" set:html={jsonLd} is:inline />
 
 		<script is:inline>
