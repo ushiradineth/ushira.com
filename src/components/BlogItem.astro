@@ -1,6 +1,6 @@
 ---
 import type { Blog } from "../lib/types";
-import { formatDate } from "../lib/utils";
+import { formatDate, isWithinDays } from "../lib/utils";
 import Badge from "./Badge.astro";
 
 interface Props {
@@ -9,14 +9,20 @@ interface Props {
 }
 
 const { blog, class: className } = Astro.props;
+const isNew = blog.date ? isWithinDays(blog.date, 30) : false;
 ---
 
 <a href={blog.link ?? "javascript:;"} target={blog.link && blog.link.startsWith("http") ? "_blank" : "_self"} class={className}>
 	<div class="flex w-full flex-col gap-4 rounded-lg py-4 sm:gap-2">
 		<div class="flex">
 			<div class="flex w-full flex-col items-start justify-start gap-2 font-semibold sm:flex-row">
-				<h2 class="flex h-full w-fit gap-2 sm:max-w-[70%]">
-					{blog.title}
+				<h2 class="flex h-full w-fit items-center gap-2 sm:max-w-[70%]">
+					<span>{blog.title}</span>
+					{isNew && (
+						<span class="inline-flex items-center rounded-full bg-emerald-500/15 px-2 text-xs font-semibold uppercase tracking-wide text-emerald-500">
+							New
+						</span>
+					)}
 				</h2>
 				<span class="flex gap-2 sm:ml-auto">
 					<p class="w-fit text-right text-muted">

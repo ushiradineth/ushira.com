@@ -10,7 +10,7 @@ date: 2025-10-14
 
 Most teams start with per-environment networks; Dev, QA, and Prod each with their own NAT, firewall, DNS, and load balancers. This approach is simple at first but quickly becomes costly, inconsistent, and difficult to secure.
 
-In this post, I’ll walk through how we adopted a **hub-and-spoke network architecture secured with Cloudflare Zero Trust (ZTN)**. I’ll cover why we chose this model, how traffic flows, the security benefits, and real-world deployments, including industry practices from **Google Cloud and Surge Global**.
+In this post, I’ll walk through how we have adopted a **hub-and-spoke network architecture secured with Cloudflare Zero Trust (ZTN)** for a enterprise project at Surge Global. I’ll cover why we chose this model, how traffic flows, the security benefits, and real-world deployments, including industry practices from **Google Cloud and Surge Global**.
 
 ---
 
