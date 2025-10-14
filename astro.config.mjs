@@ -36,4 +36,11 @@ export default defineConfig({
 	output: "static",
 	site: "https://ushira.com",
 	adapter: vercel(),
+	vite: {
+		server: {
+			watch: {
+				ignored: ["**/.conform.*", "**/.conform.*.md"],
+			},
+		},
+	},
 });
