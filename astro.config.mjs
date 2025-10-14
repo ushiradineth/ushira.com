@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
 import robotsTxt from "astro-robots-txt";
-import vercelStatic from "@astrojs/vercel/static";
+import vercel from "@astrojs/vercel";
 import icon from "astro-icon";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
@@ -35,5 +35,5 @@ export default defineConfig({
 	markdown: rehypeConfig,
 	output: "static",
 	site: "https://ushira.com",
-	adapter: vercelStatic(),
+	adapter: vercel(),
 });

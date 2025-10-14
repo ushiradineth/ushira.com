@@ -3,7 +3,7 @@ import "@fontsource-variable/roboto-mono";
 
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
 
@@ -203,7 +203,7 @@ const jsonLd =
 			}
 		</style>
 
-		<ViewTransitions />
+		<ClientRouter />
 	</head>
 	<body class="flex flex-col items-center text-pretty font-roboto tracking-tight text-text">
 		<main role="main" id="main-content" class="flex w-full justify-center">

@@ -1,37 +1,49 @@
 import type { Social } from "../types";
 
-export const SocialLinks = new Map<"Twitter" | "LinkedIn" | "YouTube" | "Github" | "Instagram" | "CV", string>([
+type SocialKey = "Twitter" | "LinkedIn" | "YouTube" | "Github" | "Instagram" | "CV";
+
+const socialEntries: ReadonlyArray<[SocialKey, string]> = [
 	["Twitter", "https://www.twitter.com/ushiradineth"],
 	["LinkedIn", "https://www.linkedin.com/in/ushiradineth"],
 	["YouTube", "https://www.youtube.com"],
 	["Github", "https://www.github.com/ushiradineth"],
 	["Instagram", "https://www.instagram.com"],
 	["CV", "https://cv.ushira.com"],
-]);
+];
+
+export const SocialLinks = new Map<SocialKey, string>(socialEntries);
+
+export function requireSocialLink(key: SocialKey): string {
+	const href = SocialLinks.get(key);
+	if (!href) {
+		throw new Error(`Missing social link for ${key}`);
+	}
+	return href;
+}
 
 export const socials: Social[] = [
 	{
 		title: "Twitter",
 		description: "Occasional thoughts, links, and ramblings.",
-		href: SocialLinks.get("Twitter")!,
+		href: requireSocialLink("Twitter"),
 		icon: "mdi:twitter",
 	},
 	{
 		title: "YouTube [SOON]",
 		description: "Technical breakdowns, experiments, and dev videos.",
-		href: SocialLinks.get("YouTube")!,
+		href: requireSocialLink("YouTube"),
 		icon: "mdi:youtube",
 	},
 	{
 		title: "LinkedIn",
 		description: "Professional updates and work history.",
-		href: SocialLinks.get("LinkedIn")!,
+		href: requireSocialLink("LinkedIn"),
 		icon: "mdi:linkedin",
 	},
 	{
 		title: "Instagram [SOON]",
 		description: "Day-to-day updates from a WFH software engineer.",
-		href: SocialLinks.get("Instagram")!,
+		href: requireSocialLink("Instagram"),
 		icon: "mdi:instagram",
 	},
 ];

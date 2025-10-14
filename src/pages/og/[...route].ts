@@ -3,7 +3,7 @@ import { getCollection, type CollectionEntry } from "astro:content";
 
 const pages = {
 	index: {
-		title: "portfolio",
+		title: "me",
 	},
 	projects: {
 		title: "projects",

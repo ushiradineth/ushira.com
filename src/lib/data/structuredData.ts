@@ -1,7 +1,7 @@
-import { type Article, type Person, type WebSite, type WithContext } from "schema-dts";
+import type { Article, Person, WebSite, WithContext } from "schema-dts";
 import avatar from "../../images/self.png";
 import type { CollectionEntry } from "astro:content";
-import { SocialLinks } from "./socials";
+import { requireSocialLink } from "./socials";
 
 export const blogWebsite: WithContext<WebSite> = {
 	"@context": "https://schema.org",
@@ -16,7 +16,7 @@ export const mainWebsite: WithContext<WebSite> = {
 	"@context": "https://schema.org",
 	"@type": "WebSite",
 	url: import.meta.env.SITE,
-	name: "Ushira Dineth Portfolio",
+	name: "Ushira Dineth",
 	description: "Ushira Dineth's contact page, portfolio and blog",
 	inLanguage: "en_US",
 };
@@ -28,11 +28,11 @@ export const personSchema: WithContext<Person> = {
 	url: "https://ushira.com",
 	image: `${import.meta.env.SITE}${avatar.src}`,
 	sameAs: [
-		SocialLinks.get("Twitter")!,
-		SocialLinks.get("LinkedIn")!,
-		SocialLinks.get("Github")!,
-		SocialLinks.get("CV")!,
-		SocialLinks.get("YouTube")!,
+		requireSocialLink("Twitter"),
+		requireSocialLink("LinkedIn"),
+		requireSocialLink("Github"),
+		requireSocialLink("CV"),
+		requireSocialLink("YouTube"),
 	],
 	jobTitle: "Software Engineer",
 	worksFor: {

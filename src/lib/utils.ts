@@ -20,7 +20,7 @@ export function getDurationFromDate(date: Date): string {
 	// Format the result
 	let result = "";
 	if (difference_years !== 0) {
-		result += difference_years + " year";
+		result += `${difference_years} year`;
 		if (difference_years !== 1) {
 			result += "s";
 		}
@@ -29,7 +29,7 @@ export function getDurationFromDate(date: Date): string {
 		if (result !== "") {
 			result += " and ";
 		}
-		result += difference_months + " month";
+		result += `${difference_months} month`;
 		if (difference_months !== 1) {
 			result += "s";
 		}
