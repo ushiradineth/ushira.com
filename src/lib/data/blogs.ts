@@ -1,17 +1,23 @@
 import type { Blog } from "../types";
 
 export const blogs: Blog[] = [
+	// {
+	// 	title: "The art of committing secrets to Git",
+	// 	link: "/blog/the-art-of-committing-secrets-to-git/",
+	// 	date: new Date(2023, 11 - 1, 1),
+	// 	tags: ["Git", "Secrets", "Agenix", "Sealed Secrets"],
+	// },
 	{
-		title: "Automation with Ansible",
-		tags: ["Automation", "CI/CD", "VMs", "Cloud"],
+		title: "Declarative Infrastructure with Nix",
+		// link: "/blog/declarative-infrastructure-with-nix/",
+		// date: new Date(2023, 11 - 1, 1),
+		tags: ["Nix", "NixOS", "Home Manager", "Nix Darwin", "Colmena", "NixOS Anywhere"],
 	},
 	{
-		title: "Bitnami Sealed Secrets + Automating through CI",
-		tags: ["GitOps", "ArgoCD", "Terrafrom", "Kubernetes", "CI/CD"],
-	},
-	{
-		title: "AWS Load Balancers for Kubernetes + Setup",
-		tags: ["AWS", "Load Balancing", "Terrafrom", "Kubernetes"],
+		title: "Hub-and-Spoke Architecture with Zero Trust Networking",
+		link: "/blog/hub-and-spoke/",
+		date: new Date(2025, 10 - 1, 14),
+		tags: ["Cloud Architecture", "Zero Trust", "Networking", "Security"],
 	},
 	{
 		title: "GitOps for Kubernetes with ArgoCD",
