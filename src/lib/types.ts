@@ -28,13 +28,6 @@ export type Job = {
 	points: string[];
 };
 
-export type Blog = {
-	title: string;
-	tags: string[];
-	link?: string;
-	date?: Date;
-};
-
 export type Social = {
 	title: string;
 	href: string;

@@ -4,7 +4,21 @@ title: "Hub-and-Spoke Architecture with Zero Trust Networking"
 description: "Simplifying Networking, Security, and Cost at Scale."
 tags: ["Cloud Architecture", "Zero Trust", "Networking", "Security", "Cost Optimization"]
 date: 2025-10-14
+image: ../../images/blog/hub-and-spoke/hub-and-spoke.png
+imageAlt: "Hub-and-spoke network architecture diagram"
 ---
+
+import FigureImage from '../../components/FigureImage.astro';
+import currentArchitecture from '../../images/blog/hub-and-spoke/current-architecture.png';
+import hubAndSpoke from '../../images/blog/hub-and-spoke/hub-and-spoke.png';
+import hubAndSpokeTrafficFlow from '../../images/blog/hub-and-spoke/hub-and-spoke-traffic-flow.png';
+import monolithicTrafficFlow from '../../images/blog/hub-and-spoke/monolithic-traffic-flow.png';
+import cloudflareZtn from '../../images/blog/hub-and-spoke/cloudflare-ztn.png';
+import finalArchitecture from '../../images/blog/hub-and-spoke/final-architecture.png';
+import gcpExample from '../../images/blog/hub-and-spoke/gcp-example.png';
+import hubAndSpokeSurge from '../../images/blog/hub-and-spoke/hub-and-spoke-surge.png';
+import transitiveBefore from '../../images/blog/hub-and-spoke/transitive-before.png';
+import transitiveAfter from '../../images/blog/hub-and-spoke/transitive-after.png';
 
 ## Introduction
 
@@ -24,8 +38,7 @@ Each environment duplicating infrastructure looks like this:
 * Logs and monitoring fragmented
 * Higher costs and configuration drift risks
 
-![Figure 1: Traditional per-environment networking - duplicated resources across Dev, QA, and Prod.](../../images/blog/hub-and-spoke/current-architecture.png)
-_Figure 1: Traditional per-environment networking - duplicated resources across Dev, QA, and Prod._
+<FigureImage src={currentArchitecture} alt="Traditional per-environment networking diagram showing duplicated resources across Dev, QA, and Prod" caption="Figure 1: Traditional per-environment networking - duplicated resources across Dev, QA, and Prod." />
 
 What seems easy for a small setup becomes a bottleneck at scale.
 
@@ -46,8 +59,7 @@ In a hub-and-spoke model:
 * Reduced cost (one NAT, one firewall instead of many)
 * Easier audits and observability
 
-![Figure 2: Hub centralises shared networking and security, while spokes remain private and isolated.](../../images/blog/hub-and-spoke/hub-and-spoke.png)
-_Figure 2: Hub centralises shared networking and security, while spokes remain private and isolated._
+<FigureImage src={hubAndSpoke} alt="Diagram of a hub centralising shared networking and security while spokes remain private" caption="Figure 2: Hub centralises shared networking and security, while spokes remain private and isolated." />
 
 ---
 
@@ -59,8 +71,7 @@ _Figure 2: Hub centralises shared networking and security, while spokes remain p
 * Applications egress through separate NATs.
 * Each environment manages its own firewall rules.
 
-![Figure 3: Per-environment traffic flow - multiple load balancers and NAT gateways per environment.](../../images/blog/hub-and-spoke/monolithic-traffic-flow.png)
-_Figure 3: Per-environment traffic flow - multiple load balancers and NAT gateways per environment._
+<FigureImage src={monolithicTrafficFlow} alt="Diagram of per-environment traffic flow with multiple load balancers and NAT gateways" caption="Figure 3: Per-environment traffic flow - multiple load balancers and NAT gateways per environment." />
 
 **Hub-and-Spoke Model**
 
@@ -68,8 +79,7 @@ _Figure 3: Per-environment traffic flow - multiple load balancers and NAT gatewa
 * Outbound traffic flows → spokes → hub NAT → internet.
 * Developers and admins authenticate via Zero Trust before reaching any spoke.
 
-![Figure 4: Hub-and-spoke traffic flow - single entry and exit point through the hub.](../../images/blog/hub-and-spoke/hub-and-spoke-traffic-flow.png)
-_Figure 4: Hub-and-spoke traffic flow - single entry and exit point through the hub._
+<FigureImage src={hubAndSpokeTrafficFlow} alt="Diagram of hub-and-spoke traffic flow with a single entry and exit point through the hub" caption="Figure 4: Hub-and-spoke traffic flow - single entry and exit point through the hub." />
 
 ---
 
@@ -81,8 +91,7 @@ Zero Trust changes the game:
 * Provides identity- and context-aware access
 * Replaces VPNs with granular, policy-driven access
 
-![Figure 5: Cloudflare Zero Trust acts as the identity-aware access layer, replacing public IPs and VPNs.](../../images/blog/hub-and-spoke/cloudflare-ztn.png)
-_Figure 5: Cloudflare Zero Trust acts as the identity-aware access layer, replacing public IPs and VPNs._
+<FigureImage src={cloudflareZtn} alt="Diagram showing Cloudflare Zero Trust acting as the identity-aware access layer" caption="Figure 5: Cloudflare Zero Trust acts as the identity-aware access layer, replacing public IPs and VPNs." />
 
 With Cloudflare ZTN, neither the hub nor the spokes need public exposure. Access flows through Cloudflare’s global edge, authenticated per user/device/policy.
 
@@ -140,8 +149,7 @@ The final state looks like this:
 * Cloudflare Tunnel provides secure developer/admin access
 * End users reach production apps only via the external load balancer
 
-![Figure 6: Final architecture - unified hub handling all ingress and egress, secured with Cloudflare Zero Trust.](../../images/blog/hub-and-spoke/final-architecture.png)
-_Figure 6: Final architecture - unified hub handling all ingress and egress, secured with Cloudflare Zero Trust._
+<FigureImage src={finalArchitecture} alt="Diagram of the final hub-and-spoke architecture secured with Cloudflare Zero Trust" caption="Figure 6: Final architecture - unified hub handling all ingress and egress, secured with Cloudflare Zero Trust." />
 
 This pattern isolates environments, simplifies operations, and eliminates public exposure.
 
@@ -151,15 +159,13 @@ This pattern isolates environments, simplifies operations, and eliminates public
 
 ### Surge Global
 
-![Figure 7: Hub-and-spoke deployment from an enterprise project at Surge Global.](../../images/blog/hub-and-spoke/hub-and-spoke-surge.png)
-_Figure 7: Hub-and-spoke deployment from an enterprise project at Surge Global._
+<FigureImage src={hubAndSpokeSurge} alt="Diagram of the hub-and-spoke deployment used in a Surge Global enterprise project" caption="Figure 7: Hub-and-spoke deployment from an enterprise project at Surge Global." />
 
 We deployed this model at an Enterprise project at Surge Global, our first company project to use hub-and-spoke. It centralised firewall/NAT/DNS, used Cloudflare ZTN for non-prod environments, and reduced both cost and operational overhead.
 
 ### Industry Reference
 
-![Figure 8: GCP reference architecture - Fortinet firewalls securing the hub, similar to large-scale enterprise and government environments.](../../images/blog/hub-and-spoke/gcp-example.png)
-_Figure 8: GCP reference architecture - Fortinet firewalls securing the hub, similar to large-scale enterprise and government environments._
+<FigureImage src={gcpExample} alt="GCP reference architecture showing Fortinet firewalls securing the hub" caption="Figure 8: GCP reference architecture - Fortinet firewalls securing the hub, similar to large-scale enterprise and government environments." />
 
 Google Cloud publishes a reference hub-and-spoke model with Fortinet appliances protecting the hub. This design mirrors what the **Surge Global Project** runs today, showing that hub-and-spoke + Zero Trust is now an **industry standard** for secure, large-scale environments.
 
@@ -187,11 +193,9 @@ When deploying hub-and-spoke, plan for:
 * **Scaling limits** (peering, firewall throughput, `cloudflared` sizing)
 * **High availability** (multi-zone, multi-region hub design)
 
-![Figure 9: Non-transitive connectivity before redesign - spokes cannot communicate directly.](../../images/blog/hub-and-spoke/transitive-before.png)
-_Figure 9: Non-transitive connectivity before redesign - spokes cannot communicate directly._
+<FigureImage src={transitiveBefore} alt="Diagram of non-transitive connectivity before redesign where spokes cannot communicate directly" caption="Figure 9: Non-transitive connectivity before redesign - spokes cannot communicate directly." />
 
-![Figure 10: Non-transitive connectivity resolved via hub routing - spoke-to-spoke traffic flows through hub.](../../images/blog/hub-and-spoke/transitive-after.png)
-_Figure 10: Non-transitive connectivity resolved via hub routing - spoke-to-spoke traffic flows through hub._
+<FigureImage src={transitiveAfter} alt="Diagram showing non-transitive connectivity resolved via hub routing with spoke-to-spoke traffic flowing through the hub" caption="Figure 10: Non-transitive connectivity resolved via hub routing - spoke-to-spoke traffic flows through hub." />
 
 ---
 

@@ -4,15 +4,21 @@ import ImageGallery from "../components/ImageGallery.astro";
 import SocialCard from "../components/SocialCard.astro";
 import avatar from "../images/self.png";
 import Layout from "../layouts/Layout.astro";
-import { blogs } from "../lib/data/blogs";
 import { formatDate, isWithinDays } from "../lib/utils";
 import { socials } from "../lib/data/socials";
 import { images } from "../lib/data/images";
+import { getCollection } from "astro:content";
 
+const blogs = await getCollection("blog");
 const latestNewBlog =
 	blogs
-		.filter((blog) => blog.date && isWithinDays(blog.date, 30))
-		.sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0))[0] ?? null;
+		.filter((post) => {
+			const { date } = post.data;
+			if (!date || Number.isNaN(date.getTime())) return false;
+			if (date.getTime() > Date.now()) return false;
+			return isWithinDays(date, 30);
+		})
+		.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())[0] ?? null;
 ---
 
 <Layout title="Ushira Dineth" description="ushira.com">
@@ -21,10 +27,10 @@ const latestNewBlog =
 			<span class="inline-flex items-center rounded bg-emerald-500 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-white">
 				New
 			</span>
-			<a class="flex-1 font-semibold text-emerald-700 hover:underline" href={latestNewBlog.link ?? "#"}>
-				{latestNewBlog.title}
+			<a class="flex-1 font-semibold text-emerald-700 hover:underline" href={`/blog/${latestNewBlog.slug}/`}>
+				{latestNewBlog.data.title}
 			</a>
-			<span class="text-xs uppercase tracking-wide">{latestNewBlog.date ? formatDate(latestNewBlog.date) : ""}</span>
+			<span class="text-xs uppercase tracking-wide">{latestNewBlog.data.date ? formatDate(latestNewBlog.data.date) : ""}</span>
 		</section>
 	)}
 

@@ -1,0 +1,57 @@
+---
+// Scroll progress indicator for blog posts
+---
+
+<div id="scroll-progress" class="fixed left-0 top-16 z-50 h-1 bg-primary shadow-md" style="width: 0%; transition: width 0.15s ease-out"></div>
+
+<script>
+	let rafId: number | null = null;
+	let targetWidth = 0;
+
+	function updateScrollProgress() {
+		const scrollProgress = document.getElementById("scroll-progress");
+		if (!scrollProgress) return;
+
+		const scrollTop = window.scrollY;
+		const docHeight = document.body.scrollHeight - window.innerHeight;
+		targetWidth = (scrollTop / docHeight) * 100;
+
+		// Cancel any pending animation frame
+		if (rafId !== null) {
+			cancelAnimationFrame(rafId);
+		}
+
+		// Use requestAnimationFrame for smooth updates
+		rafId = requestAnimationFrame(() => {
+			scrollProgress.style.width = `${targetWidth}%`;
+			rafId = null;
+		});
+	}
+
+	// Initial setup
+	function initScrollProgress() {
+		updateScrollProgress();
+		window.addEventListener("scroll", updateScrollProgress, { passive: true });
+	}
+
+	// Cleanup function
+	function cleanupScrollProgress() {
+		window.removeEventListener("scroll", updateScrollProgress);
+		if (rafId !== null) {
+			cancelAnimationFrame(rafId);
+			rafId = null;
+		}
+	}
+
+	// Run on page load
+	document.addEventListener("DOMContentLoaded", initScrollProgress);
+
+	// Re-run after view transitions
+	document.addEventListener("astro:page-load", () => {
+		cleanupScrollProgress();
+		initScrollProgress();
+	});
+
+	// Cleanup before page unload
+	document.addEventListener("astro:before-preparation", cleanupScrollProgress);
+</script>

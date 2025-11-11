@@ -92,6 +92,31 @@ const jsonLd =
 				--border: 255, 255, 255, 0.1; /* #ffffff1a */
 			}
 
+			/* Smooth scrolling with offset for fixed header */
+			html {
+				scroll-behavior: smooth;
+				scroll-padding-top: 5rem; /* Offset for fixed header */
+			}
+
+			/* Blog heading styles for anchor links */
+			article h2,
+			article h3,
+			article h4,
+			article h5,
+			article h6 {
+				position: relative;
+				scroll-margin-top: 5rem;
+			}
+
+			/* Group hover effect for heading anchor links */
+			article h2:hover .anchor-link,
+			article h3:hover .anchor-link,
+			article h4:hover .anchor-link,
+			article h5:hover .anchor-link,
+			article h6:hover .anchor-link {
+				opacity: 1;
+			}
+
 			hr {
 				border-color: rgba(var(--border)) !important;
 			}

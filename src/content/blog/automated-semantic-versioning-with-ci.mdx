@@ -4,7 +4,17 @@ title: "Automated Semantic Versioning with CI"
 description: "This article outlines the usage of Semantic Versioning and automating it using shell scripts and Continuous integration Pipelines."
 date: 2024-02-03
 tags: ["GitFlow", "Git", "Semantic Versioning", "Bash", "CI/CD"]
+image: ../../images/blog/automated-semantic-versioning-with-ci/gitflow.png
+imageAlt: "GitFlow branching strategy visualised"
 ---
+
+import FigureImage from '../../components/FigureImage.astro';
+import gitflow from '../../images/blog/automated-semantic-versioning-with-ci/gitflow.png';
+import developBranchPipeline from '../../images/blog/automated-semantic-versioning-with-ci/develop-branch-pipeline.png';
+import initiateReleaseBranchPipeline from '../../images/blog/automated-semantic-versioning-with-ci/initiate-release-branch-pipeline.png';
+import mainBranchPipeline from '../../images/blog/automated-semantic-versioning-with-ci/main-branch-pipeline.png';
+import releaseBranchPipeline from '../../images/blog/automated-semantic-versioning-with-ci/release-branch-pipeline.png';
+import versionBumpPipeline from '../../images/blog/automated-semantic-versioning-with-ci/version-bump-pipeline.png';
 
 All the code for this article is available on [GitHub](https://github.com/ushiradineth/semver_ci).
 
@@ -12,8 +22,7 @@ All the code for this article is available on [GitHub](https://github.com/ushira
 
 ## Branching Strategy
 
-![GitFlow](../../images/blog/automated-semantic-versioning-with-ci/gitflow.png)
-_GitFlow_
+<FigureImage src={gitflow} alt="Diagram illustrating the GitFlow branching model" caption="Figure 1: GitFlow branching model - main branches and their relationships." />
 
 The repository needs to follow the following branching strategy with three main branches:
 
@@ -41,8 +50,7 @@ Reference: [Semantic Versioning](https://semver.org/)
 
 These pipelines are triggered when code is pushed to the branch and are responsible of releasing to code to each environment.
 
-![main branch pipeline flow](../../images/blog/automated-semantic-versioning-with-ci/main-branch-pipeline.png)
-_main branch pipeline flow_
+<FigureImage src={mainBranchPipeline} alt="Flowchart of the main branch pipeline" caption="Figure 2: Main branch pipeline - production deployment workflow with version management." />
 
 'main' branch pipeline flowThe 'main' pipeline is responsible for deploying all code pushed to the 'main' branch. It begins by running the 'version.sh' script, removing any build identifiers (such as 'rc1') from the version. The pipeline then proceeds to update the 'develop' branch with each merged release or hotfix using 'release.sh' and 'hotfix.sh' scripts. Following this, the pipeline tags the release or hotfix and concludes by building the Docker image
 
@@ -50,15 +58,13 @@ File: [semver_ci/bitbucket-pipelines.yml](https://github.com/ushiradineth/semver
 
 ### 'release/' pipeline
 
-![release/* branch pipeline flow](../../images/blog/automated-semantic-versioning-with-ci/release-branch-pipeline.png)
-_release/\* branch pipeline flow_
+<FigureImage src={releaseBranchPipeline} alt="Flowchart of the release branch pipeline" caption="Figure 3: Release branch pipeline - release candidate versioning and deployment." />
 
 When a new release branch is created using the 'release/\*' pattern, the 'release/\*' pipeline will be triggered. During its initial run, this pipeline dynamically adjusts the version by replacing the 'develop' branch's build identifier 'SNAPSHOT' with 'rc1' using the 'version.sh' script. Subsequent pushes to the release branch trigger the pipeline once again, incrementing the release candidate version on each push. This seamless process ensures that the version in the 'release/\*' branch accurately reflects the evolving release candidates. The pipeline concludes by building the Docker image.
 
 ### 'develop' pipeline
 
-![develop/* branch pipeline flow](../../images/blog/automated-semantic-versioning-with-ci/develop-branch-pipeline.png)
-_develop/\* branch pipeline flow_
+<FigureImage src={developBranchPipeline} alt="Flowchart of the develop branch pipeline" caption="Figure 4: Develop branch pipeline - snapshot build workflow for active development." />
 
 Upon merging code from either the 'feature/\*' or 'main' branches into 'develop', the 'develop' pipeline will be triggered. The 'version.sh' script will first add the SNAPSHOT build identifier to the version (e.g., 2.0.1-SNAPSHOT). Following this version update, the pipeline will build the Docker image.
 
@@ -66,15 +72,13 @@ Upon merging code from either the 'feature/\*' or 'main' branches into 'develop'
 
 ### 'version-bump' pipeline
 
-![version-bump pipeline flow](../../images/blog/automated-semantic-versioning-with-ci/version-bump-pipeline.png)
-_version-bump pipeline flow_
+<FigureImage src={versionBumpPipeline} alt="Flowchart of the version-bump pipeline" caption="Figure 5: Version-bump pipeline - manual version increment workflow for major, minor, or patch updates." />
 
 The 'version-bump' pipeline, using by the 'version.sh' script, handles version increments in the 'develop' branch. Developers can trigger version bumps, choosing between major, minor, or patch increments.
 
 ### 'initiate-release-branch' pipeline
 
-![initiate-release-branch pipeline flow](../../images/blog/automated-semantic-versioning-with-ci/initiate-release-branch-pipeline.png)
-_initiate-release-branch pipeline flow_
+<FigureImage src={initiateReleaseBranchPipeline} alt="Flowchart of the initiate-release-branch pipeline" caption="Figure 6: Initiate-release-branch pipeline - automated release branch creation from develop." />
 
 The 'initiate-release-branch' script automates the creation of release branches from the 'develop' branch. When executed, it checks out a new branch with the 'release/\*' pattern, commits an empty change to trigger a build, and pushes the branch to the remote repository.
 

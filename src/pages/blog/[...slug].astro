@@ -7,6 +7,7 @@ import { blogWebsite, getArticleSchema, mainWebsite, personSchema } from "../../
 import Badge from "../../components/Badge.astro";
 import BlogTableOfContents from "../../components/BlogTableOfContents.astro";
 import BlogNavigationCard from "../../components/BlogNavigationCard.astro";
+import ScrollProgress from "../../components/ScrollProgress.astro";
 
 interface Props {
 	post: CollectionEntry<"blog">;
@@ -69,73 +70,8 @@ function getReadingTime(content: string) {
 }
 ---
 
-<script is:inline>
-	window.addEventListener("DOMContentLoaded", () => {
-		const headerOffset = document.getElementById("header")?.offsetHeight ?? 64;
-
-		// Inject anchor links next to headings
-		const levels = ["h2", "h3", "h4", "h5", "h6"];
-		const headings = document.querySelectorAll(levels.map((tag) => `article ${tag}[id]`).join(","));
-
-		// Add anchor links to headings
-		headings.forEach((heading) => {
-			const id = heading.getAttribute("id");
-			if (!id) return;
-
-			// Avoid duplicates
-			if (heading.querySelector(".anchor-link")) return;
-
-			// Create # anchor
-			const anchor = document.createElement("a");
-			anchor.href = `#${id}`;
-			anchor.textContent = "#";
-			anchor.className = "anchor-link opacity-0 ml-2 group-hover:opacity-100 text-muted hover:text-primary transition";
-
-			// Accessibility
-			anchor.setAttribute("aria-label", `Link to heading ${heading.textContent?.trim()}`);
-			anchor.setAttribute("tabindex", "0");
-			anchor.setAttribute("role", "link");
-			anchor.classList.add("focus:outline-none", "focus:opacity-100", "focus-visible:ring", "focus-visible:ring-primary");
-
-			// Add layout classes to heading
-			heading.setAttribute("tabindex", "-1");
-			heading.classList.add("group", "relative");
-			heading.appendChild(anchor);
-		});
-
-		// Smooth scroll with offset for all in-page # links
-		document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-			anchor.addEventListener("click", function (e) {
-				const targetId = anchor.getAttribute("href");
-				const targetElement = document.querySelector(targetId);
-				if (!targetElement) return;
-
-				e.preventDefault();
-
-				const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-				const offsetPosition = elementPosition - headerOffset;
-
-				window.scrollTo({
-					top: offsetPosition,
-					behavior: "smooth",
-				});
-
-				history.pushState(null, "", targetId);
-			});
-		});
-	});
-
-	// Show scroll progress
-	window.addEventListener("scroll", () => {
-		const scrollTop = window.scrollY;
-		const docHeight = document.body.scrollHeight - window.innerHeight;
-		const scrollPercent = (scrollTop / docHeight) * 100;
-		document.getElementById("scroll-progress").style.width = `${scrollPercent}%`;
-	});
-</script>
-
 <Layout title={post.data.title} description={post.data.description} tags={post.data.tags} jsonLd={JSON.stringify(jsonLd)}>
-	<div id="scroll-progress" class="fixed left-0 top-16 z-50 h-1 bg-primary shadow-md transition-all" style="width: 0%"></div>
+	<ScrollProgress />
 
 	<div id="blog-header" class="flex w-full items-center gap-4">
 		<a class="w-fit rounded-full bg-accent-contrast p-2 ring-1 ring-muted" aria-label="Back" href="/blog/">
@@ -148,27 +84,25 @@ function getReadingTime(content: string) {
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-4">
 		<article id="blog-body" class="hide-scrollbar prose col-span-1 grid dark:prose-invert md:col-span-3">
 			<h1 class="my-2 text-4xl font-bold">{post.data.title}</h1>
+			{post.data.description && <p class="mt-2 text-lg text-muted">{post.data.description}</p>}
 
-			{
-				post.data.tags?.length && (
-					<div class="my-2 flex flex-wrap gap-2">
-						{post.data.tags.map((tag) => (
-							<Badge>#{tag}</Badge>
-						))}
-					</div>
-				)
-			}
+			{post.data.tags?.length && (
+				<div class="my-4 flex flex-wrap gap-2">
+					{post.data.tags.map((tag) => (
+						<Badge>#{tag}</Badge>
+					))}
+				</div>
+			)}
 
-			<Content />
+            <Content />
 
-			{
-				(previousPost || nextPost) && (
-					<div class={`grid gap-4 border-t border-border pt-8 ${previousPost && nextPost ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
-						{previousPost && <BlogNavigationCard label="← Previous" post={previousPost} />}
-						{nextPost && <BlogNavigationCard label="Next →" post={nextPost} />}
-					</div>
-				)
-			}
+			{(previousPost || nextPost) && (
+				<div class={`grid gap-4 border-t border-border pt-8 ${previousPost && nextPost ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
+					{previousPost && <BlogNavigationCard label="← Previous" post={previousPost} />}
+					{nextPost && <BlogNavigationCard label="Next →" post={nextPost} />}
+				</div>
+			)}
+
 		</article>
 		<aside id="blog-index" class="sticky top-20 hidden h-fit shrink-0 overflow-x-hidden border-l border-border pl-4 md:block">
 			<BlogTableOfContents headings={headings} />
