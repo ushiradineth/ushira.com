@@ -20,8 +20,6 @@
     "@fontsource-variable/roboto-mono": "^5.2.8",
     "@iconify-json/mdi": "^1.2.3",
     "@rehype-pretty/transformers": "^0.13.2",
-    "@vercel/analytics": "^1.5.0",
-    "@vercel/speed-insights": "^1.2.0",
     "astro": "^5.14.4",
     "astro-icon": "^1.1.5",
     "astro-og-canvas": "^0.7.2",

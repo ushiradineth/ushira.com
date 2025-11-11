@@ -4,8 +4,6 @@ import "@fontsource-variable/roboto-mono";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { ClientRouter } from "astro:transitions";
-import Analytics from "@vercel/analytics/astro";
-import SpeedInsights from "@vercel/speed-insights/astro";
 
 import { blogWebsite, mainWebsite, personSchema } from "../lib/data/structuredData";
 
@@ -62,7 +60,7 @@ const jsonLd =
 		<link rel="canonical" href={canonicalURL} />
 		<link rel="alternate" type="application/rss+xml" title="Ushira Dineth Blog" href={rssURL} />
 		<script type="application/ld+json" set:html={jsonLd} is:inline />
-		<script defer src="https://umami.ushira.com/script.js" data-website-id="b527789a-2e95-4a4a-bafa-8df054b48628"></script>
+		<script is:inline defer src="https://umami.ushira.com/script.js" data-website-id="b527789a-2e95-4a4a-bafa-8df054b48628"></script>
 
 		<script is:inline>
 			const local = localStorage.getItem("theme");
@@ -216,8 +214,6 @@ const jsonLd =
 					<slot />
 				</main>
 				<Footer />
-				<Analytics />
-				<SpeedInsights />
 			</div>
 			<div id="background" class="custom-gradient fixed -z-10 flex h-full w-full flex-col gap-4 bg-sky-200">
 				<svg width="0" height="0">
