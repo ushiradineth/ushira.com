@@ -1,14 +1,12 @@
 import type { Social } from "../types";
 
-type SocialKey = "Twitter" | "LinkedIn" | "YouTube" | "Github" | "Instagram" | "CV";
+type SocialKey = "Twitter" | "LinkedIn" | "Github" | "Instagram";
 
 const socialEntries: ReadonlyArray<[SocialKey, string]> = [
 	["Twitter", "https://www.twitter.com/ushiradineth"],
 	["LinkedIn", "https://www.linkedin.com/in/ushiradineth"],
-	["YouTube", "https://www.youtube.com"],
 	["Github", "https://www.github.com/ushiradineth"],
-	["Instagram", "https://www.instagram.com"],
-	["CV", "https://cv.ushira.com"],
+	["Instagram", "https://www.instagram.com/ushiradineth"],
 ];
 
 export const SocialLinks = new Map<SocialKey, string>(socialEntries);

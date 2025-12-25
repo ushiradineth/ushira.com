@@ -27,13 +27,7 @@ export const personSchema: WithContext<Person> = {
 	name: "Ushira Dineth",
 	url: "https://ushira.com",
 	image: `${import.meta.env.SITE}${avatar.src}`,
-	sameAs: [
-		requireSocialLink("Twitter"),
-		requireSocialLink("LinkedIn"),
-		requireSocialLink("Github"),
-		requireSocialLink("CV"),
-		requireSocialLink("YouTube"),
-	],
+	sameAs: [requireSocialLink("Twitter"), requireSocialLink("LinkedIn"), requireSocialLink("Github")],
 	jobTitle: "Software Engineer",
 	worksFor: {
 		"@type": "Organization",
