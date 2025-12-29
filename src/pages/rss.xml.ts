@@ -23,7 +23,7 @@ export const GET: APIRoute = async ({ site }) => {
 			const categories = post.data.tags.map((tag) => `<category>${escapeXml(tag)}</category>`).join("");
 			const description = post.data.description ? `<![CDATA[${post.data.description}]]>` : "";
 
-		return `<item>
+			return `<item>
 <title>${escapeXml(post.data.title)}</title>
 <link>${postUrl}</link>
 <guid>${postUrl}</guid>
