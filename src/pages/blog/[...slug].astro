@@ -8,6 +8,7 @@ import Tag from "../../components/Tag.astro";
 import BlogTableOfContents from "../../components/BlogTableOfContents.astro";
 import BlogNavigationCard from "../../components/BlogNavigationCard.astro";
 import ScrollProgress from "../../components/ScrollProgress.astro";
+import CodeBlockCopy from "../../components/CodeBlockCopy.astro";
 
 interface Props {
 	post: CollectionEntry<"blog">;
@@ -72,6 +73,7 @@ function getReadingTime(content: string) {
 
 <Layout title={post.data.title} description={post.data.description} tags={post.data.tags} jsonLd={JSON.stringify(jsonLd)}>
 	<ScrollProgress />
+	<CodeBlockCopy />
 
 	<div id="blog-header" class="flex w-full items-center gap-4">
 		<a class="w-fit rounded-full bg-accent-contrast p-2 ring-1 ring-muted" aria-label="Back" href="/blog/">

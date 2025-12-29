@@ -1,0 +1,119 @@
+---
+// Code block copy button component
+---
+
+<style is:global>
+	/* Code block copy button */
+	.code-block-wrapper {
+		position: relative;
+	}
+
+	.copy-button {
+		position: absolute;
+		top: 0.75rem;
+		right: 0.75rem;
+		padding: 0.375rem 0.75rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		font-family: var(--font-sans);
+		background-color: rgb(var(--accent-contrast));
+		color: rgb(var(--text));
+		border: 1px solid rgb(var(--border));
+		border-radius: 0.375rem;
+		cursor: pointer;
+		transition: all 150ms ease;
+		opacity: 0;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+	}
+
+	.copy-button svg {
+		width: 1rem;
+		height: 1rem;
+		flex-shrink: 0;
+	}
+
+	.code-block-wrapper:hover .copy-button {
+		opacity: 1;
+	}
+
+	.copy-button:hover {
+		background-color: rgb(var(--primary));
+		color: rgb(var(--background));
+		border-color: rgb(var(--primary));
+	}
+
+	.copy-button:active {
+		transform: scale(0.95);
+	}
+
+	.copy-button.copied {
+		background-color: rgb(46, 160, 67);
+		color: white;
+		border-color: rgb(46, 160, 67);
+	}
+</style>
+
+<script>
+	function setupCopyButtons() {
+		// SVG icons
+		const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>`;
+		const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>`;
+
+		// Find all pre blocks in prose content
+		const preBlocks = document.querySelectorAll("article.prose pre");
+
+		preBlocks.forEach((pre) => {
+			// Skip if already wrapped
+			if (pre.parentElement?.classList.contains("code-block-wrapper")) {
+				return;
+			}
+
+			// Create wrapper
+			const wrapper = document.createElement("div");
+			wrapper.className = "code-block-wrapper";
+
+			// Create copy button
+			const button = document.createElement("button");
+			button.className = "copy-button";
+			button.innerHTML = `${copyIcon}<span>Copy</span>`;
+			button.setAttribute("aria-label", "Copy to clipboard");
+
+			// Add click handler
+			button.addEventListener("click", async () => {
+				const code = pre.querySelector("code");
+				if (!code) return;
+
+				try {
+					await navigator.clipboard.writeText(code.textContent || "");
+					button.innerHTML = `${checkIcon}<span>Copied!</span>`;
+					button.classList.add("copied");
+
+					setTimeout(() => {
+						button.innerHTML = `${copyIcon}<span>Copy</span>`;
+						button.classList.remove("copied");
+					}, 2000);
+				} catch (err) {
+					console.error("Failed to copy:", err);
+					button.innerHTML = `${copyIcon}<span>Failed</span>`;
+					setTimeout(() => {
+						button.innerHTML = `${copyIcon}<span>Copy</span>`;
+					}, 2000);
+				}
+			});
+
+			// Wrap pre block and add button
+			pre.parentNode?.insertBefore(wrapper, pre);
+			wrapper.appendChild(pre);
+			wrapper.appendChild(button);
+		});
+	}
+
+	// Run on page load
+	document.addEventListener("DOMContentLoaded", setupCopyButtons);
+
+	// Re-run after view transitions
+	document.addEventListener("astro:page-load", setupCopyButtons);
+</script>
