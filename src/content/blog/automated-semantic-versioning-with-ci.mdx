@@ -3,7 +3,7 @@ slug: "automated-semantic-versioning-with-ci"
 title: "Automated Semantic Versioning with CI"
 description: "This article outlines the usage of Semantic Versioning and automating it using shell scripts and Continuous integration Pipelines."
 date: 2024-02-03
-tags: ["GitFlow", "Git", "Semantic Versioning", "Bash", "CI/CD"]
+tags: ["git", "bash", "cicd", "automation"]
 image: ../../images/blog/automated-semantic-versioning-with-ci/gitflow.png
 imageAlt: "GitFlow branching strategy visualised"
 ---
@@ -88,13 +88,13 @@ The 'initiate-release-branch' script automates the creation of release branches 
 
 The 'version.sh' script that is used for maintaining the semantic versioning system. It takes two arguments:
 
-#### Release (snapshot, rc, main):
+#### Release (snapshot, rc, main)
 
 - snapshot: Sets the version to '2.0.0-SNAPSHOT' in the 'develop' branch.
 - rc: Increments and sets the release candidate version in release branches (2.0.0-rc1, 2.0.0-rc2, etc.).
 - main: Cleans up build tags in the main branch (2.0.0-rc1 to 2.0.0) and creates a Git Tag with the version.
 
-#### Semantic Version (major, minor, patch): Increments the specified segment of the semantic version.
+#### Semantic Version (major, minor, patch): Increments the specified segment of the semantic version
 
 File: [semver_ci/version.sh](https://github.com/ushiradineth/semver_ci/blob/main/version.sh)
 

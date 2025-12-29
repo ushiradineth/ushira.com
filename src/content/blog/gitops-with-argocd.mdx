@@ -3,7 +3,7 @@ slug: "gitops-with-argocd"
 title: "GitOps for Kubernetes with ArgoCD"
 description: "Automating application delivery with GitOps patterns and ArgoCD."
 date: 2024-02-20
-tags: ["GitOps", "ArgoCD", "Terrafrom", "Kubernetes", "CI/CD"]
+tags: ["gitops", "argocd", "terraform", "kubernetes", "cicd"]
 image: ../../images/blog/gitops-with-argocd/gitops-flow.png
 imageAlt: "Diagram showing GitOps workflow with ArgoCD"
 ---
@@ -88,7 +88,7 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm install argocd argo/argo-cd
 ```
 
-#### Using Terraform – REQUIRES HELM PROVIDER
+#### Using Terraform
 
 ```hcl
 resource "helm_release" "argocd" {
@@ -175,7 +175,7 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm install argocd-image-updater argo/argocd-image-updater -f values.yaml
 ```
 
-#### Using Terraform – **REQUIRES HELM PROVIDER**
+#### Using Terraform
 
 ```hcl
 resource "helm_release" "argo_image_updater" {

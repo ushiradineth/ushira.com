@@ -4,7 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
 import { formatDate } from "../../lib/utils";
 import { blogWebsite, getArticleSchema, mainWebsite, personSchema } from "../../lib/data/structuredData";
-import Badge from "../../components/Badge.astro";
+import Tag from "../../components/Tag.astro";
 import BlogTableOfContents from "../../components/BlogTableOfContents.astro";
 import BlogNavigationCard from "../../components/BlogNavigationCard.astro";
 import ScrollProgress from "../../components/ScrollProgress.astro";
@@ -89,7 +89,9 @@ function getReadingTime(content: string) {
 			{post.data.tags?.length && (
 				<div class="my-4 flex flex-wrap gap-2">
 					{post.data.tags.map((tag) => (
-						<Badge>#{tag}</Badge>
+						<a href={`/blog/?tag=${tag}`} class="no-underline hover:no-underline">
+							<Tag>#{tag}</Tag>
+						</a>
 					))}
 				</div>
 			)}
