@@ -28,13 +28,13 @@ In this post, I’ll walk through how we have adopted a **hub-and-spoke network 
 
 ## The Problem: Per-Environment Networking
 
-Each environment duplicating infrastructure looks like this:
+**Each environment duplicating infrastructure looks like this:**
 
-* NAT, firewall, load balancer, DNS repeated in every environment
-* Multiple ingress/egress points to manage
-* Firewall policies scattered and inconsistent
-* Logs and monitoring fragmented
-* Higher costs and configuration drift risks
+- NAT, firewall, load balancer, DNS repeated in every environment
+- Multiple ingress/egress points to manage
+- Firewall policies scattered and inconsistent
+- Logs and monitoring fragmented
+- Higher costs and configuration drift risks
 
 <FigureImage src={currentArchitecture} alt="Traditional per-environment networking diagram showing duplicated resources across Dev, QA, and Prod" caption="Figure 1: Traditional per-environment networking - duplicated resources across Dev, QA, and Prod." />
 
@@ -44,18 +44,18 @@ What seems easy for a small setup becomes a bottleneck at scale.
 
 ## The Solution: Hub-and-Spoke Architecture
 
-In a hub-and-spoke model:
+**In a hub-and-spoke model:**
 
-* **Hub** contains shared services (NAT, firewall, DNS, load balancer).
-* **Spokes** are isolated environments (Dev, QA, Prod) that remain private.
-* All ingress and egress flows through the hub.
+- **Hub** contains shared services (NAT, firewall, DNS, load balancer).
+- **Spokes** are isolated environments (Dev, QA, Prod) that remain private.
+- All ingress and egress flows through the hub.
 
 **Benefits:**
 
-* Centralised firewall and NAT management
-* Uniform policies
-* Reduced cost (one NAT, one firewall instead of many)
-* Easier audits and observability
+- centralised firewall and nat management
+- uniform policies
+- reduced cost (one nat, one firewall instead of many)
+- Easier audits and observability
 
 <FigureImage src={hubAndSpoke} alt="Diagram of a hub centralising shared networking and security while spokes remain private" caption="Figure 2: Hub centralises shared networking and security, while spokes remain private and isolated." />
 
@@ -65,17 +65,17 @@ In a hub-and-spoke model:
 
 **Per-Environment (Monolithic) Model**
 
-* Public traffic hits environment-specific load balancers.
-* Applications egress through separate NATs.
-* Each environment manages its own firewall rules.
+- Public traffic hits environment-specific load balancers.
+- Applications egress through separate NATs.
+- Each environment manages its own firewall rules.
 
 <FigureImage src={monolithicTrafficFlow} alt="Diagram of per-environment traffic flow with multiple load balancers and NAT gateways" caption="Figure 3: Per-environment traffic flow - multiple load balancers and NAT gateways per environment." />
 
 **Hub-and-Spoke Model**
 
-* Public traffic flows → hub load balancer → spokes.
-* Outbound traffic flows → spokes → hub NAT → internet.
-* Developers and admins authenticate via Zero Trust before reaching any spoke.
+- Public traffic flows → hub load balancer → spokes.
+- Outbound traffic flows → spokes → hub NAT → internet.
+- Developers and admins authenticate via Zero Trust before reaching any spoke.
 
 <FigureImage src={hubAndSpokeTrafficFlow} alt="Diagram of hub-and-spoke traffic flow with a single entry and exit point through the hub" caption="Figure 4: Hub-and-spoke traffic flow - single entry and exit point through the hub." />
 
@@ -83,11 +83,11 @@ In a hub-and-spoke model:
 
 ## Introducing Cloudflare Zero Trust
 
-Zero Trust changes the game:
+**Zero Trust changes the game:**
 
-* Removes the need for public IPs
-* Provides identity- and context-aware access
-* Replaces VPNs with granular, policy-driven access
+- Removes the need for public IPs
+- Provides identity- and context-aware access
+- Replaces VPNs with granular, policy-driven access
 
 <FigureImage src={cloudflareZtn} alt="Diagram showing Cloudflare Zero Trust acting as the identity-aware access layer" caption="Figure 5: Cloudflare Zero Trust acts as the identity-aware access layer, replacing public IPs and VPNs." />
 
@@ -97,10 +97,10 @@ With Cloudflare ZTN, neither the hub nor the spokes need public exposure. Access
 
 ## Deploying the Cloudflare Connector
 
-Getting started is simple. Run the cloudflared daemon on a hub VM:
+**Getting started is simple. Run the cloudflared daemon on a hub VM:**
 
 ```bash
-sudo cloudflared service install <token> 
+sudo cloudflared service install <token>
 ```
 
 Then apply a tight firewall rule to allow `cloudflared` to connect only to Cloudflare endpoints (TCP/UDP 7844).
@@ -140,12 +140,12 @@ See the [Cloudflare Docs – Tunnel with Firewall](https://developers.cloudflare
 
 ## Final Architecture
 
-The final state looks like this:
+**The final state looks like this:**
 
-* Hub centralises NAT, firewall, and load balancers
-* Spokes are fully private
-* Cloudflare Tunnel provides secure developer/admin access
-* End users reach production apps only via the external load balancer
+- Hub centralises NAT, firewall, and load balancers
+- Spokes are fully private
+- Cloudflare Tunnel provides secure developer/admin access
+- End users reach production apps only via the external load balancer
 
 <FigureImage src={finalArchitecture} alt="Diagram of the final hub-and-spoke architecture secured with Cloudflare Zero Trust" caption="Figure 6: Final architecture - unified hub handling all ingress and egress, secured with Cloudflare Zero Trust." />
 
@@ -173,23 +173,23 @@ See the [Google Cloud – Fortinet Reference Architecture](https://cloud.google.
 
 ## Tradeoffs
 
-No design is free:
+**No design is free:**
 
-* Routing is more complex than per-environment
-* Hub is a critical dependency → must be highly available
-* Steeper learning curve for teams
-* Centralisation means changes affect all environments
+- Routing is more complex than per-environment
+- Hub is a critical dependency → must be highly available
+- Steeper learning curve for teams
+- Centralisation means changes affect all environments
 
 ---
 
 ## Key Considerations
 
-When deploying hub-and-spoke, plan for:
+**When deploying hub-and-spoke, plan for:**
 
-* **IP address space** (avoid overlaps)
-* **Non-transitive peering** (spoke-to-spoke must go via hub, or use Shared VPC / PSC / NCC)
-* **Scaling limits** (peering, firewall throughput, `cloudflared` sizing)
-* **High availability** (multi-zone, multi-region hub design)
+- **IP address space** (avoid overlaps)
+- **Non-transitive peering** (spoke-to-spoke must go via hub, or use Shared VPC / PSC / NCC)
+- **Scaling limits** (peering, firewall throughput, `cloudflared` sizing)
+- **High availability** (multi-zone, multi-region hub design)
 
 <FigureImage src={transitiveBefore} alt="Diagram of non-transitive connectivity before redesign where spokes cannot communicate directly" caption="Figure 9: Non-transitive connectivity before redesign - spokes cannot communicate directly." />
 
@@ -199,11 +199,11 @@ When deploying hub-and-spoke, plan for:
 
 ## Hands-On Resources
 
-To make this concrete, I’ve published **Terraform examples** that show three ways to deploy Cloudflare Tunnels in hub-and-spoke:
+**To make this concrete, I’ve published **Terraform examples** that show three ways to deploy Cloudflare Tunnels in hub-and-spoke:**
 
-* **Full IaC with Kubernetes** (complete automation)
-* **Manual + Kubernetes** (use existing tunnel, deploy cloudflared only)
-* **Manual VM on GCP** (run cloudflared on Compute Engine)
+- **Full IaC with Kubernetes** (complete automation)
+- **Manual + Kubernetes** (use existing tunnel, deploy cloudflared only)
+- **Manual VM on GCP** (run cloudflared on Compute Engine)
 
 [Cloudflare Zero Trust Terraform templates (GitHub)](https://github.com/ushiradineth/blog-assets/tree/main/hub-and-spoke)
 
@@ -211,9 +211,9 @@ To make this concrete, I’ve published **Terraform examples** that show three w
 
 ## Further Reading & Resources
 
-* [How Cloudflare does outbound-only connections](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
-* [Cloudflare firewall configuration for tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-with-firewall/)
-* [GCP Hub-and-Spoke Architecture (official reference)](https://cloud.google.com/architecture/deploy-hub-spoke-vpc-network-topology)
-* [GCP Hub-and-Spoke in practice with Fortinet](https://cloud.google.com/architecture/partners/fortigate-architecture-in-cloud)
-* [Azure Landing Zone – Hub-and-Spoke Architecture](https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke)
-* [Cloudflare Zero Trust Terraform templates (GitHub)](https://github.com/ushiradineth/blog-assets/tree/main/hub-and-spoke)
+- [How Cloudflare does outbound-only connections](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
+- [Cloudflare firewall configuration for tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-with-firewall/)
+- [GCP Hub-and-Spoke Architecture (official reference)](https://cloud.google.com/architecture/deploy-hub-spoke-vpc-network-topology)
+- [GCP Hub-and-Spoke in practice with Fortinet](https://cloud.google.com/architecture/partners/fortigate-architecture-in-cloud)
+- [Azure Landing Zone – Hub-and-Spoke Architecture](https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke)
+- [Cloudflare Zero Trust Terraform templates (GitHub)](https://github.com/ushiradineth/blog-assets/tree/main/hub-and-spoke)

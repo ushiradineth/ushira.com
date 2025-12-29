@@ -25,6 +25,7 @@ export default {
 			typography: ({ theme }) => ({
 				DEFAULT: {
 					css: {
+						// Color system
 						"--tw-prose-body": theme("colors.text"),
 						"--tw-prose-headings": theme("colors.text"),
 						"--tw-prose-links": theme("colors.primary"),
@@ -40,96 +41,37 @@ export default {
 						"--tw-prose-pre-bg": "transparent",
 						"--tw-prose-th-borders": theme("colors.border"),
 						"--tw-prose-td-borders": theme("colors.border"),
+
+						// Font families
 						fontFamily: theme("fontFamily.sans").join(", "),
+
+						// Essential overrides only
 						maxWidth: "none",
-						lineHeight: "1.75",
-						fontSize: "1rem",
-						a: {
-							fontWeight: "500",
-							textDecoration: "underline",
-							textUnderlineOffset: "2px",
-							"&:hover": {
-								color: theme("colors.primary"),
-							},
-						},
-						h1: {
-							fontWeight: "700",
-							fontSize: "2.5rem",
-							lineHeight: "1.2",
+
+						// Remove all vertical margins - use gap instead
+						"> *": {
 							marginTop: "0",
-							marginBottom: "1rem",
+							marginBottom: "0",
 						},
-						h2: {
-							fontWeight: "700",
-							fontSize: "1.875rem",
-							lineHeight: "1.3",
-							marginTop: "2rem",
-							marginBottom: "1rem",
-						},
-						h3: {
-							fontWeight: "600",
-							fontSize: "1.5rem",
-							lineHeight: "1.4",
-							marginTop: "1.75rem",
-							marginBottom: "0.75rem",
-						},
-						h4: {
-							fontWeight: "600",
-							fontSize: "1.25rem",
-							lineHeight: "1.5",
-							marginTop: "1.5rem",
-							marginBottom: "0.5rem",
-						},
-						p: {
-							marginTop: "1.25rem",
-							marginBottom: "1.25rem",
-						},
-						code: {
+
+						// Remove code backticks
+						"code::before": { content: '""' },
+						"code::after": { content: '""' },
+
+						// Inline code styling
+						":not(pre) > code": {
 							fontFamily: theme("fontFamily.mono").join(", "),
-							fontWeight: "400",
-							fontSize: "0.875rem",
+							fontSize: "0.875em",
+							fontWeight: "500",
+							padding: "0.125rem 0.375rem !important",
+							borderRadius: "0.25rem",
+							backgroundColor: "rgb(var(--muted) / 0.5)",
+							border: "1px solid rgb(var(--border) / 0.5)",
 						},
-						"code::before": {
-							content: '""',
-						},
-						"code::after": {
-							content: '""',
-						},
+
+						// Code blocks
 						pre: {
 							fontFamily: theme("fontFamily.mono").join(", "),
-							fontSize: "0.875rem",
-							lineHeight: "1.7",
-							borderRadius: theme("borderRadius.lg"),
-							padding: "1rem",
-						},
-						blockquote: {
-							fontWeight: "400",
-							fontStyle: "italic",
-							borderLeftWidth: "4px",
-							borderLeftColor: theme("colors.border"),
-							paddingLeft: "1rem",
-						},
-						ul: {
-							listStyleType: "disc",
-							paddingLeft: "1.5rem",
-							marginTop: "1.25rem",
-							marginBottom: "1.25rem",
-						},
-						ol: {
-							listStyleType: "decimal",
-							paddingLeft: "1.5rem",
-							marginTop: "1.25rem",
-							marginBottom: "1.25rem",
-						},
-						"p + ul": {
-							marginTop: "0.5rem",
-						},
-						"p + ol": {
-							marginTop: "0.5rem",
-						},
-						li: {
-							marginTop: "0.5rem",
-							marginBottom: "0.5rem",
 						},
 					},
 				},

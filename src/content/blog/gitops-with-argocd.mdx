@@ -21,6 +21,8 @@ Before continuing in this article, you should have the following:
 - Basic understanding of Git and CI/CD.
 - Understanding of [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) would be advantageous.
 
+---
+
 ## GitOps
 
 GitOps is a methodology that leverages [Git](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F) to manage and automate the deployment and configuration of infrastructure and applications. The core idea is to declare the desired state of the system in a Git repository, and a tool, such as [ArgoCD](https://argo-cd.readthedocs.io/en/stable/), continuously reconciles the actual state with the declared state.
@@ -62,6 +64,8 @@ GitOps strategies dictate how infrastructure and applications are managed using 
 | Simple to implement and understand                          | Comparavely complex architecture                                                                      |
 | Immediate feedback on the success or failure of the changes | Feedback is given when changes are periodically applied, with automatic rollback when failed          |
 | Desired state and actual state may not always be in-sync    | Ensures the target environment is always in sync with the desired state defined in the Git repository |
+
+---
 
 ## ArgoCD
 
@@ -152,11 +156,15 @@ In addition, the following options are used to ensure precision and control thro
   - `CreateNamespace = true`: Creates the specified namespace if it doesn’t exist.
   - `PruneLast = true`: Prunes resources in the last step of synchronization.
 
+---
+
 ## GitOps Workflow with ArgoCD
 
 - Configuration in Git: The DevOps Team commits changes to Git repositories, specifying desired configurations for applications and infrastructure.
 - Synchronization: ArgoCD continuously synchronizes the Kubernetes cluster with the Git repository, applying changes and maintaining the desired state.
 - Rollback and History: ArgoCD keeps a history of deployments, allowing for easy rollback to previous versions in case of issues or for auditing purposes.
+
+---
 
 ## Argo Image Updater
 
@@ -266,6 +274,8 @@ argocd-image-updater.argoproj.io/.allow-tags: "regexp:2\.\d+\.\d+-SNAPSHOT"
 ```
 
 - ArgoCD Applications seamlessly incorporate image update policies, using annotations and regular expressions, to regulate the deployment of specific image tags. The power of these policies lies in their environment-specific nature, enabling control over image versions in various environments.
+
+---
 
 ## Summary
 

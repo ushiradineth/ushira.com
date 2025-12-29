@@ -82,12 +82,12 @@ function getReadingTime(content: string) {
 	</div>
 
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-4">
-		<article id="blog-body" class="hide-scrollbar prose col-span-1 grid dark:prose-invert md:col-span-3">
-			<h1 class="my-2 text-4xl font-bold">{post.data.title}</h1>
-			{post.data.description && <p class="mt-2 text-lg text-muted">{post.data.description}</p>}
+		<article id="blog-body" class="hide-scrollbar prose col-span-1 grid gap-6 dark:prose-invert md:col-span-3">
+			<h1 class="text-4xl font-bold">{post.data.title}</h1>
+			{post.data.description && <p class="text-lg text-muted">{post.data.description}</p>}
 
 			{post.data.tags?.length && (
-				<div class="my-4 flex flex-wrap gap-2">
+				<div class="flex flex-wrap gap-2">
 					{post.data.tags.map((tag) => (
 						<a href={`/blog/?tag=${tag}`} class="no-underline hover:no-underline">
 							<Tag>#{tag}</Tag>

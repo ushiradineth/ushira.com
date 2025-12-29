@@ -32,6 +32,8 @@ Additionally, we use branches like 'hotfix/\*' and 'bugfix/\*' for addressing is
 
 Reference: [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
+---
+
 ## Semantic Versioning 2.0
 
 In this versioning system, we align with the Semantic Versioning 2.0 (SemVer 2) to ensure clarity and consistency in our application version management. The SemVer structure we follow is MAJOR.MINOR.PATCH.
@@ -43,6 +45,8 @@ In this versioning system, we align with the Semantic Versioning 2.0 (SemVer 2) 
 By adopting SemVer in our versioning strategy, we enhance communication about our software changes, maintain a clear understanding of version compatibility, and ensure a systematic approach to releases across different stages of our development lifecycle.
 
 Reference: [Semantic Versioning](https://semver.org/)
+
+---
 
 ## Branch Pipelines
 
@@ -66,6 +70,8 @@ When a new release branch is created using the 'release/\*' pattern, the 'releas
 
 Upon merging code from either the 'feature/\*' or 'main' branches into 'develop', the 'develop' pipeline will be triggered. The 'version.sh' script will first add the SNAPSHOT build identifier to the version (e.g., 2.0.1-SNAPSHOT). Following this version update, the pipeline will build the Docker image.
 
+---
+
 ## Custom Pipelines
 
 ### 'version-bump' pipeline
@@ -79,6 +85,8 @@ The 'version-bump' pipeline, using by the 'version.sh' script, handles version i
 <FigureImage src={initiateReleaseBranchPipeline} alt="Flowchart of the initiate-release-branch pipeline" caption="Figure 6: Initiate-release-branch pipeline - automated release branch creation from develop." />
 
 The 'initiate-release-branch' script automates the creation of release branches from the 'develop' branch. When executed, it checks out a new branch with the 'release/\*' pattern, commits an empty change to trigger a build, and pushes the branch to the remote repository.
+
+---
 
 ## Versioning Scripts
 
@@ -113,6 +121,8 @@ File: [semver_ci/hotfix.sh](https://github.com/ushiradineth/semver_ci/blob/main/
 - The 'initiate-release-branch.sh' script creates a release branch from the develop branch.
 
 File: [semver_ci/initiate-release-branch.sh](https://github.com/ushiradineth/semver_ci/blob/main/initiate-release-branch.sh)
+
+---
 
 ## Alternative: GitFlow CLI Tool by NVIE
 
