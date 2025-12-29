@@ -15,17 +15,17 @@ const allTags = [...new Set(blogPosts.flatMap((post) => post.data.tags ?? []))].
 	<Title>Blog Posts</Title>
 	<p class="text-muted">Personal blog posts, notes, and other ramblings.</p>
 
-	<div class="mt-6 font-mono text-sm" data-blog-page>
+	<div class="mt-6 text-sm" data-blog-page>
 		<div class="flex flex-col gap-4 border-t border-border pt-6">
-			<div class="flex flex-wrap gap-2">
+			<div class="flex flex-wrap">
 				{allTags.map((tag) => (
-					<button data-tag={tag} class="tag-filter text-sm text-muted transition-colors hover:text-primary" type="button">
+					<Tag data-tag={tag}>
 						#{tag}
-					</button>
+					</Tag>
 				))}
-				<button data-tag="clear" class="tag-filter hidden text-sm text-muted transition-colors hover:text-primary" type="button">
+				<Tag data-tag="clear">
 					(clear)
-				</button>
+				</Tag>
 			</div>
 			<span class="text-xs text-muted">
 				<span data-result-count>{blogPosts.length}</span> items
