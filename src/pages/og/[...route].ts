@@ -34,16 +34,16 @@ export const { getStaticPaths, GET } = OGImageRoute({
 		bgImage: {
 			path: "./src/images/og-bg.png",
 		},
-		fonts: ["https://cdn.jsdelivr.net/fontsource/fonts/roboto-mono:vf@latest/latin-wght-normal.woff2"],
+		fonts: ["https://cdn.jsdelivr.net/fontsource/fonts/instrument-sans:vf@latest/latin-wght-normal.woff2"],
 		font: {
 			title: {
 				color: [0, 0, 0],
-				families: ["Roboto Mono"],
+				families: ["Instrument Sans Variable"],
 				size: 80,
 			},
 			description: {
 				color: [0, 0, 0],
-				families: ["Roboto Mono"],
+				families: ["Instrument Sans Variable"],
 				size: 30,
 			},
 		},
