@@ -20,11 +20,12 @@ const rehypeConfig = {
 			{
 				behavior: "append",
 				properties: {
-					class: "anchor-link opacity-0 ml-2 group-hover:opacity-100 text-muted hover:text-primary transition focus:outline-none focus:opacity-100 focus-visible:ring focus-visible:ring-primary",
+					class:
+						"anchor-link opacity-0 ml-2 group-hover:opacity-100 text-muted hover:text-primary transition focus:outline-none focus:opacity-100 focus-visible:ring focus-visible:ring-primary",
 					ariaLabel: "Link to heading",
 					tabIndex: 0,
 				},
-				content: h("span", "#"),
+				content: h("span", { "data-heading-anchor": true }, "#"),
 			},
 		],
 		[

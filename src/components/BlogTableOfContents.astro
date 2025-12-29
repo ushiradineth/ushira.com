@@ -6,21 +6,36 @@ interface Props {
 }
 
 const { headings } = Astro.props;
+
+// Remove anchor link hash from heading text
+const cleanHeadings = headings.map((heading) => ({
+	...heading,
+	text: heading.text.replace(/\s*#\s*$/, "").trim(),
+}));
+
+const indentMap: Record<number, string> = {
+	2: "pl-0",
+	3: "pl-4",
+	4: "pl-8",
+};
 ---
 
 <div class="flex flex-col gap-4">
-	<h2 class="text-sm font-semibold text-muted">Index</h2>
-	<nav id="toc" class="flex flex-col gap-2 text-sm">
+	<h2 class="text-sm font-semibold text-muted">Table of Contents</h2>
+	<nav id="toc" class="flex flex-col gap-1.5 text-sm">
 		{
-			headings.map((heading) => (
-				<a
-					href={`#${heading.slug}`}
-					data-slug={heading.slug}
-					style={`margin-left: ${(heading.depth - 1) * 10}px`}
-					class="truncate text-ellipsis text-muted transition-all hover:text-primary">
-					{heading.text}
-				</a>
-			))
+			cleanHeadings.map((heading) => {
+				const indentClass = indentMap[heading.depth] ?? "pl-0";
+				return (
+					<a
+						href={`#${heading.slug}`}
+						data-slug={heading.slug}
+						class={`flex items-start ${indentClass} text-muted transition-colors hover:text-primary underline-offset-4`}
+					>
+						<span class="min-w-0 break-words">{heading.text}</span>
+					</a>
+				);
+			})
 		}
 	</nav>
 </div>
@@ -29,7 +44,7 @@ const { headings } = Astro.props;
 <script is:inline>
 	function initTOCObserver() {
 		const tocLinks = document.querySelectorAll("#toc a");
-		const headings = Array.from(document.querySelectorAll("article h2, article h3"));
+		const headings = Array.from(document.querySelectorAll("article h2, article h3, article h4"));
 
 		if (!headings.length) return;
 
