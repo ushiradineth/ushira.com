@@ -162,65 +162,13 @@ const jsonLd =
 			/* --- */
 
 			/* Shiki Configuration */
-			code[data-theme*=" "],
-			code[data-theme*=" "] span {
+			/* Shiki handles theme switching via inline styles and CSS variables */
+			code span {
 				color: var(--shiki-light);
-				background-color: var(--shiki-light-bg);
 			}
 
-			.dark code[data-theme*=" "],
-			.dark code[data-theme*=" "] span {
+			.dark code span {
 				color: var(--shiki-dark);
-				background-color: var(--shiki-dark-bg);
-			}
-
-			code > span {
-				padding-right: 8px;
-			}
-
-			code {
-				font-size: 0.875rem;
-				line-height: 1.25rem;
-			}
-
-			/* Inline code styling */
-			p code,
-			li code,
-			td code,
-			h1 code,
-			h2 code,
-			h3 code,
-			h4 code,
-			h5 code,
-			h6 code {
-				font-family: "Geist Mono Variable", monospace;
-				font-weight: 500;
-				padding: 0.125rem 0.375rem !important;
-				border-radius: 0.25rem;
-				background-color: rgb(var(--muted) / 0.5) !important;
-				border: 1px solid rgb(var(--border) / 0.5);
-			}
-
-			figure,
-			pre {
-				overflow-x: auto;
-				padding: 0 0 0 0 !important;
-				margin: 0 0 0 0 !important;
-			}
-
-			pre > code {
-				padding: 10px 20px 10px 10px !important;
-				counter-reset: line;
-				@apply hide-scrollbar;
-			}
-
-			code[data-line-numbers] > [data-line]::before {
-				counter-increment: line;
-				content: counter(line);
-				display: inline-block;
-				width: 1.5rem;
-				text-align: right;
-				color: rgb(var(--muted));
 			}
 			/* --- */
 

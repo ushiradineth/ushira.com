@@ -5,14 +5,11 @@ import robotsTxt from "astro-robots-txt";
 import vercel from "@astrojs/vercel";
 import icon from "astro-icon";
 import mdx from "@astrojs/mdx";
-import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import { transformerCopyButton } from "@rehype-pretty/transformers";
 import { h } from "hastscript";
 
-const rehypeConfig = {
-	syntaxHighlight: false,
+const markdownConfig = {
 	rehypePlugins: [
 		rehypeSlug,
 		[
@@ -28,27 +25,18 @@ const rehypeConfig = {
 				content: h("span", { "data-heading-anchor": true }, "#"),
 			},
 		],
-		[
-			rehypePrettyCode,
-			{
-				theme: {
-					dark: "github-dark-dimmed",
-					light: "github-light",
-				},
-				transformers: [
-					transformerCopyButton({
-						visibility: "hover",
-						feedbackDuration: 2_500,
-					}),
-				],
-			},
-		],
 	],
+	shikiConfig: {
+		themes: {
+			light: "github-light",
+			dark: "github-dark-high-contrast",
+		},
+	},
 };
 
 export default defineConfig({
-	integrations: [tailwind(), sitemap(), robotsTxt(), icon(), mdx(rehypeConfig)],
-	markdown: rehypeConfig,
+	integrations: [tailwind(), sitemap(), robotsTxt(), icon(), mdx(markdownConfig)],
+	markdown: markdownConfig,
 	output: "static",
 	site: "https://ushira.com",
 	adapter: vercel(),

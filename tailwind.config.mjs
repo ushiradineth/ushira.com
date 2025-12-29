@@ -54,6 +54,11 @@ export default {
 							marginBottom: "0",
 						},
 
+						// Tighten spacing between intro paragraphs and their lists
+						"p + ul, p + ol": {
+							marginTop: "-0.75rem",
+						},
+
 						// Remove code backticks
 						"code::before": { content: '""' },
 						"code::after": { content: '""' },
@@ -63,15 +68,10 @@ export default {
 							fontFamily: theme("fontFamily.mono").join(", "),
 							fontSize: "0.875em",
 							fontWeight: "500",
-							padding: "0.125rem 0.375rem !important",
+							padding: "0.125rem 0.375rem",
 							borderRadius: "0.25rem",
 							backgroundColor: "rgb(var(--muted) / 0.5)",
 							border: "1px solid rgb(var(--border) / 0.5)",
-						},
-
-						// Code blocks
-						pre: {
-							fontFamily: theme("fontFamily.mono").join(", "),
 						},
 					},
 				},
