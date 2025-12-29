@@ -12,12 +12,12 @@ const { label, post } = Astro.props;
 
 <a
 	href={`/blog/${post.slug}`}
-	class="group block rounded-xl p-4 no-underline ring-1 ring-border transition-all hover:ring-primary"
+	class="group block rounded-lg px-4 py-0 no-underline ring-1 ring-border transition-all hover:ring-primary"
 	aria-label={`Read ${label.toLowerCase()} post: ${post.data.title}`}>
 	<p class="text-xs text-muted">{label}</p>
-	<h2 class="text-base font-semibold text-text transition group-hover:text-primary">
+	<p class="text-base font-semibold text-text transition group-hover:text-primary">
 		{post.data.title}
-	</h2>
+	</p>
 	{
 		post.data.tags?.length && (
 			<div class="flex flex-wrap gap-1">

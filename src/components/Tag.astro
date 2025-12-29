@@ -1,1 +1,8 @@
-<button class="rounded p-1 text-sm font-mono font-semibold hover:text-primary hover:underline underline-offset-4"><slot /></button>
+---
+const { class: className, ...rest } = Astro.props;
+const classes = `rounded text-sm font-mono font-semibold hover:text-primary hover:underline underline-offset-4 ${className || ''}`.trim();
+---
+
+<button {...rest} class={classes}>
+  <slot />
+</button>

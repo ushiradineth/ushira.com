@@ -112,10 +112,20 @@ export default {
 						ul: {
 							listStyleType: "disc",
 							paddingLeft: "1.5rem",
+							marginTop: "1.25rem",
+							marginBottom: "1.25rem",
 						},
 						ol: {
 							listStyleType: "decimal",
 							paddingLeft: "1.5rem",
+							marginTop: "1.25rem",
+							marginBottom: "1.25rem",
+						},
+						"p + ul": {
+							marginTop: "0.5rem",
+						},
+						"p + ol": {
+							marginTop: "0.5rem",
 						},
 						li: {
 							marginTop: "0.5rem",

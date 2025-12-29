@@ -12,7 +12,7 @@ const { src, alt, caption } = Astro.props;
 const figureCaption = caption ?? alt;
 ---
 
-<figure class="rounded-xl border border-border bg-background/40">
+<figure class="rounded-lg border border-border bg-background/40">
 	<Image src={src} alt={alt} class="w-full" />
 	<figcaption class="m-4 text-sm text-muted">{figureCaption}</figcaption>
 </figure>
