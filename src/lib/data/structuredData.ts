@@ -37,16 +37,14 @@ export const personSchema: WithContext<Person> = {
 };
 
 export function getArticleSchema(post: CollectionEntry<"blog">) {
-	const heroImage = post.data.image;
-	const defaultImageUrl = new URL(`/og/blog/${post.slug}/`, import.meta.env.SITE).toString();
-	const imageValue = heroImage !== undefined ? new URL(heroImage.src, import.meta.env.SITE).toString() : defaultImageUrl;
+	const imageUrl = new URL(`/og/blog/${post.slug}/`, import.meta.env.SITE).toString();
 
 	const articleStructuredData: WithContext<Article> = {
 		"@context": "https://schema.org",
 		"@type": "Article",
 		headline: post.data.title,
 		url: `${import.meta.env.SITE}/blog/${post.slug}/`,
-		image: imageValue,
+		image: imageUrl,
 		description: post.data.description,
 		datePublished: post.data.date.toString(),
 		publisher: {
