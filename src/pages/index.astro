@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import ImageGallery from "../components/ImageGallery.astro";
 import SocialCard from "../components/SocialCard.astro";
+import CodingStats from "../components/CodingStats.astro";
 import avatar from "../images/self.png";
 import Layout from "../layouts/Layout.astro";
 import { formatDate, isWithinDays } from "../lib/utils";
@@ -56,6 +57,10 @@ const latestNewBlog =
 	<span class="ml-auto flex">
 		<ImageGallery images={images} />
 	</span>
+
+	<!-- <div class="flex flex-col gap-4 pt-12"> -->
+	<!-- 	<CodingStats /> -->
+	<!-- </div> -->
 
 	<div class="flex flex-col gap-4 pt-12">
 		<p>Elsewhere on the internet:</p>
