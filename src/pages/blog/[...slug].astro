@@ -76,7 +76,7 @@ function getReadingTime(content: string) {
 	<CodeBlockCopy />
 
 	<div id="blog-header" class="flex w-full items-center gap-4">
-		<a class="w-fit rounded-full bg-accent-contrast p-2 ring-1 ring-muted" aria-label="Back" href="/blog/">
+		<a class="w-fit rounded-full bg-secondary p-2 ring-1 ring-muted" aria-label="Back" href="/blog/">
 			<Icon size="16" name="mdi:arrow-left" />
 		</a>
 		<span class="text-muted">|</span>
@@ -86,7 +86,7 @@ function getReadingTime(content: string) {
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-4">
 		<article id="blog-body" class="hide-scrollbar prose col-span-1 grid gap-6 dark:prose-invert md:col-span-3">
 			<h1 class="text-4xl font-bold">{post.data.title}</h1>
-			{post.data.description && <p class="text-lg text-muted">{post.data.description}</p>}
+			{post.data.description && <p class="text-lg text-muted-foreground">{post.data.description}</p>}
 
 			{post.data.tags?.length && (
 				<div class="flex flex-wrap gap-2">

@@ -23,11 +23,11 @@ const latestNewBlog =
 
 <Layout title="Ushira Dineth" description="ushira.com">
 	{latestNewBlog && (
-		<section class="mb-6 flex items-center gap-2 rounded-lg border border-emerald-500/40 bg-emerald-500/5 px-4 py-3 text-sm text-muted">
-			<span class="inline-flex items-center rounded bg-emerald-500 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-white">
+		<section class="mb-6 flex items-center gap-2 rounded-lg border border-chart-1/40 bg-chart-1/5 px-4 py-3 text-sm text-muted-foreground">
+			<span class="inline-flex items-center rounded bg-chart-1 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-background">
 				New
 			</span>
-			<a class="flex-1 font-semibold text-emerald-700 hover:underline" href={`/blog/${latestNewBlog.slug}/`}>
+			<a class="flex-1 font-semibold text-chart-1 hover:underline" href={`/blog/${latestNewBlog.slug}/`}>
 				{latestNewBlog.data.title}
 			</a>
 			<span class="text-xs uppercase tracking-wide">{latestNewBlog.data.date ? formatDate(latestNewBlog.data.date) : ""}</span>

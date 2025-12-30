@@ -18,7 +18,7 @@ const markdownConfig = {
 				behavior: "append",
 				properties: {
 					class:
-						"anchor-link opacity-0 ml-2 group-hover:opacity-100 text-muted hover:text-primary transition focus:outline-none focus:opacity-100 focus-visible:ring focus-visible:ring-primary",
+						"anchor-link opacity-0 ml-2 group-hover:opacity-100 text-muted-foreground hover:text-primary transition focus:outline-none focus:opacity-100 focus-visible:ring focus-visible:ring-primary",
 					ariaLabel: "Link to heading",
 					tabIndex: 0,
 				},
@@ -31,6 +31,7 @@ const markdownConfig = {
 			light: "github-light",
 			dark: "github-dark-high-contrast",
 		},
+		defaultColor: false,
 	},
 };
 

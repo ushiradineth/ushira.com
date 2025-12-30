@@ -7,18 +7,18 @@ interface Props {
 	class?: string;
 }
 
-const { height = 32, width = 32, primary = "accent", secondary = "text", class: className } = Astro.props;
+const { height = 32, width = 32, primary = "accent", secondary = "foreground", class: className } = Astro.props;
 ---
 
 <svg class={className} height={height} width={width} viewBox={`0 0 ${width} ${height}`} fill="none" xmlns="http://www.w3.org/2000/svg">
-	<rect height={height} width={width} style={`fill: rgb(var(--${secondary}))`}></rect>
+	<rect height={height} width={width} style={`fill: var(--${secondary})`}></rect>
 	<path
 		d="M2.34667 12.5867V2.34666H12.5867V5.76H9.17334L26.24 22.8267V19.4133H29.6533V29.6533H19.4133V26.24H22.8267L5.76 9.17333V12.5867H2.34667Z"
-		style={`fill: rgb(var(--${primary}))`}></path>
+		style={`fill: var(--${primary})`}></path>
 	<path
 		d="M12.5867 29.6533H2.34667L2.34667 19.4133H5.76V22.8267L22.8267 5.76H19.4133V2.34667H29.6533V12.5867H26.24V9.17334L9.17334 26.24H12.5867V29.6533Z"
-		style={`fill: rgb(var(--${primary}))`}></path>
+		style={`fill: var(--${primary})`}></path>
 	<path
 		d="M15.443 16L14.7932 14.7932L16 15.443L17.2068 14.7932L16.557 16L17.2068 17.2068L16 16.557L14.7932 17.2068L15.443 16Z"
-		style={`fill: rgb(var(--${secondary}))`}></path>
+		style={`fill: var(--${secondary})`}></path>
 </svg>

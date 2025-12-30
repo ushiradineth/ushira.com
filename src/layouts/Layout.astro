@@ -95,140 +95,125 @@ const jsonLd =
 
 		<style is:global>
 			:root {
-				--text: 16, 22, 25; /* #101619 */
-				--background: 247, 252, 254; /* #f7fcfe */
-				--primary: 46, 82, 97; /* #2e5261 */
-				--accent: 255, 241, 242; /* #fecdd3 (rose-200) */
-				--accent-contrast: 241, 245, 249; /* #f1f5f9 */
-				--muted: 100, 100, 109; /* #64646d - Darker for better contrast */
-				--border: 24, 24, 27, 0.15; /* #18181b26 - Slightly more visible */
-			--code-bg: 241, 245, 249; /* #f1f5f9 - Solid background for inline code */
-			--code-border: 226, 232, 240; /* #e2e8f0 */
+				--background: oklch(0.9821 0 0);
+				--foreground: oklch(0.2435 0 0);
+				--card: oklch(0.9911 0 0);
+				--card-foreground: oklch(0.2435 0 0);
+				--popover: oklch(0.9911 0 0);
+				--popover-foreground: oklch(0.2435 0 0);
+				--primary: oklch(0.4341 0.0392 41.9938);
+				--primary-foreground: oklch(1.0000 0 0);
+				--secondary: oklch(0.9200 0.0651 74.3695);
+				--secondary-foreground: oklch(0.3499 0.0685 40.8288);
+				--muted: oklch(0.9521 0 0);
+				--muted-foreground: oklch(0.5032 0 0);
+				--accent: oklch(0.9310 0 0);
+				--accent-foreground: oklch(0.2435 0 0);
+				--destructive: oklch(0.6271 0.1936 33.3390);
+				--destructive-foreground: oklch(1.0000 0 0);
+				--border: oklch(0.8822 0 0);
+				--input: oklch(0.8822 0 0);
+				--ring: oklch(0.4341 0.0392 41.9938);
+				--chart-1: oklch(0.4341 0.0392 41.9938);
+				--chart-2: oklch(0.9200 0.0651 74.3695);
+				--chart-3: oklch(0.9310 0 0);
+				--chart-4: oklch(0.9367 0.0523 75.5009);
+				--chart-5: oklch(0.4338 0.0437 41.6746);
+				--sidebar: oklch(0.9881 0 0);
+				--sidebar-foreground: oklch(0.2645 0 0);
+				--sidebar-primary: oklch(0.3250 0 0);
+				--sidebar-primary-foreground: oklch(0.9881 0 0);
+				--sidebar-accent: oklch(0.9761 0 0);
+				--sidebar-accent-foreground: oklch(0.3250 0 0);
+				--sidebar-border: oklch(0.9401 0 0);
+				--sidebar-ring: oklch(0.7731 0 0);
+				--font-sans: 'Instrument Sans Variable', sans-serif;
+				--font-mono: 'Geist Mono Variable', monospace;
+				--radius: 0.5rem;
+				--shadow-x: 0;
+				--shadow-y: 1px;
+				--shadow-blur: 3px;
+				--shadow-spread: 0px;
+				--shadow-opacity: 0.1;
+				--shadow-color: oklch(0 0 0);
+				--shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+				--shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+				--shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+				--shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+				--shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+				--shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+				--shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+				--shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+				--tracking-normal: 0em;
+				--spacing: 0.25rem;
 			}
 
 			.dark {
-				--text: 243, 243, 242; /* #f3f3f2 */
-				--background: 18, 18, 18; /* #121212 */
-				--primary: 159, 195, 210; /* #9fc3d2 */
-				--accent: 15, 23, 42; /* #0f172a (slate-900) */
-				--accent-contrast: 30, 41, 59; /* #1e293b (slate-800) */
-				--muted: 156, 163, 175; /* #9ca3af */
-				--border: 255, 255, 255, 0.15; /* #ffffff26 - Slightly more visible */
-			--code-bg: 30, 41, 59; /* #1e293b - Solid background for inline code */
-			--code-border: 51, 65, 85; /* #334155 */
+				--background: oklch(0.1776 0 0);
+				--foreground: oklch(0.9491 0 0);
+				--card: oklch(0.2134 0 0);
+				--card-foreground: oklch(0.9491 0 0);
+				--popover: oklch(0.2134 0 0);
+				--popover-foreground: oklch(0.9491 0 0);
+				--primary: oklch(0.9247 0.0524 66.1732);
+				--primary-foreground: oklch(0.2029 0.0240 200.1962);
+				--secondary: oklch(0.3163 0.0190 63.6992);
+				--secondary-foreground: oklch(0.9247 0.0524 66.1732);
+				--muted: oklch(0.2520 0 0);
+				--muted-foreground: oklch(0.7699 0 0);
+				--accent: oklch(0.2850 0 0);
+				--accent-foreground: oklch(0.9491 0 0);
+				--destructive: oklch(0.6271 0.1936 33.3390);
+				--destructive-foreground: oklch(1.0000 0 0);
+				--border: oklch(0.2351 0.0115 91.7467);
+				--input: oklch(0.4017 0 0);
+				--ring: oklch(0.9247 0.0524 66.1732);
+				--chart-1: oklch(0.9247 0.0524 66.1732);
+				--chart-2: oklch(0.3163 0.0190 63.6992);
+				--chart-3: oklch(0.2850 0 0);
+				--chart-4: oklch(0.3481 0.0219 67.0001);
+				--chart-5: oklch(0.9245 0.0533 67.0855);
+				--sidebar: oklch(0.2103 0.0059 285.8852);
+				--sidebar-foreground: oklch(0.9674 0.0013 286.3752);
+				--sidebar-primary: oklch(0.4882 0.2172 264.3763);
+				--sidebar-primary-foreground: oklch(1.0000 0 0);
+				--sidebar-accent: oklch(0.2739 0.0055 286.0326);
+				--sidebar-accent-foreground: oklch(0.9674 0.0013 286.3752);
+				--sidebar-border: oklch(0.2739 0.0055 286.0326);
+				--sidebar-ring: oklch(0.8711 0.0055 286.2860);
+				--font-sans: 'Instrument Sans Variable', sans-serif;
+				--font-mono: 'Geist Mono Variable', monospace;
+				--radius: 0.5rem;
+				--shadow-x: 0;
+				--shadow-y: 1px;
+				--shadow-blur: 3px;
+				--shadow-spread: 0px;
+				--shadow-opacity: 0.1;
+				--shadow-color: oklch(0 0 0);
+				--shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+				--shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
+				--shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+				--shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10);
+				--shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10);
+				--shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10);
+				--shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 8px 10px -1px hsl(0 0% 0% / 0.10);
+				--shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
 			}
 
-			/* Smooth scrolling with offset for fixed header */
-			html {
-				scroll-behavior: smooth;
-				scroll-padding-top: 5rem; /* Offset for fixed header */
-			}
-
-			/* Blog heading styles for anchor links */
-			article h2,
-			article h3,
-			article h4,
-			article h5,
-			article h6 {
-				position: relative;
-				scroll-margin-top: 5rem;
-			}
-
-			/* Group hover effect for heading anchor links */
-			article h2:hover .anchor-link,
-			article h3:hover .anchor-link,
-			article h4:hover .anchor-link,
-			article h5:hover .anchor-link,
-			article h6:hover .anchor-link {
-				opacity: 1;
-			}
-
-			hr {
-				border-color: rgba(var(--border)) !important;
-			}
-
-			p:has(img):has(em) img {
-				margin-bottom: 0 !important;
-			}
-
-			p:has(img):has(em) {
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-			}
-
-			/* Astro Icon Configuration */
-			[data-icon] {
-				font-size: 1.5rem;
-				color: var(--text);
-			}
-			/* --- */
-
-			/* Shiki Configuration */
-			/* Shiki handles theme switching via inline styles and CSS variables */
-			code span {
-				color: var(--shiki-light);
-			}
-
-			.dark code span {
-				color: var(--shiki-dark);
-			}
-			/* --- */
-
-			.hide-scrollbar::-webkit-scrollbar {
-				display: none;
-			}
-
-			.hide-scrollbar {
-				-ms-overflow-style: none; /* IE and Edge */
-				scrollbar-width: none; /* Firefox */
-			}
-
-			/* Continuous gradient animation */
-			@keyframes moveGradient {
-				0% {
-					background-position: 50% 50%;
-				}
-				20% {
-					background-position: 100% 100%;
-				}
-				40% {
-					background-position: 0% 0%;
-				}
-				60% {
-					background-position: 100% -100%;
-				}
-				80% {
-					background-position: -100% 100%;
-				}
-				100% {
-					background-position: 50% 50%;
-				}
-			}
-
-			.custom-gradient {
-				background: radial-gradient(ellipse at center, rgba(var(--accent), 1), rgba(var(--background), 1));
-				filter: url(#grainy);
-				background-size: 200% 200%;
-				animation: moveGradient 24s ease infinite;
-				-webkit-backdrop-filter: blur(3px);
-				backdrop-filter: blur(3px);
-			}
 		</style>
 
 		<ClientRouter />
 	</head>
-	<body class="flex flex-col items-center text-pretty font-sans tracking-tight text-text antialiased">
+	<body class="flex flex-col items-center text-pretty font-sans tracking-tight text-foreground antialiased">
 		<main role="main" id="main-content" class="flex w-full justify-center">
-			<div id="content" class="flex min-h-screen w-full max-w-[1080px] flex-col">
+			<div id="content" class="flex min-h-screen w-full max-w-content flex-col">
 				<Header transition:persist />
-				<main class="flex min-w-[50%] flex-col gap-4 px-4 py-8">
+				<main class="flex min-w-half flex-col gap-4 px-4 py-8">
 					<slot />
 				</main>
 				<Footer />
 			</div>
-			<div id="background" class="custom-gradient fixed -z-10 flex h-full w-full flex-col gap-4 bg-sky-200">
+			<div id="background" class="custom-gradient fixed -z-10 flex h-full w-full flex-col gap-4">
 				<svg width="0" height="0">
 					<filter id="grainy" x="0" y="0" width="100%" height="100%">
 						<feTurbulence type="fractalNoise" baseFrequency="1"></feTurbulence>

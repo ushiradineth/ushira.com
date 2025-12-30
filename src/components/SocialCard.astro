@@ -10,11 +10,11 @@ interface Props {
 const { social } = Astro.props;
 ---
 
-<div class="group h-full w-full list-none rounded-lg bg-accent-contrast">
+<div class="group h-full w-full list-none rounded-lg bg-secondary">
 	<a href={social.href} class="flex flex-col p-6">
 		<div class="flex items-center justify-center">
 			<div class="flex items-center justify-center gap-2">
-				<p class="font-light"><Icon name={social.icon} /><p class="text-green-400 dark:text-green-500">•</p></p>
+				<p class="font-light"><Icon name={social.icon} /><p class="text-chart-1">•</p></p>
 				<h2 class="text-xl font-semibold">
 					{social.title}
 				</h2>
