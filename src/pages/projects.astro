@@ -3,9 +3,14 @@ import Project from "../components/Project.astro";
 import Title from "../components/Title.astro";
 import Layout from "../layouts/Layout.astro";
 import { projects } from "../lib/data/projects";
+import { getWebPageJsonLd } from "../lib/data/structuredData";
+
+const description = "Portfolio of projects built with Kubernetes, Go, TypeScript, Terraform, and Nix";
+const url = `${import.meta.env.SITE}/projects/`;
+const jsonLd = getWebPageJsonLd(url, "Projects", description);
 ---
 
-<Layout title="Projects" description="ushira.com">
+<Layout title="Projects" description={description} jsonLd={jsonLd}>
 	<Title>Projects</Title>
 	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 		{projects.map((project) => <Project project={project} />)}

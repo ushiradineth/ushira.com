@@ -2,7 +2,7 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
-import { getWebPageSchema, mainWebsite, personSchema } from "../../lib/data/structuredData";
+import { getWebPageJsonLd } from "../../lib/data/structuredData";
 
 interface Props {
 	note: CollectionEntry<"notes">;
@@ -21,11 +21,7 @@ const { note } = Astro.props;
 const { Content } = await note.render();
 
 const url = `${import.meta.env.SITE}/notes/${note.slug}/`;
-const webPageSchema = getWebPageSchema(url, note.data.title, note.data.description);
-const jsonLd = JSON.stringify({
-	"@context": "https://schema.org",
-	"@graph": [webPageSchema, mainWebsite, personSchema],
-});
+const jsonLd = getWebPageJsonLd(url, note.data.title, note.data.description);
 ---
 
 <Layout title={note.data.title} description={note.data.description} jsonLd={jsonLd}>

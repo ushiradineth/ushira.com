@@ -1,16 +1,20 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Icon } from "astro-icon/components";
+import { getWebPageJsonLd } from "../lib/data/structuredData";
 
 const resumeFileId = "1NVYbVdsrnCtMkfZ6hjuiUI3GYwD5mA0d";
 const resumeViewUrl = `https://drive.google.com/file/d/${resumeFileId}/view`;
 const resumeEmbedUrl = `https://drive.google.com/file/d/${resumeFileId}/preview`;
+
+const title = "Resume - Ushira Dineth";
+const description =
+	"Resume of Ushira Dineth, Senior DevOps & Infrastructure Engineer with 3+ years of experience in Kubernetes, Terraform, and cloud infrastructure";
+const url = `${import.meta.env.SITE}/resume/`;
+const jsonLd = getWebPageJsonLd(url, title, description);
 ---
 
-<Layout
-	title="Resume - Ushira Dineth"
-	description="Resume of Ushira Dineth, Senior DevOps & Infrastructure Engineer with 3+ years of experience in Kubernetes, Terraform, and cloud infrastructure."
->
+<Layout title={title} description={description} jsonLd={jsonLd}>
 	<!-- Header -->
 	<div class="mb-6 flex items-center justify-between gap-4">
 		<h1 class="text-3xl font-bold text-foreground">Resume</h1>

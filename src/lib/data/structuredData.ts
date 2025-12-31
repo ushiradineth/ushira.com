@@ -83,3 +83,18 @@ export function getWebPageSchema(url: string, title: string, description: string
 		inLanguage: "en_US",
 	};
 }
+
+export function getWebPageJsonLd(url: string, title: string, description: string): string {
+	const webPageSchema = getWebPageSchema(url, title, description);
+	return JSON.stringify({
+		"@context": "https://schema.org",
+		"@graph": [webPageSchema, mainWebsite, personSchema],
+	});
+}
+
+export function getBlogJsonLd(): string {
+	return JSON.stringify({
+		"@context": "https://schema.org",
+		"@graph": [blogWebsite, mainWebsite, personSchema],
+	});
+}

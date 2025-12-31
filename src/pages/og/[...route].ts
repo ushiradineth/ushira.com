@@ -8,14 +8,15 @@ const pages = {
 	projects: {
 		title: "projects",
 	},
-	work: {
-		title: "work",
-	},
 	blog: {
 		title: "blog",
 	},
 	notes: {
 		title: "notes",
+	},
+	resume: {
+		title: "Resume",
+		description: "Resume of Ushira Dineth",
 	},
 };
 

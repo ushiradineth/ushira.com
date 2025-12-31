@@ -2,17 +2,12 @@
 import Layout from "../layouts/Layout.astro";
 import Title from "../components/Title.astro";
 import { Icon } from "astro-icon/components";
-import { getWebPageSchema, mainWebsite, personSchema } from "../lib/data/structuredData";
+import { getWebPageJsonLd } from "../lib/data/structuredData";
 import { getCollection } from "astro:content";
 
 const description = "My preferences, philosophies, and opinions on software and work";
 const url = `${import.meta.env.SITE}/notes/`;
-
-const webPageSchema = getWebPageSchema(url, "Notes", description);
-const jsonLd = JSON.stringify({
-	"@context": "https://schema.org",
-	"@graph": [webPageSchema, mainWebsite, personSchema],
-});
+const jsonLd = getWebPageJsonLd(url, "Notes", description);
 
 const notes = (await getCollection("notes")).sort((a, b) => a.data.order - b.data.order);
 ---
