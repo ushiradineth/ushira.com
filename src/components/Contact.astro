@@ -1,0 +1,89 @@
+---
+import { Icon } from "astro-icon/components";
+import { requireSocialLink } from "../lib/data/socials";
+
+const contactMethods = [
+	{
+		title: "Email",
+		icon: "mdi:email",
+		href: "mailto:hi@ushira.com",
+		label: "hi@ushira.com",
+		description: "Best for project inquiries and professional stuff",
+	},
+	{
+		title: "LinkedIn",
+		icon: "mdi:linkedin",
+		href: requireSocialLink("LinkedIn"),
+		label: "linkedin.com/in/ushiradineth",
+		description: "Professional networking",
+	},
+	{
+		title: "GitHub",
+		icon: "mdi:github",
+		href: requireSocialLink("Github"),
+		label: "github.com/ushiradineth",
+		description: "Check out my code",
+	},
+	{
+		title: "Twitter",
+		icon: "mdi:twitter",
+		href: requireSocialLink("Twitter"),
+		label: "@ushiradineth",
+		description: "Tech thoughts and discussions",
+	},
+	{
+		title: "Resume",
+		icon: "mdi:file-document",
+		href: "/resume",
+		label: "Resume",
+		description: "Download my resume",
+	},
+	{
+		title: "RSS Feed",
+		icon: "mdi:rss",
+		href: "/rss.xml",
+		label: "RSS Feed",
+		description: "Subscribe to my blog posts",
+	},
+];
+---
+
+<section class="w-full">
+	<h2 class="mb-4 text-3xl font-bold text-foreground">Contact</h2>
+
+	<p class="mb-6 text-muted-foreground">
+		I'm always interested in hearing about new challenges, collaboration opportunities, and technical discussions. You can reach out to me
+		via any of the methods below.
+	</p>
+
+	<div class="mb-8 grid gap-3 sm:grid-cols-2">
+		{
+			contactMethods.map((method) => (
+				<a
+					href={method.href}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="group flex items-center gap-3 rounded-lg border border-border bg-background p-4 transition-all hover:border-primary hover:bg-muted/30"
+				>
+					<Icon name={method.icon} class="h-5 w-5 text-muted-foreground group-hover:text-primary" />
+					<div class="flex-1">
+						<div class="font-medium text-foreground">{method.title}</div>
+						<div class="text-sm text-muted-foreground">{method.description}</div>
+					</div>
+				</a>
+			))
+		}
+	</div>
+
+	<p class="text-center text-foreground">
+		<strong>Before you message:</strong> Please read{" "}
+		<a
+			href="https://nohello.net/en/"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="font-medium text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
+		>
+			nohello.net
+		</a>. Include context in your first message; it helps me respond faster and more effectively.
+	</p>
+</section>

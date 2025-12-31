@@ -1,14 +1,8 @@
 ---
-import { Image } from "astro:assets";
-import ImageGallery from "../components/ImageGallery.astro";
-import SocialCard from "../components/SocialCard.astro";
-import CodingStats from "../components/CodingStats.astro";
-import avatar from "../images/self.png";
 import Layout from "../layouts/Layout.astro";
-import { formatDate, isWithinDays } from "../lib/utils";
-import { socials } from "../lib/data/socials";
-import { images } from "../lib/data/images";
 import { getCollection } from "astro:content";
+import { formatDate, isWithinDays } from "../lib/utils";
+import Contact from "../components/Contact.astro";
 
 const blogs = await getCollection("blog");
 const latestNewBlog =
@@ -23,49 +17,54 @@ const latestNewBlog =
 ---
 
 <Layout title="Ushira Dineth" description="ushira.com">
-	{latestNewBlog && (
-		<section class="mb-6 flex items-center gap-2 rounded-lg border border-chart-1/40 bg-chart-1/5 px-4 py-3 text-sm text-muted-foreground">
-			<span class="inline-flex items-center rounded bg-chart-1 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-background">
-				New
-			</span>
-			<a class="flex-1 font-semibold text-chart-1 hover:underline" href={`/blog/${latestNewBlog.slug}/`}>
-				{latestNewBlog.data.title}
-			</a>
-			<span class="text-xs uppercase tracking-wide">{latestNewBlog.data.date ? formatDate(latestNewBlog.data.date) : ""}</span>
-		</section>
-	)}
+	{
+		latestNewBlog && (
+			<section class="mb-6 flex items-center gap-2 rounded-lg border border-chart-1/40 bg-chart-1/5 px-4 py-3 text-sm text-muted-foreground">
+				<span class="inline-flex items-center rounded bg-chart-1 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-background">
+					New
+				</span>
+				<a class="flex-1 font-semibold text-chart-1 hover:underline" href={`/blog/${latestNewBlog.slug}/`}>
+					{latestNewBlog.data.title}
+				</a>
+				<span class="text-xs uppercase tracking-wide">{latestNewBlog.data.date ? formatDate(latestNewBlog.data.date) : ""}</span>
+			</section>
+		)
+	}
 
-	<Image
-		class="h-20 w-20 rounded-full object-cover drop-shadow-xl transition-all duration-500 group-hover:scale-110 md:hidden"
-		src={avatar}
-		alt={"Ushira Dineth"}
-	/>
-
-	<div class="flex flex-col-reverse gap-8 md:flex-row md:gap-60">
-		<span class="flex flex-col gap-2">
+	<div class="flex flex-col gap-8 md:gap-16">
+		<div class="space-y-6 text-foreground text-xl">
 			<p>
-				I'm a full stack software engineer focused on building products with extra attention to detail from UI/UX to Infrastructure and
-				everything in between.
+				I’m a software engineer based in Sri Lanka, working on distributed systems, infrastructure, and product engineering. Currently at{
+					" "
+				}
+				<a
+					href="https://surge.global/"
+					class="font-medium text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
+				>
+					Surge Global, Colombo
+				</a>.
 			</p>
-			<p>I have taken part in multiple project learning and understanding how software is built from end to end.</p>
-			<p>Currently, I work with TypeScript, NextJS, Terraform and Kubernetes.</p>
-			<p>I'm currently learning Go!</p>
-		</span>
-		<Image src={avatar} alt={"Ushira Dineth"} class={"hidden h-52 w-52 rounded-lg md:block"} />
-	</div>
 
-	<span class="ml-auto flex">
-		<ImageGallery images={images} />
-	</span>
+			<p>
+				I work primarily with Kubernetes, Go, TypeScript, and Terraform. I care about reliability, reproducibility, and systems that are
+				boring by design. My goal is to automate myself out of work.
+			</p>
 
-	<!-- <div class="flex flex-col gap-4 pt-12"> -->
-	<!-- 	<CodingStats /> -->
-	<!-- </div> -->
+			<p>
+				More context, opinions, and work-in-progress notes live in{" "}
+				<a href="/notes/" class="font-medium text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary">
+					the notes
+				</a>.
+			</p>
 
-	<div class="flex flex-col gap-4 pt-12">
-		<p>Elsewhere on the internet:</p>
-		<div class="grid h-full w-full grid-cols-1 justify-between gap-2 md:grid-cols-2">
-			{socials.map((social) => <SocialCard social={social} />)}
+			<p>
+				Technical writing lives on{" "}
+				<a href="/blog/" class="font-medium text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary">
+					the blog
+				</a>.
+			</p>
 		</div>
+
+		<Contact />
 	</div>
 </Layout>
