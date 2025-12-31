@@ -1,0 +1,46 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const favorites = [
+	{ name: "Neovim", icon: "simple-icons:neovim" },
+	{ name: "NixOS", icon: "simple-icons:nixos" },
+	{ name: "Kubernetes", icon: "simple-icons:kubernetes" },
+	{ name: "ArgoCD", icon: "simple-icons:argo" },
+	{ name: "Go", icon: "simple-icons:go" },
+	{ name: "TypeScript", icon: "simple-icons:typescript" },
+	{ name: "Tailscale", icon: "simple-icons:tailscale" },
+	{ name: "Terraform", icon: "simple-icons:terraform" },
+	{ name: "PostgreSQL", icon: "simple-icons:postgresql" },
+	{ name: "Ghostty", icon: "simple-icons:ghostty" },
+	{ name: "Obsidian", icon: "simple-icons:obsidian" },
+	{ name: "Cloudflare Zero Trust", icon: "simple-icons:cloudflare" },
+	{ name: "Seafile", icon: "simple-icons:seafile" },
+	{ name: "Immich", icon: "simple-icons:immich" },
+	{ name: "GCP", icon: "simple-icons:googlecloud" },
+];
+---
+
+<Layout title="Tools" description="Software I use and prefer">
+	<div class="space-y-8">
+		<div class="space-y-3">
+			<a href="/notes/" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+				<Icon name="mdi:arrow-left" class="h-4 w-4" />
+				Back to Notes
+			</a>
+			<h1 class="text-4xl font-bold text-foreground">Tools</h1>
+			<p class="text-lg text-muted-foreground">Software I use and prefer.</p>
+		</div>
+
+		<div class="flex flex-wrap gap-3">
+			{
+				favorites.map((tool) => (
+					<span class="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2.5 text-base text-foreground">
+						<Icon name={tool.icon} class="h-5 w-5 text-muted-foreground" />
+						{tool.name}
+					</span>
+				))
+			}
+		</div>
+	</div>
+</Layout>

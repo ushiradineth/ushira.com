@@ -1,0 +1,20 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+	icon: string;
+	title: string;
+}
+
+const { icon, title } = Astro.props;
+---
+
+<div class="rounded-lg border border-border bg-background p-6">
+	<h2 class="mb-3 flex items-center gap-2 text-xl font-semibold text-foreground">
+		<Icon name={icon} class="h-6 w-6 text-primary" />
+		{title}
+	</h2>
+	<div class="space-y-2 text-muted-foreground">
+		<slot />
+	</div>
+</div>

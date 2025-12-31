@@ -35,6 +35,7 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "@iconify-json/simple-icons": "^1.2.64",
     "@tailwindcss/typography": "^0.5.19",
     "@typescript-eslint/eslint-plugin": "^8.51.0",
     "@typescript-eslint/parser": "^8.51.0",

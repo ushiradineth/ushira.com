@@ -1,0 +1,39 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+
+const interests = [
+	"Foodie - always hunting for the next great meal",
+	"Cafe dweller - I do my best thinking in coffee shops",
+	"T1 LoL esports fan - been following the team for years",
+	"Open source advocate - all my software is open source, and I contribute when I can",
+	"NixOS user - declarative system configuration",
+	"Neovim user - modal editing for life",
+];
+---
+
+<Layout title="Outside of Work" description="Personal interests and non-programming activities">
+	<div class="space-y-8">
+		<div class="space-y-3">
+			<a href="/notes/" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+				<Icon name="mdi:arrow-left" class="h-4 w-4" />
+				Back to Notes
+			</a>
+			<h1 class="text-4xl font-bold text-foreground">Outside of Work</h1>
+			<p class="text-lg text-muted-foreground">What I do when I'm not writing code.</p>
+		</div>
+
+		<div class="rounded-lg border border-border bg-background p-6">
+			<ul class="space-y-3 text-muted-foreground">
+				{
+					interests.map((interest) => (
+						<li class="flex gap-3">
+							<span class="text-primary">•</span>
+							<span>{interest}</span>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</div>
+</Layout>
