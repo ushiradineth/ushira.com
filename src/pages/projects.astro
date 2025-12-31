@@ -7,7 +7,14 @@ import { projects } from "../lib/data/projects";
 
 <Layout title="Projects" description="ushira.com">
 	<Title>Projects</Title>
-	<div class="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 		{projects.map((project) => <Project project={project} />)}
+	</div>
+
+	<div class="mt-12 border-t border-border/30 pt-8">
+		<p class="text-center text-sm text-muted-foreground/70">
+			Work projects and other minor projects are not included. These projects represent what I actively work on, maintain, or plan to
+			develop in the future.
+		</p>
 	</div>
 </Layout>

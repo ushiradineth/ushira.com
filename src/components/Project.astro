@@ -2,45 +2,104 @@
 import { Icon } from "astro-icon/components";
 
 import type { Project } from "../lib/types";
-import Badge from "./Badge.astro";
-import IconLink from "./IconLink.astro";
-import IconLinkSet from "./IconLinkSet.astro";
-import RoundedIcon from "./RoundedIcon.astro";
 
 interface Props {
 	project: Project;
 }
 
 const { project } = Astro.props;
+const primaryLink = project.links[0]?.href || "#";
 ---
 
-<div class="group flex h-full w-full flex-col flex-wrap gap-2 rounded-lg border border-border p-4 hover:border-dotted">
-	<div class="mb-2 flex gap-4">
-		<RoundedIcon icon={project.icon} alt={project.title} />
+<div
+	class="group flex h-full w-full cursor-pointer flex-col gap-3 rounded-lg border border-border bg-background p-6 transition-all hover:border-primary hover:bg-muted/30"
+	data-href={primaryLink}
+>
+	<!-- Header: Title + Additional Links -->
+	<div class="flex items-start justify-between gap-3">
+		<h2 class="text-xl font-semibold text-foreground">
+			{project.title}
+		</h2>
+		{
+			project.links.length > 1 && (
+				<div class="flex items-center gap-1.5">
+					{project.links.slice(1).map((link) => (
+						<a
+							href={link.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="flex h-7 w-7 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+							title={link.label}
+							aria-label={link.label}
+						>
+							<Icon name={link.logo} class="h-4 w-4" />
+						</a>
+					))}
+				</div>
+			)
+		}
+	</div>
 
-		<div class="flex h-full flex-col items-start justify-center gap-2 text-xl font-medium">
-			<h2>
-				{project.title}
-			</h2>
-			<IconLinkSet>
-				{
-					project.links.map((link) => (
-						<IconLink label={link.href} href={link.href}>
-							<Icon name={link.logo} />
-						</IconLink>
-					))
-				}
-			</IconLinkSet>
+	<!-- Period -->
+	<p class="text-xs text-muted-foreground">
+		{project.period}
+	</p>
+
+	<!-- Description -->
+	<p class="text-sm text-muted-foreground">
+		{project.description}
+	</p>
+
+	<!-- Technologies -->
+	<div class="mt-auto border-t border-border pt-3">
+		<p class="mb-2 text-xs text-muted-foreground">Technologies:</p>
+		<div class="flex flex-wrap gap-2">
+			{
+				project.technologies.map((tech) => (
+					<a
+						href={tech.href}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1 text-xs transition-colors hover:border-primary hover:text-primary"
+						title={tech.name}
+						aria-label={tech.name}
+					>
+						<Icon name={tech.icon} class="h-3.5 w-3.5" />
+						<span>{tech.name}</span>
+					</a>
+				))
+			}
 		</div>
 	</div>
-
-	<p class="text-xs text-muted-foreground">{project.designation} • {project.period}</p>
-
-	<div class="flex w-full flex-wrap">
-		<p>{project.description}</p>
-	</div>
-
-	<div class="mt-auto flex flex-wrap gap-2">
-		{project.technologies.map((technology) => <Badge>{technology}</Badge>)}
-	</div>
 </div>
+
+<script is:inline>
+	(function () {
+		function handleCardClicks() {
+			const cards = document.querySelectorAll("[data-href]");
+			cards.forEach((card) => {
+				card.addEventListener("click", (e) => {
+					const target = e.target;
+					// Don't navigate if clicking on a link or inside a link
+					if (target.tagName === "A" || target.closest("a")) {
+						return;
+					}
+					const href = card.dataset.href;
+					if (href) {
+						window.open(href, "_blank", "noopener,noreferrer");
+					}
+				});
+			});
+		}
+
+		// Run on page load
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", handleCardClicks);
+		} else {
+			handleCardClicks();
+		}
+
+		// Re-run on view transitions (Astro navigation)
+		document.addEventListener("astro:page-load", handleCardClicks);
+	})();
+</script>
