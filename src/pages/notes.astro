@@ -2,48 +2,22 @@
 import Layout from "../layouts/Layout.astro";
 import Title from "../components/Title.astro";
 import { Icon } from "astro-icon/components";
+import { getWebPageSchema, mainWebsite, personSchema } from "../lib/data/structuredData";
+import { getCollection } from "astro:content";
 
-const sections = [
-	{
-		title: "Outside of Work",
-		href: "/notes/outside-of-work/",
-		icon: "mdi:coffee",
-		description: "What I do when I'm not writing code",
-	},
-	{
-		title: "Philosophy",
-		href: "/notes/philosophy/",
-		icon: "mdi:lightbulb-on",
-		description: "How I think about work, problems, and building systems",
-	},
-	{
-		title: "How I Work",
-		href: "/notes/how-i-work/",
-		icon: "mdi:cog",
-		description: "Principles, workflows, and automation mindset",
-	},
-	{
-		title: "Tools",
-		href: "/notes/tools/",
-		icon: "mdi:tools",
-		description: "Software I use and prefer",
-	},
-	{
-		title: "Things I Avoid",
-		href: "/notes/things-i-avoid/",
-		icon: "mdi:alert-circle",
-		description: "Technologies and patterns I stay away from",
-	},
-	{
-		title: "Learning",
-		href: "/notes/learning/",
-		icon: "mdi:school",
-		description: "What I'm currently exploring and building expertise in",
-	},
-];
+const description = "My preferences, philosophies, and opinions on software and work";
+const url = `${import.meta.env.SITE}/notes/`;
+
+const webPageSchema = getWebPageSchema(url, "Notes", description);
+const jsonLd = JSON.stringify({
+	"@context": "https://schema.org",
+	"@graph": [webPageSchema, mainWebsite, personSchema],
+});
+
+const notes = (await getCollection("notes")).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Layout title="Notes" description="My preferences, philosophies, and opinions on software and work">
+<Layout title="Notes" description={description} jsonLd={jsonLd}>
 	<div class="space-y-8">
 		<div class="space-y-3">
 			<Title>Notes</Title>
@@ -52,16 +26,16 @@ const sections = [
 
 		<div class="grid gap-4 sm:grid-cols-2">
 			{
-				sections.map((section) => (
+				notes.map((note) => (
 					<a
-						href={section.href}
+						href={`/notes/${note.slug}/`}
 						class="group flex flex-col gap-3 rounded-lg border border-border bg-background p-6 transition-all hover:border-primary hover:bg-muted/30"
 					>
 						<div class="flex items-center gap-3">
-							<Icon name={section.icon} class="h-6 w-6 text-muted-foreground group-hover:text-primary" />
-							<h2 class="text-xl font-semibold text-foreground">{section.title}</h2>
+							<Icon name={note.data.icon} class="h-6 w-6 text-muted-foreground group-hover:text-primary" />
+							<h2 class="text-xl font-semibold text-foreground">{note.data.title}</h2>
 						</div>
-						<p class="text-sm text-muted-foreground">{section.description}</p>
+						<p class="text-sm text-muted-foreground">{note.data.description}</p>
 					</a>
 				))
 			}

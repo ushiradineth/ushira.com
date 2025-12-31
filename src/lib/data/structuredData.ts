@@ -66,3 +66,20 @@ export function getArticleSchema(post: CollectionEntry<"blog">) {
 	};
 	return articleStructuredData;
 }
+
+export function getWebPageSchema(url: string, title: string, description: string) {
+	return {
+		"@context": "https://schema.org",
+		"@type": "WebPage",
+		url,
+		name: title,
+		description,
+		author: {
+			"@type": "Person",
+			name: "Ushira Dineth",
+			url: import.meta.env.SITE,
+			image: import.meta.env.SITE + avatar.src,
+		},
+		inLanguage: "en_US",
+	};
+}

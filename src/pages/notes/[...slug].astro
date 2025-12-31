@@ -1,0 +1,46 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { getWebPageSchema, mainWebsite, personSchema } from "../../lib/data/structuredData";
+
+interface Props {
+	note: CollectionEntry<"notes">;
+}
+
+export async function getStaticPaths() {
+	const notes = await getCollection("notes");
+
+	return notes.map((note: CollectionEntry<"notes">) => ({
+		params: { slug: note.slug },
+		props: { note },
+	}));
+}
+
+const { note } = Astro.props;
+const { Content } = await note.render();
+
+const url = `${import.meta.env.SITE}/notes/${note.slug}/`;
+const webPageSchema = getWebPageSchema(url, note.data.title, note.data.description);
+const jsonLd = JSON.stringify({
+	"@context": "https://schema.org",
+	"@graph": [webPageSchema, mainWebsite, personSchema],
+});
+---
+
+<Layout title={note.data.title} description={note.data.description} jsonLd={jsonLd}>
+	<div class="space-y-8">
+		<div class="space-y-3">
+			<a href="/notes/" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+				<Icon name="mdi:arrow-left" class="h-4 w-4" />
+				Back to Notes
+			</a>
+			<h1 class="text-4xl font-bold text-foreground">{note.data.title}</h1>
+			<p class="text-lg text-muted-foreground">{note.data.description}</p>
+		</div>
+
+		<div class="space-y-4">
+			<Content />
+		</div>
+	</div>
+</Layout>

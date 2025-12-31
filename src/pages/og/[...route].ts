@@ -14,11 +14,18 @@ const pages = {
 	blog: {
 		title: "blog",
 	},
+	notes: {
+		title: "notes",
+	},
 };
 
 const blogPosts: CollectionEntry<"blog">[] = await getCollection("blog");
+const notePosts: CollectionEntry<"notes">[] = await getCollection("notes");
 
 const blogs = Object.fromEntries(blogPosts.map(({ slug, data }) => [`blog/${slug}`, { title: data.title, description: data.description }]));
+const notes = Object.fromEntries(
+	notePosts.map(({ slug, data }) => [`notes/${slug}`, { title: data.title, description: data.description }]),
+);
 
 export const { getStaticPaths, GET } = OGImageRoute({
 	param: "route",
@@ -26,6 +33,7 @@ export const { getStaticPaths, GET } = OGImageRoute({
 	pages: {
 		...pages,
 		...blogs,
+		...notes,
 	},
 
 	getImageOptions: (_, page) => ({
