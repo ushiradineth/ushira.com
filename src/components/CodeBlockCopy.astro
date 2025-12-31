@@ -92,7 +92,8 @@
 
 			// Create copy button
 			const button = document.createElement("button");
-			button.className = "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-muted-foreground bg-background border border-border rounded-md cursor-pointer transition-all duration-150 hover:bg-secondary hover:text-foreground active:scale-95";
+			button.className =
+				"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-muted-foreground bg-background border border-border rounded-md cursor-pointer transition-all duration-150 hover:bg-secondary hover:text-foreground active:scale-95";
 			button.innerHTML = `${copyIcon}<span>Copy</span>`;
 			button.setAttribute("aria-label", "Copy to clipboard");
 
@@ -104,11 +105,13 @@
 				try {
 					await navigator.clipboard.writeText(code.textContent || "");
 					button.innerHTML = `${checkIcon}<span>Copied!</span>`;
-					button.className = "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-background bg-chart-1 border border-chart-1 rounded-md cursor-pointer transition-all duration-150";
+					button.className =
+						"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-background bg-chart-1 border border-chart-1 rounded-md cursor-pointer transition-all duration-150";
 
 					setTimeout(() => {
 						button.innerHTML = `${copyIcon}<span>Copy</span>`;
-						button.className = "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-muted-foreground bg-background border border-border rounded-md cursor-pointer transition-all duration-150 hover:bg-secondary hover:text-foreground active:scale-95";
+						button.className =
+							"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-muted-foreground bg-background border border-border rounded-md cursor-pointer transition-all duration-150 hover:bg-secondary hover:text-foreground active:scale-95";
 					}, 2000);
 				} catch (err) {
 					console.error("Failed to copy:", err);

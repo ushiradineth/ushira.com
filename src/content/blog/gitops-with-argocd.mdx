@@ -6,12 +6,12 @@ date: 2024-02-20
 tags: ["gitops", "argocd", "terraform", "kubernetes", "cicd"]
 ---
 
-import FigureImage from '../../components/FigureImage.astro';
-import gitopsFlow from '../../images/blog/gitops-with-argocd/gitops-flow.png';
-import argocdFlow from '../../images/blog/gitops-with-argocd/argocd-flow.png';
-import argocdImageUpdaterFlow from '../../images/blog/gitops-with-argocd/argocd-image-updater-flow.png';
-import reconciliationLoop from '../../images/blog/gitops-with-argocd/reconciliation-loop.png';
-import terraformFlow from '../../images/blog/gitops-with-argocd/terraform-flow.png';
+import FigureImage from "../../components/FigureImage.astro";
+import gitopsFlow from "../../images/blog/gitops-with-argocd/gitops-flow.png";
+import argocdFlow from "../../images/blog/gitops-with-argocd/argocd-flow.png";
+import argocdImageUpdaterFlow from "../../images/blog/gitops-with-argocd/argocd-image-updater-flow.png";
+import reconciliationLoop from "../../images/blog/gitops-with-argocd/reconciliation-loop.png";
+import terraformFlow from "../../images/blog/gitops-with-argocd/terraform-flow.png";
 
 ## Prerequisites
 
@@ -27,7 +27,11 @@ Before continuing in this article, you should have the following:
 
 GitOps is a methodology that leverages [Git](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F) to manage and automate the deployment and configuration of infrastructure and applications. The core idea is to declare the desired state of the system in a Git repository, and a tool, such as [ArgoCD](https://argo-cd.readthedocs.io/en/stable/), continuously reconciles the actual state with the declared state.
 
-<FigureImage src={gitopsFlow} alt="Diagram explaining the GitOps workflow" caption="Figure 1: GitOps workflow - declarative configuration management with Git as source of truth." />
+<FigureImage
+	src={gitopsFlow}
+	alt="Diagram explaining the GitOps workflow"
+	caption="Figure 1: GitOps workflow - declarative configuration management with Git as source of truth."
+/>
 
 ### Key Concepts of GitOps
 
@@ -36,7 +40,11 @@ GitOps is a methodology that leverages [Git](https://git-scm.com/book/en/v2/Get
 - **Automated Synchronization**: Tools like ArgoCD continuously monitor the Git repository for changes. Upon detecting changes, they automatically synchronize the actual state of the system with the declared state in Git.
 - **Reconciliation Loop**: The continuous reconciliation loop ensures the deployed system always converges to the desired state declared in the Git repository.
 
-<FigureImage src={reconciliationLoop} alt="Diagram of the GitOps reconciliation loop" caption="Figure 2: Reconciliation loop - continuous synchronization between desired and actual state." />
+<FigureImage
+	src={reconciliationLoop}
+	alt="Diagram of the GitOps reconciliation loop"
+	caption="Figure 2: Reconciliation loop - continuous synchronization between desired and actual state."
+/>
 
 ### Strategies of GitOps
 
@@ -48,7 +56,11 @@ GitOps strategies dictate how infrastructure and applications are managed using 
 - Automated processes detect changes and apply them to the target environment.
 - For example, Terraform applies infrastructure changes defined in configuration files stored in a Git repository.
 
-<FigureImage src={terraformFlow} alt="Diagram of the Terraform push-based GitOps flow" caption="Figure 3: Terraform push-based flow - automated infrastructure changes triggered by Git commits." />
+<FigureImage
+	src={terraformFlow}
+	alt="Diagram of the Terraform push-based GitOps flow"
+	caption="Figure 3: Terraform push-based flow - automated infrastructure changes triggered by Git commits."
+/>
 
 #### Pull Strategy
 
@@ -77,7 +89,11 @@ GitOps strategies dictate how infrastructure and applications are managed using 
 
 Here’s how it works:
 
-<FigureImage src={argocdFlow} alt="Diagram of the ArgoCD pull-based GitOps flow" caption="Figure 4: ArgoCD pull-based flow - continuous monitoring and synchronization from Git to Kubernetes cluster." />
+<FigureImage
+	src={argocdFlow}
+	alt="Diagram of the ArgoCD pull-based GitOps flow"
+	caption="Figure 4: ArgoCD pull-based flow - continuous monitoring and synchronization from Git to Kubernetes cluster."
+/>
 
 ArgoCD takes declarative configuration as a core principle, and it achieves this through the use of custom resources like Application and ApplicationSet. These resources allow users to create application configurations in a declarative manner. Check out the sample Application below and for further information, refer to [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/).
 
@@ -144,13 +160,11 @@ The provided setup will deploy the ArgoCD Example App, utilizing a designated Gi
 In addition, the following options are used to ensure precision and control through Sync Policies in ArgoCD:
 
 - **Automated Sync:**
-
   - `prune`: Removes resources from the cluster that are no longer defined in the Git repository.
   - `selfHeal`: Attempts to bring the cluster state in line with the desired state.
   - `allowEmpty`: Prevents synchronization if the application source is empty.
 
 - **Sync Options:**
-
   - `Validate = true`: Validates the manifests before applying them to the cluster.
   - `PrunePropagationPolicy = foreground`: Ensures that pruning occurs in the foreground.
   - `CreateNamespace = true`: Creates the specified namespace if it doesn’t exist.
@@ -170,7 +184,11 @@ In addition, the following options are used to ensure precision and control thro
 
 [Argo Image Updater](https://argocd-image-updater.readthedocs.io/en/stable/) is an extension for ArgoCD that automates the updating of container images in Kubernetes manifests. This tool is vital for maintaining the latest versions of application images and ensuring seamless deployments across environments. Here’s how it works:
 
-<FigureImage src={argocdImageUpdaterFlow} alt="Diagram of the ArgoCD Image Updater workflow" caption="Figure 5: ArgoCD Image Updater flow - automated container image updates in Kubernetes manifests." />
+<FigureImage
+	src={argocdImageUpdaterFlow}
+	alt="Diagram of the ArgoCD Image Updater workflow"
+	caption="Figure 5: ArgoCD Image Updater flow - automated container image updates in Kubernetes manifests."
+/>
 
 ### Install Argo Image Updater Helm Chart
 

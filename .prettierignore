@@ -1,0 +1,7 @@
+dist
+.astro
+node_modules
+.vercel
+.conform.*
+pnpm-lock.yaml
+package-lock.json

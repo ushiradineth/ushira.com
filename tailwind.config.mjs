@@ -295,22 +295,23 @@ export default {
 	plugins: [
 		typography,
 		({ addBase, theme }) => {
-				addBase({
+			addBase({
 				// Smooth scrolling with offset for fixed header
 				html: {
 					scrollBehavior: "smooth",
 					scrollPaddingTop: theme("spacing.header-offset"),
 					letterSpacing: "var(--tracking-normal)",
+					scrollbarGutter: "stable",
 				},
 				// Dark mode color-scheme for form controls/scrollbars
 				".dark": {
 					colorScheme: "dark",
 				},
-					// Blog heading styles for anchor links
-					"article h2, article h3, article h4, article h5, article h6": {
-						position: "relative",
-						scrollMarginTop: theme("spacing.header-offset"),
-					},
+				// Blog heading styles for anchor links
+				"article h2, article h3, article h4, article h5, article h6": {
+					position: "relative",
+					scrollMarginTop: theme("spacing.header-offset"),
+				},
 				// Group hover effect for heading anchor links
 				"article h2:hover .anchor-link, article h3:hover .anchor-link, article h4:hover .anchor-link, article h5:hover .anchor-link, article h6:hover .anchor-link":
 					{

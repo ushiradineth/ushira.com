@@ -13,7 +13,8 @@ const { label, post } = Astro.props;
 <a
 	href={`/blog/${post.slug}`}
 	class="group block rounded-lg px-4 py-0 no-underline ring-1 ring-border transition-all hover:ring-primary"
-	aria-label={`Read ${label.toLowerCase()} post: ${post.data.title}`}>
+	aria-label={`Read ${label.toLowerCase()} post: ${post.data.title}`}
+>
 	<p class="text-xs text-muted-foreground">{label}</p>
 	<p class="text-base font-semibold text-foreground transition group-hover:text-primary">
 		{post.data.title}
