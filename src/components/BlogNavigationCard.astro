@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import Badge from "./Badge.astro";
 
 export interface Props {
 	label: string;
@@ -12,21 +11,12 @@ const { label, post } = Astro.props;
 
 <a
 	href={`/blog/${post.slug}`}
-	class="group block rounded-lg px-4 py-0 no-underline ring-1 ring-border transition-all hover:ring-primary"
+	class="group block border-l border-border pl-3 no-underline"
 	aria-label={`Read ${label.toLowerCase()} post: ${post.data.title}`}
 >
-	<p class="text-xs text-muted-foreground">{label}</p>
-	<p class="text-base font-semibold text-foreground transition group-hover:text-primary">
+	<p class="text-xs uppercase tracking-[0.05em] text-muted-foreground">{label}</p>
+	<p class="text-lg font-medium text-foreground transition-colors group-hover:text-muted-foreground">
 		{post.data.title}
 	</p>
-	{
-		post.data.tags?.length && (
-			<div class="flex flex-wrap gap-1">
-				{post.data.tags.map((tag) => (
-					<Badge>#{tag}</Badge>
-				))}
-			</div>
-		)
-	}
 	<p class="line-clamp-2 text-sm text-muted-foreground">{post.data.description}</p>
 </a>

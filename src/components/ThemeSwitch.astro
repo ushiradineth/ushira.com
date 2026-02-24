@@ -3,49 +3,61 @@
 </span>
 
 <script>
-	// Initialize the theme on client load
-	window.onload = init;
+	const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-	// Initialise the theme on page swap (Required for ViewTransition)
-	document.addEventListener("astro:after-swap", init);
-
-	// Listen for changes to the prefers-color-scheme
-	window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
-		setup(event.matches ? "dark" : "light");
-	});
-
-	// Set the theme, prioritizing local storage  system preference
 	function init() {
 		const local = localStorage.getItem("theme");
-		const system = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+		const system = mediaQuery.matches ? "dark" : "light";
 		setup(local ?? system);
 	}
 
-	// Setup the theme switcher
 	function setup(theme: string) {
 		const themeSwitch = document.getElementById("astro-color-scheme-switch");
-		const eventType = "click";
 		const element = themeSwitch?.querySelector("button");
 		if (!element) {
 			throw new Error(`<button> element must be present inside 'themeSwitch' or change the 'strategy' attribute`);
 		}
 
 		element.value = theme;
+		applyTheme(theme);
 
-		update(theme);
-
-		element.addEventListener(eventType, (event) => {
-			const button = event.currentTarget as HTMLButtonElement;
-			const theme = button.value === "dark" ? "light" : "dark";
-			button.value = theme;
-			update(theme);
-		});
+		if (element.dataset.bound !== "true") {
+			element.dataset.bound = "true";
+			element.addEventListener("click", (event) => {
+				const button = event.currentTarget as HTMLButtonElement;
+				const theme = button.value === "dark" ? "light" : "dark";
+				button.value = theme;
+				setTheme(theme, true);
+			});
+		}
 	}
 
-	// Update the theme
-	function update(value: string) {
-		localStorage.setItem("theme", value);
+	function applyTheme(value: string) {
 		document.documentElement.classList.remove("light", "dark");
 		document.documentElement.classList.add(value);
 	}
+
+	function setTheme(value: string, animate = false) {
+		localStorage.setItem("theme", value);
+		if (animate && document.startViewTransition) {
+			document.documentElement.classList.add("theme-switching");
+			const transition = document.startViewTransition(() => {
+				applyTheme(value);
+			});
+			transition.finished.finally(() => {
+				document.documentElement.classList.remove("theme-switching");
+			});
+			return;
+		}
+
+		applyTheme(value);
+	}
+
+	window.addEventListener("load", init);
+	document.addEventListener("astro:after-swap", init);
+	mediaQuery.addEventListener("change", (event) => {
+		const local = localStorage.getItem("theme");
+		if (local) return;
+		applyTheme(event.matches ? "dark" : "light");
+	});
 </script>

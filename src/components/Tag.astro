@@ -1,6 +1,7 @@
 ---
 const { class: className, ...rest } = Astro.props;
-const classes = `rounded text-sm font-mono font-semibold hover:text-primary hover:underline underline-offset-4 ${className || ""}`.trim();
+const classes =
+	`text-xs font-medium text-muted-foreground transition-colors hover:text-foreground hover:underline underline-offset-4 ${className || ""}`.trim();
 ---
 
 <button {...rest} class={classes}>

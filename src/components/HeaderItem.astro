@@ -1,17 +1,20 @@
 ---
-import Underline from "./Underline.astro";
-const underline = "underline underline-offset-8";
-
 interface Props {
 	href: string;
 	target?: string;
 }
 
 const { href, target } = Astro.props;
+const isActive = Astro.url.pathname === href;
 ---
 
-<a href={href} target={target} class={Astro.url.pathname === href ? underline : "group"}>
-	<Underline>
-		<slot />
-	</Underline>
+<a
+	href={href}
+	target={target}
+	class:list={[
+		"underline-offset-4 transition-colors hover:text-foreground hover:underline",
+		isActive ? "text-foreground underline" : "text-muted-foreground",
+	]}
+>
+	<slot />
 </a>

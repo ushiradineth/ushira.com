@@ -7,20 +7,25 @@
 	.astro-code,
 	.astro-code span {
 		color: var(--shiki-light) !important;
-		background-color: var(--shiki-light-bg) !important;
+		background-color: transparent !important;
 	}
 
 	.dark .astro-code,
 	.dark .astro-code span {
 		color: var(--shiki-dark) !important;
-		background-color: var(--shiki-dark-bg) !important;
+		background-color: transparent !important;
 	}
 
 	/* Code block wrapper tweaks */
+	.code-block-wrapper {
+		margin: 0.5rem 0;
+	}
+
 	.code-block-wrapper pre {
 		margin: 0;
 		border-radius: 0;
 		border: none;
+		padding: 0.5rem 0;
 	}
 
 	/* Copy button SVG sizing */
@@ -79,21 +84,20 @@
 
 			// Create wrapper
 			const wrapper = document.createElement("div");
-			wrapper.className = "code-block-wrapper relative overflow-hidden rounded-lg border border-border";
+			wrapper.className = "code-block-wrapper border-l border-border pl-3";
 
 			// Create header
 			const header = document.createElement("div");
-			header.className = "flex items-center justify-between px-4 py-3 bg-muted border-b border-border";
+			header.className = "flex items-center justify-between pb-1";
 
 			// Create title element
 			const titleElement = document.createElement("div");
-			titleElement.className = "text-sm font-medium font-mono text-muted-foreground";
+			titleElement.className = "text-xs font-medium uppercase tracking-[0.05em] text-muted-foreground";
 			titleElement.textContent = title;
 
 			// Create copy button
 			const button = document.createElement("button");
-			button.className =
-				"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-muted-foreground bg-background border border-border rounded-md cursor-pointer transition-all duration-150 hover:bg-secondary hover:text-foreground active:scale-95";
+			button.className = "flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground";
 			button.innerHTML = `${copyIcon}<span>Copy</span>`;
 			button.setAttribute("aria-label", "Copy to clipboard");
 
@@ -105,16 +109,13 @@
 				try {
 					await navigator.clipboard.writeText(code.textContent || "");
 					button.innerHTML = `${checkIcon}<span>Copied!</span>`;
-					button.className =
-						"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-background bg-chart-1 border border-chart-1 rounded-md cursor-pointer transition-all duration-150";
+					button.className = "flex items-center gap-1 text-xs text-foreground transition-colors";
 
 					setTimeout(() => {
 						button.innerHTML = `${copyIcon}<span>Copy</span>`;
-						button.className =
-							"flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium font-sans text-muted-foreground bg-background border border-border rounded-md cursor-pointer transition-all duration-150 hover:bg-secondary hover:text-foreground active:scale-95";
+						button.className = "flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground";
 					}, 2000);
 				} catch (err) {
-					console.error("Failed to copy:", err);
 					button.innerHTML = `${copyIcon}<span>Failed</span>`;
 					setTimeout(() => {
 						button.innerHTML = `${copyIcon}<span>Copy</span>`;

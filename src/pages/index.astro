@@ -3,6 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { formatDate, isWithinDays } from "../lib/utils";
 import Contact from "../components/Contact.astro";
+import HomeLinkGroup from "../components/HomeLinkGroup.astro";
+import { homeAppGroups, homeLanguages, homeMainStack } from "../lib/data/home";
 
 const blogs = await getCollection("blog");
 const latestNewBlog =
@@ -17,54 +19,192 @@ const latestNewBlog =
 ---
 
 <Layout title="Ushira Dineth" description="ushira.com">
+	<section class="space-y-4">
+		<h1 class="sr-only">Ushira Dineth</h1>
+		<p class="text-foreground">
+			Infrastructure and Backend engineer @
+			<a href="https://surge.global/" class="underline underline-offset-4 transition-colors hover:text-muted-foreground">surge.global</a>
+		</p>
+		<ul class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+			{homeMainStack.map((item) => <li>{item}</li>)}
+		</ul>
+	</section>
+
+	<section class="space-y-3">
+		<h2 class="text-sm font-medium uppercase tracking-[0.05em] text-muted-foreground">Apps</h2>
+		{homeAppGroups.map((group) => <HomeLinkGroup group={group} />)}
+	</section>
+
+	<section class="space-y-3">
+		<h2 class="text-sm font-medium uppercase tracking-[0.05em] text-muted-foreground">Languages</h2>
+		<ul class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+			{homeLanguages.map((language) => <li>{language}</li>)}
+		</ul>
+	</section>
+
 	{
 		latestNewBlog && (
-			<section class="mb-6 flex items-center gap-2 rounded-lg border border-chart-1/40 bg-chart-1/5 px-4 py-3 text-sm text-muted-foreground">
-				<span class="inline-flex items-center rounded bg-chart-1 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-background">
-					New
-				</span>
-				<a class="flex-1 font-semibold text-chart-1 hover:underline" href={`/blog/${latestNewBlog.slug}/`}>
+			<p class="text-sm text-muted-foreground">
+				Latest post:{" "}
+				<a class="underline underline-offset-4 hover:text-foreground" href={`/blog/${latestNewBlog.slug}/`}>
 					{latestNewBlog.data.title}
 				</a>
-				<span class="text-xs uppercase tracking-wide">{latestNewBlog.data.date ? formatDate(latestNewBlog.data.date) : ""}</span>
-			</section>
+				({latestNewBlog.data.date ? formatDate(latestNewBlog.data.date) : ""})
+			</p>
 		)
 	}
 
-	<div class="flex flex-col gap-8 md:gap-16">
-		<div class="space-y-6 text-foreground text-xl">
-			<p>
-				I’m a software engineer based in Sri Lanka, working on distributed systems, infrastructure, and product engineering. Currently at{
-					" "
-				}
-				<a
-					href="https://surge.global/"
-					class="font-medium text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary"
-				>
-					Surge Global, Colombo
-				</a>.
-			</p>
+	<Contact />
 
-			<p>
-				I work primarily with Kubernetes, Go, TypeScript, and Terraform. I care about reliability, reproducibility, and systems that are
-				boring by design. My goal is to automate myself out of work.
-			</p>
-
-			<p>
-				More context, opinions, and work-in-progress notes live in{" "}
-				<a href="/notes/" class="font-medium text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary">
-					the notes
-				</a>.
-			</p>
-
-			<p>
-				Technical writing lives on{" "}
-				<a href="/blog/" class="font-medium text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary">
-					the blog
-				</a>.
-			</p>
-		</div>
-
-		<Contact />
+	<div id="link-preview" class="preview-card" aria-hidden="true">
+		<img id="link-preview-image" alt="" loading="lazy" />
 	</div>
 </Layout>
+
+<script>
+	function mshot(url: string) {
+		return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=640`;
+	}
+
+	function initLinkPreview() {
+		const preview = document.getElementById("link-preview");
+		const image = document.getElementById("link-preview-image") as HTMLImageElement | null;
+		const links = Array.from(document.querySelectorAll<HTMLAnchorElement>(".preview-link[data-preview-url]"));
+		if (!preview || !image || links.length === 0) return;
+
+		const cache = ((window as typeof window & { __linkPreviewCache?: Map<string, string> }).__linkPreviewCache ??= new Map());
+		let currentToken = 0;
+
+		const position = (event: MouseEvent) => {
+			const x = Math.min(window.innerWidth - 340, event.clientX + 20);
+			const y = Math.min(window.innerHeight - 240, event.clientY + 20);
+			preview.style.left = `${Math.max(16, x)}px`;
+			preview.style.top = `${Math.max(16, y)}px`;
+		};
+
+		const preload = (url: string) => {
+			const src = mshot(url);
+			if (cache.has(src)) return Promise.resolve(src);
+			return new Promise<string>((resolve) => {
+				const preloader = new Image();
+				preloader.decoding = "async";
+				preloader.src = src;
+				preloader.onload = () => {
+					cache.set(src, src);
+					resolve(src);
+				};
+				preloader.onerror = () => resolve(src);
+			});
+		};
+
+		const loadPreview = (url: string, token: number) => {
+			const src = mshot(url);
+
+			if (cache.has(src)) {
+				if (token !== currentToken) return;
+				image.src = src;
+				image.classList.add("ready");
+				preview.classList.add("visible");
+				preview.classList.remove("loading");
+				return;
+			}
+
+			void preload(url).then((resolvedSrc) => {
+				if (token !== currentToken) return;
+				image.src = resolvedSrc;
+				image.classList.add("ready");
+				preview.classList.add("visible");
+				preview.classList.remove("loading");
+			});
+		};
+
+		links.forEach((link) => {
+			const previewUrl = link.dataset.previewUrl;
+			if (!previewUrl) return;
+			void preload(previewUrl);
+		});
+
+		links.forEach((link) => {
+			if (link.dataset.previewBound === "true") return;
+			link.dataset.previewBound = "true";
+
+			const previewUrl = link.dataset.previewUrl;
+			if (!previewUrl) return;
+
+			link.addEventListener("mouseenter", (event) => {
+				currentToken += 1;
+				image.classList.remove("ready");
+				preview.classList.add("loading");
+				position(event as MouseEvent);
+				loadPreview(previewUrl, currentToken);
+			});
+
+			link.addEventListener("mousemove", (event) => {
+				position(event as MouseEvent);
+			});
+
+			link.addEventListener("mouseleave", () => {
+				currentToken += 1;
+				preview.classList.remove("visible");
+				preview.classList.remove("loading");
+				image.classList.remove("ready");
+				image.removeAttribute("src");
+			});
+		});
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initLinkPreview);
+	} else {
+		initLinkPreview();
+	}
+
+	document.addEventListener("astro:page-load", initLinkPreview);
+</script>
+
+<style is:global>
+	.preview-card {
+		position: fixed;
+		z-index: 1000;
+		pointer-events: none;
+		opacity: 0;
+		transform: translateY(8px);
+		transition:
+			opacity 0.15s ease,
+			transform 0.15s ease;
+		border-radius: 4px;
+		overflow: hidden;
+		box-shadow: 0 8px 32px rgb(0 0 0 / 0.12);
+		border: 1px solid var(--border);
+		background: var(--secondary);
+		min-width: 320px;
+		min-height: 213px;
+	}
+
+	.preview-card.visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.preview-card img {
+		display: block;
+		width: 320px;
+		height: 213px;
+		object-fit: cover;
+		background: var(--secondary);
+		opacity: 0;
+		transition: opacity 0.12s ease;
+	}
+
+	.preview-card.loading {
+		background: var(--muted);
+	}
+
+	.preview-card img.ready {
+		opacity: 1;
+	}
+
+	.dark .preview-card {
+		box-shadow: 0 8px 32px rgb(0 0 0 / 0.4);
+	}
+</style>

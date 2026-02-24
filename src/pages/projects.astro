@@ -1,5 +1,4 @@
 ---
-import Project from "../components/Project.astro";
 import Title from "../components/Title.astro";
 import Layout from "../layouts/Layout.astro";
 import { projects } from "../lib/data/projects";
@@ -11,15 +10,39 @@ const jsonLd = getWebPageJsonLd(url, "Projects", description);
 ---
 
 <Layout title="Projects" description={description} jsonLd={jsonLd}>
-	<Title>Projects</Title>
-	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-		{projects.map((project) => <Project project={project} />)}
-	</div>
+	<section class="space-y-3">
+		<Title>Projects</Title>
+		<p class="text-sm text-muted-foreground">Selected projects I maintain or actively iterate on.</p>
+	</section>
 
-	<div class="mt-12 border-t border-border/30 pt-8">
-		<p class="text-center text-sm text-muted-foreground/70">
-			Work projects and other minor projects are not included. These projects represent what I actively work on, maintain, or plan to
-			develop in the future.
-		</p>
-	</div>
+	<section class="space-y-4 text-sm">
+		{
+			projects.map((project) => {
+				const primaryLink = project.links[0];
+				return (
+					<article class="space-y-1 border-b border-border pb-4 last:border-0">
+						<div class="flex flex-wrap items-baseline gap-2">
+							<h2 class="font-medium text-foreground">{project.title}</h2>
+							<span class="text-xs text-muted-foreground">{project.period}</span>
+						</div>
+						<p class="text-muted-foreground">{project.description}</p>
+						<div class="flex flex-wrap items-center gap-2">
+							{primaryLink && (
+								<a
+									href={primaryLink.href}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="underline underline-offset-4 hover:text-foreground"
+								>
+									project link
+								</a>
+							)}
+							<span class="text-muted-foreground">-</span>
+							<span class="text-xs text-muted-foreground">{project.technologies.map((tech) => tech.name).join(", ")}</span>
+						</div>
+					</article>
+				);
+			})
+		}
+	</section>
 </Layout>

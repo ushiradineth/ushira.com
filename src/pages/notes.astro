@@ -1,7 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Title from "../components/Title.astro";
-import { Icon } from "astro-icon/components";
 import { getWebPageJsonLd } from "../lib/data/structuredData";
 import { getCollection } from "astro:content";
 
@@ -13,27 +12,23 @@ const notes = (await getCollection("notes")).sort((a, b) => a.data.order - b.dat
 ---
 
 <Layout title="Notes" description={description} jsonLd={jsonLd}>
-	<div class="space-y-8">
-		<div class="space-y-3">
-			<Title>Notes</Title>
-			<p class="text-lg text-muted-foreground">Personal opinions, preferences, and thoughts on software engineering and work.</p>
-		</div>
+	<section class="space-y-3">
+		<Title>Notes</Title>
+		<p class="text-sm text-muted-foreground">Personal preferences, principles, and working notes.</p>
+	</section>
 
-		<div class="grid gap-4 sm:grid-cols-2">
-			{
-				notes.map((note) => (
-					<a
-						href={`/notes/${note.slug}/`}
-						class="group flex flex-col gap-3 rounded-lg border border-border bg-background p-6 transition-all hover:border-primary hover:bg-muted/30"
-					>
-						<div class="flex items-center gap-3">
-							<Icon name={note.data.icon} class="h-6 w-6 text-muted-foreground group-hover:text-primary" />
-							<h2 class="text-xl font-semibold text-foreground">{note.data.title}</h2>
-						</div>
-						<p class="text-sm text-muted-foreground">{note.data.description}</p>
-					</a>
-				))
-			}
-		</div>
-	</div>
+	<section class="space-y-3 text-sm">
+		{
+			notes.map((note) => (
+				<article class="border-b border-border pb-3 last:border-0">
+					<h2>
+						<a href={`/notes/${note.slug}/`} class="font-medium text-foreground underline-offset-4 hover:underline">
+							{note.data.title}
+						</a>
+					</h2>
+					<p class="text-muted-foreground">{note.data.description}</p>
+				</article>
+			))
+		}
+	</section>
 </Layout>

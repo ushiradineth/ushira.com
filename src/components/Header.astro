@@ -1,23 +1,19 @@
 ---
 import HeaderItem from "./HeaderItem.astro";
 import Theme from "./Theme.astro";
-import Title from "./Title.astro";
 import Logo from "./Logo.astro";
 ---
 
-<div id="header" class="pb-16">
-	<div
-		class="fixed z-10 flex h-16 w-full max-w-content items-center justify-between gap-4 border-b border-border bg-background/30 p-4 backdrop-blur"
-	>
-		<a href="/" target="_self">
-			<Title class="hidden sm:inline">Ushira Dineth</Title>
-			<Logo class="inline sm:hidden" height={32} width={32} />
+<div id="header" class="pb-2">
+	<div class="flex items-center justify-between gap-4">
+		<a href="/" target="_self" class="text-base font-medium text-foreground">
+			<span class="hidden sm:inline">Ushira Dineth</span>
+			<Logo class="inline sm:hidden" height={28} width={28} />
 		</a>
-		<div class="flex items-center gap-4">
+		<div class="flex items-center gap-3 text-sm">
 			<HeaderItem href="/notes/">notes</HeaderItem>
 			<HeaderItem href="/projects/">projects</HeaderItem>
 			<HeaderItem href="/blog/">blog</HeaderItem>
-			<span class="text-muted">|</span>
 			<Theme />
 		</div>
 	</div>

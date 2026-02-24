@@ -2,18 +2,18 @@
 import ThemeSwitch from "./ThemeSwitch.astro";
 ---
 
-<div class="flex transition-all duration-500 hover:rotate-45">
+<div class="flex">
 	<ThemeSwitch strategy="button">
 		<button
 			name="Theme Toggle"
 			title="Theme Toggle"
 			aria-label="Theme Toggle"
 			aria-labelledby="Theme Toggle"
-			class="flex rounded-lg text-sm"
+			class="flex text-muted-foreground transition-colors hover:text-foreground"
 		>
 			<svg
 				id="theme-toggle-light-icon"
-				class="-z-10 hidden h-5 w-5 dark:inline"
+				class="hidden h-4 w-4 dark:inline"
 				fill="currentColor"
 				viewBox="0 0 20 20"
 				xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +24,7 @@ import ThemeSwitch from "./ThemeSwitch.astro";
 			>
 			<svg
 				id="theme-toggle-dark-icon"
-				class="-z-10 h-5 w-5 dark:hidden"
+				class="h-4 w-4 dark:hidden"
 				fill="currentColor"
 				viewBox="0 0 20 20"
 				xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg

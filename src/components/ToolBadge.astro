@@ -9,7 +9,7 @@ interface Props {
 const { icon, name } = Astro.props;
 ---
 
-<span class="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-4 py-2.5 text-base text-foreground">
-	<Icon name={icon} class="h-5 w-5 text-muted-foreground" />
+<span class="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+	<Icon name={icon} class="h-4 w-4 text-muted-foreground" />
 	{name}
 </span>

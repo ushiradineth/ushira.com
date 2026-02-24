@@ -336,12 +336,6 @@ export default {
 					fontSize: theme("fontSize.icon"),
 					color: "var(--foreground)",
 				},
-				// Wakapi chart sizing
-				".wakapi-chart": {
-					width: "100%",
-					height: "auto",
-					display: "block",
-				},
 				// Hide scrollbar utility
 				".hide-scrollbar::-webkit-scrollbar": {
 					display: "none",

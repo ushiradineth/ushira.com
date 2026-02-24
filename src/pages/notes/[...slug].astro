@@ -25,17 +25,19 @@ const jsonLd = getWebPageJsonLd(url, note.data.title, note.data.description);
 ---
 
 <Layout title={note.data.title} description={note.data.description} jsonLd={jsonLd}>
-	<div class="space-y-8">
+	<div class="space-y-6">
 		<div class="space-y-3">
 			<a href="/notes/" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
 				<Icon name="mdi:arrow-left" class="h-4 w-4" />
 				Back to Notes
 			</a>
-			<h1 class="text-4xl font-bold text-foreground">{note.data.title}</h1>
-			<p class="text-lg text-muted-foreground">{note.data.description}</p>
+			<h1 class="text-2xl font-medium tracking-tight text-foreground">{note.data.title}</h1>
+			<p class="text-sm text-muted-foreground">{note.data.description}</p>
 		</div>
 
-		<div class="space-y-4">
+		<div
+			class="prose prose-sm max-w-none space-y-4 dark:prose-invert prose-headings:font-medium prose-headings:tracking-tight prose-h2:text-xl prose-h3:text-lg"
+		>
 			<Content />
 		</div>
 	</div>

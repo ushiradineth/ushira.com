@@ -2,13 +2,28 @@ import type { Project } from "../types";
 
 export const projects: Project[] = [
 	{
+		title: "lazytf",
+		period: "January 2026 – Present",
+		description: "A lazygit-style terminal UI for Terraform with workspace-aware execution and plan-first workflows.",
+		technologies: [
+			{ name: "Go", icon: "simple-icons:go", href: "https://go.dev" },
+			{ name: "Terraform", icon: "simple-icons:terraform", href: "https://www.terraform.io" },
+			{ name: "Bubble Tea", icon: "mdi:tea-outline", href: "https://github.com/charmbracelet/bubbletea" },
+			{ name: "Lip Gloss", icon: "mdi:palette-outline", href: "https://github.com/charmbracelet/lipgloss" },
+			{ name: "Charm", icon: "mdi:creation", href: "https://charm.sh" },
+		],
+		links: [{ label: "GitHub - lazytf", logo: "mdi:github", href: "https://github.com/ushiradineth/lazytf" }],
+	},
+	{
 		title: "kei",
-		period: "December 2025 – Present",
+		period: "Not started",
 		description:
 			"A modern, high-performance terminal UI for Kubernetes, built for operators and platform engineers who run real systems at scale.",
 		technologies: [
 			{ name: "Go", icon: "simple-icons:go", href: "https://go.dev" },
 			{ name: "Kubernetes", icon: "simple-icons:kubernetes", href: "https://kubernetes.io" },
+			{ name: "Bubble Tea", icon: "mdi:tea-outline", href: "https://github.com/charmbracelet/bubbletea" },
+			{ name: "Lip Gloss", icon: "mdi:palette-outline", href: "https://github.com/charmbracelet/lipgloss" },
 			{ name: "Charm", icon: "mdi:creation", href: "https://charm.sh" },
 		],
 		links: [{ label: "GitHub - kei", logo: "mdi:github", href: "https://github.com/ushiradineth/kei" }],
