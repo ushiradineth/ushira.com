@@ -14,6 +14,14 @@ import Logo from "./Logo.astro";
 			<HeaderItem href="/notes/">notes</HeaderItem>
 			<HeaderItem href="/projects/">projects</HeaderItem>
 			<HeaderItem href="/blog/">blog</HeaderItem>
+			<button
+				type="button"
+				data-command-open
+				aria-label="Open command palette"
+				class="inline-flex items-center rounded-md border border-border px-2 py-1 text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+			>
+				<kbd data-command-shortcut class="text-[11px] leading-none">⌘ K</kbd>
+			</button>
 			<Theme />
 		</div>
 	</div>

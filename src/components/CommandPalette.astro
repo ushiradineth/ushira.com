@@ -1,0 +1,458 @@
+---
+import { getCommandIndex } from "../lib/data/commandIndex";
+
+const commands = await getCommandIndex();
+const serializedCommands = JSON.stringify(commands);
+---
+
+<div data-command-palette>
+	<script is:inline type="application/json" data-command-palette-data set:html={serializedCommands} />
+	<div data-command-overlay class="fixed inset-0 z-50 hidden items-start justify-center bg-black/45 px-4 pt-[14vh] backdrop-blur-sm">
+		<div
+			data-command-dialog
+			role="dialog"
+			aria-modal="true"
+			aria-label="Command palette"
+			class="w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-background shadow-2xl"
+		>
+			<div class="border-b border-border px-4 py-3">
+				<input
+					data-command-input
+					type="text"
+					placeholder="Search pages, notes, and blog posts..."
+					class="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+					autocomplete="off"
+					spellcheck="false"
+					aria-label="Search commands"
+				/>
+			</div>
+			<ul data-command-results role="listbox" class="max-h-[50vh] overflow-y-auto p-2"></ul>
+			<div class="flex items-center justify-between border-t border-border px-4 py-2 text-xs text-muted-foreground">
+				<span class="flex items-center gap-1">
+					<kbd class="px-1.5 py-0.5 text-xs border rounded">↑</kbd>
+					<kbd class="px-1.5 py-0.5 text-xs border rounded">↓</kbd>
+					to move
+				</span>
+
+				<span class="flex items-center gap-1">
+					<kbd class="px-1.5 py-0.5 text-xs border rounded">Enter</kbd>
+					to open
+				</span>
+
+				<span class="flex items-center gap-1">
+					<kbd class="px-1.5 py-0.5 text-xs border rounded">#</kbd>
+					for tags
+				</span>
+
+				<span class="flex items-center gap-1">
+					<kbd class="px-1.5 py-0.5 text-xs border rounded">Esc</kbd>
+					to close
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	import { isMacOS } from "../lib/utils";
+
+	type PaletteCommand = {
+		id: string;
+		title: string;
+		description: string;
+		href: string;
+		group: string;
+		keywords: string[];
+	};
+
+	const CLEANUP_KEY = "__ushiraCommandPaletteCleanup";
+	const groupOrder = ["Pages", "Blog", "Notes"];
+
+	function escapeHtml(value: string): string {
+		return value
+			.replaceAll("&", "&amp;")
+			.replaceAll("<", "&lt;")
+			.replaceAll(">", "&gt;")
+			.replaceAll('"', "&quot;")
+			.replaceAll("'", "&#39;");
+	}
+
+	function fuzzyScore(query: string, target: string): number {
+		const normalizedQuery = query.trim().toLowerCase();
+		const normalizedTarget = target.trim().toLowerCase();
+
+		if (!normalizedQuery) return 1;
+		if (!normalizedTarget) return -1;
+
+		let score = 0;
+		let cursor = -1;
+		let streak = 0;
+
+		for (let i = 0; i < normalizedQuery.length; i++) {
+			const char = normalizedQuery[i];
+			const matchIndex = normalizedTarget.indexOf(char, cursor + 1);
+			if (matchIndex === -1) return -1;
+
+			const previousChar = normalizedTarget[matchIndex - 1];
+			const isWordStart = matchIndex === 0 || previousChar === " " || previousChar === "/" || previousChar === "-";
+			const isContiguous = matchIndex === cursor + 1;
+
+			streak = isContiguous ? streak + 1 : 1;
+			score += 8;
+			score += Math.max(0, 5 - matchIndex);
+			score += isWordStart ? 7 : 0;
+			score += streak > 1 ? streak * 2 : 0;
+
+			cursor = matchIndex;
+		}
+
+		if (normalizedTarget.includes(normalizedQuery)) score += 20;
+		if (normalizedTarget.startsWith(normalizedQuery)) score += 24;
+
+		return score;
+	}
+
+	function rankCommands(items: PaletteCommand[], query: string): PaletteCommand[] {
+		const hashtagPattern = /#([\p{L}\p{N}_-]+)/gu;
+		const normalizedTags = Array.from(query.matchAll(hashtagPattern)).map((match) => match[1].toLowerCase());
+
+		const tagFiltered =
+			normalizedTags.length === 0
+				? items
+				: items.filter((item) => {
+						const keywordSet = new Set(item.keywords.map((keyword) => keyword.toLowerCase()));
+						return normalizedTags.every((tag) => keywordSet.has(tag));
+					});
+
+		const normalizedQuery = query.replace(hashtagPattern, " ").trim();
+		if (!normalizedQuery) return tagFiltered;
+
+		return tagFiltered
+			.map((item) => ({
+				item,
+				score: fuzzyScore(normalizedQuery, `${item.title} ${item.description} ${item.group} ${item.href} ${item.keywords.join(" ")}`),
+			}))
+			.filter((entry) => entry.score >= 0)
+			.sort((a, b) => b.score - a.score)
+			.map((entry) => entry.item);
+	}
+
+	function initCommandPalette() {
+		const root = document.querySelector<HTMLElement>("[data-command-palette]");
+		if (!root) return;
+
+		const shortcutLabels = document.querySelectorAll<HTMLElement>("[data-command-shortcut]");
+		const isMac = isMacOS();
+		shortcutLabels.forEach((label) => {
+			label.textContent = isMac ? "⌘ K" : "Ctrl K";
+		});
+
+		const previousCleanup = (window as Window & { [CLEANUP_KEY]?: () => void })[CLEANUP_KEY];
+		if (typeof previousCleanup === "function") {
+			previousCleanup();
+		}
+
+		const dataElement = root.querySelector<HTMLScriptElement>("[data-command-palette-data]");
+		const overlayNode = root.querySelector<HTMLElement>("[data-command-overlay]");
+		const inputNode = root.querySelector<HTMLInputElement>("[data-command-input]");
+		const resultsNode = root.querySelector<HTMLUListElement>("[data-command-results]");
+
+		if (!dataElement || !overlayNode || !inputNode || !resultsNode) return;
+
+		const overlay = overlayNode;
+		const input = inputNode;
+		const results = resultsNode;
+
+		const commands = JSON.parse(dataElement.textContent ?? "[]") as PaletteCommand[];
+		const availableTags = Array.from(
+			new Set(
+				commands
+					.filter((command) => command.group === "Blog")
+					.flatMap((command) => command.keywords.map((keyword) => keyword.toLowerCase()))
+					.filter((keyword) => keyword !== "blog"),
+			),
+		).sort();
+		let filtered = [...commands];
+		let suggestedTags: string[] = [];
+		let isTagSuggestMode = false;
+		let activeIndex = 0;
+		let isOpen = false;
+
+		const triggerButtons = document.querySelectorAll<HTMLElement>("[data-command-open]");
+
+		function updateFiltered() {
+			const query = input.value.trim();
+			const activeTagMatch = input.value.match(/(?:^|\s)#([\p{L}\p{N}_-]*)$/u);
+			const selectedTags = Array.from(input.value.matchAll(/#([\p{L}\p{N}_-]+)/gu)).map((match) => match[1].toLowerCase());
+
+			isTagSuggestMode = activeTagMatch !== null;
+			if (isTagSuggestMode) {
+				const prefix = (activeTagMatch?.[1] ?? "").toLowerCase();
+				suggestedTags = availableTags
+					.filter((tag) => !selectedTags.includes(tag) && (prefix.length === 0 || tag.startsWith(prefix)))
+					.slice(0, 12);
+			} else {
+				suggestedTags = [];
+			}
+
+			const ranked = rankCommands(commands, query);
+			filtered = ranked.slice(0, 12);
+			const currentLength = isTagSuggestMode ? suggestedTags.length : filtered.length;
+			activeIndex = currentLength > 0 ? Math.min(activeIndex, currentLength - 1) : 0;
+			renderResults();
+		}
+
+		function renderResults() {
+			if (isTagSuggestMode) {
+				if (suggestedTags.length === 0) {
+					results.innerHTML = `
+						<li class="rounded-lg px-3 py-5 text-center text-sm text-muted-foreground">
+							No matching tags.
+						</li>
+					`;
+					return;
+				}
+
+				results.innerHTML = `
+					<li class="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/80">
+						Tags
+					</li>
+					${suggestedTags
+						.map((tag, index) => {
+							const isActive = index === activeIndex;
+							return `
+								<li role="option" aria-selected="${isActive}">
+									<button
+										type="button"
+										data-tag-suggestion-index="${index}"
+										class="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
+											isActive ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-muted"
+										}"
+									>
+										<span class="font-medium text-foreground">#${escapeHtml(tag)}</span>
+									</button>
+								</li>
+							`;
+						})
+						.join("")}
+				`;
+
+				const tagButtons = results.querySelectorAll<HTMLButtonElement>("[data-tag-suggestion-index]");
+				tagButtons.forEach((button) => {
+					button.addEventListener("click", () => {
+						const index = Number(button.dataset.tagSuggestionIndex);
+						navigateToIndex(index);
+					});
+				});
+				return;
+			}
+
+			if (filtered.length === 0) {
+				results.innerHTML = `
+					<li class="rounded-lg px-3 py-5 text-center text-sm text-muted-foreground">
+						No matches found.
+					</li>
+				`;
+				return;
+			}
+
+			const indexedCommands = filtered.map((command, index) => ({ command, index }));
+			const remainingGroups = Array.from(new Set(filtered.map((entry) => entry.group))).filter((group) => !groupOrder.includes(group));
+			const sortedGroups = [...groupOrder, ...remainingGroups];
+
+			results.innerHTML = sortedGroups
+				.map((group) => {
+					const groupItems = indexedCommands.filter((entry) => entry.command.group === group);
+					if (groupItems.length === 0) return "";
+
+					const groupHeader = `
+						<li class="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/80">
+							${escapeHtml(group)}
+						</li>
+					`;
+
+					const itemsMarkup = groupItems
+						.map(({ command, index }) => {
+							const isActive = index === activeIndex;
+							return `
+								<li role="option" aria-selected="${isActive}">
+									<button
+										type="button"
+										data-command-item
+										data-command-index="${index}"
+										class="flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
+											isActive ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-muted"
+										}"
+									>
+										<span class="min-w-0">
+											<span class="block truncate text-sm font-medium text-foreground">${escapeHtml(command.title)}</span>
+											<span class="mt-0.5 block truncate text-xs">${escapeHtml(command.description)}</span>
+										</span>
+									</button>
+								</li>
+							`;
+						})
+						.join("");
+
+					return `${groupHeader}${itemsMarkup}`;
+				})
+				.join("");
+
+			const resultButtons = results.querySelectorAll<HTMLButtonElement>("[data-command-item]");
+			resultButtons.forEach((button) => {
+				button.addEventListener("click", () => {
+					const index = Number(button.dataset.commandIndex);
+					navigateToIndex(index);
+				});
+			});
+		}
+
+		function openPalette() {
+			if (isOpen) return;
+			isOpen = true;
+			overlay.classList.remove("hidden");
+			overlay.classList.add("flex");
+			input.value = "";
+			activeIndex = 0;
+			updateFiltered();
+			window.requestAnimationFrame(() => input.focus());
+			document.body.style.overflow = "hidden";
+		}
+
+		function closePalette() {
+			if (!isOpen) return;
+			isOpen = false;
+			overlay.classList.add("hidden");
+			overlay.classList.remove("flex");
+			document.body.style.overflow = "";
+		}
+
+		function navigateToIndex(index: number) {
+			if (isTagSuggestMode) {
+				const tag = suggestedTags[index];
+				if (!tag) return;
+				input.value = input.value.replace(/(?:^|\s)#([\p{L}\p{N}_-]*)$/u, (match) => {
+					const leadingSpace = match.startsWith(" ") ? " " : "";
+					return `${leadingSpace}#${tag} `;
+				});
+				activeIndex = 0;
+				updateFiltered();
+				input.focus();
+				return;
+			}
+
+			const command = filtered[index];
+			if (!command) return;
+			closePalette();
+			window.location.href = command.href;
+		}
+
+		function moveActive(step: number) {
+			const count = isTagSuggestMode ? suggestedTags.length : filtered.length;
+			if (count === 0) return;
+			activeIndex = (activeIndex + step + count) % count;
+			renderResults();
+			const activeSelector = isTagSuggestMode ? `[data-tag-suggestion-index="${activeIndex}"]` : `[data-command-index="${activeIndex}"]`;
+			const activeButton = results.querySelector<HTMLElement>(activeSelector);
+			activeButton?.scrollIntoView({ block: "nearest" });
+		}
+
+		function onDocumentKeyDown(event: KeyboardEvent) {
+			const wantsOpen = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k";
+			if (wantsOpen) {
+				event.preventDefault();
+				if (isOpen) {
+					closePalette();
+				} else {
+					openPalette();
+				}
+				return;
+			}
+
+			if (!isOpen) return;
+
+			handlePaletteKey(event);
+		}
+
+		function handlePaletteKey(event: KeyboardEvent) {
+			if (!isOpen) return;
+
+			if (event.key === "Escape") {
+				event.preventDefault();
+				closePalette();
+				return true;
+			}
+
+			if (event.key === "ArrowDown") {
+				event.preventDefault();
+				moveActive(1);
+				return true;
+			}
+
+			if (event.key === "ArrowUp") {
+				event.preventDefault();
+				moveActive(-1);
+				return true;
+			}
+
+			if (event.key === "Enter") {
+				event.preventDefault();
+				navigateToIndex(activeIndex);
+				return true;
+			}
+
+			return false;
+		}
+
+		function onInputKeyDown(event: KeyboardEvent) {
+			const handled = handlePaletteKey(event);
+			if (handled) {
+				event.stopPropagation();
+			}
+		}
+
+		function onOverlayClick(event: MouseEvent) {
+			if (event.target === overlay) {
+				closePalette();
+			}
+		}
+
+		function onExternalOpen() {
+			openPalette();
+		}
+
+		document.addEventListener("keydown", onDocumentKeyDown);
+		overlay.addEventListener("click", onOverlayClick);
+		document.addEventListener("command-palette:open", onExternalOpen);
+		input.addEventListener("keydown", onInputKeyDown);
+		input.addEventListener("input", () => {
+			activeIndex = 0;
+			updateFiltered();
+		});
+
+		triggerButtons.forEach((button) => {
+			button.addEventListener("click", openPalette);
+		});
+
+		renderResults();
+
+		(window as Window & { [CLEANUP_KEY]?: () => void })[CLEANUP_KEY] = () => {
+			document.removeEventListener("keydown", onDocumentKeyDown);
+			overlay.removeEventListener("click", onOverlayClick);
+			document.removeEventListener("command-palette:open", onExternalOpen);
+			input.removeEventListener("keydown", onInputKeyDown);
+			triggerButtons.forEach((button) => {
+				button.removeEventListener("click", openPalette);
+			});
+			document.body.style.overflow = "";
+		};
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initCommandPalette, { once: true });
+	} else {
+		initCommandPalette();
+	}
+
+	document.addEventListener("astro:page-load", initCommandPalette);
+</script>
