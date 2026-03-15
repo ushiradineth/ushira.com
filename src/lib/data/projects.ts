@@ -15,6 +15,16 @@ export const projects: Project[] = [
 		links: [{ label: "GitHub - lazytf", logo: "mdi:github", href: "https://github.com/ushiradineth/lazytf" }],
 	},
 	{
+		title: "veil",
+		period: "February 2026 – Present",
+		description: "An efficient code index and retrieval toolkit built for AI agents to go from prompt to implementation ASAP.",
+		technologies: [
+			{ name: "TypeScript", icon: "simple-icons:typescript", href: "https://www.typescriptlang.org" },
+			{ name: "Bun", icon: "simple-icons:bun", href: "https://bun.sh" },
+		],
+		links: [{ label: "GitHub - veil", logo: "mdi:github", href: "https://github.com/ushiradineth/veil" }],
+	},
+	{
 		title: "kei",
 		period: "Not started",
 		description:
@@ -60,7 +70,7 @@ export const projects: Project[] = [
 		links: [
 			{
 				label: "GitHub - nix-config",
-				logo: "simple-icons:nixos",
+				logo: "mdi:github",
 				href: "https://github.com/ushiradineth/nix-config",
 			},
 		],
@@ -84,7 +94,7 @@ export const projects: Project[] = [
 			},
 			{
 				label: "GitHub - ansible",
-				logo: "simple-icons:ansible",
+				logo: "mdi:github",
 				href: "https://github.com/ushiradineth/homelab-ansible",
 			},
 		],
