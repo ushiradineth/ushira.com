@@ -4,7 +4,10 @@ import { getCollection } from "astro:content";
 import { formatDate, isWithinDays } from "../lib/utils";
 import Contact from "../components/Contact.astro";
 import HomeLinkGroup from "../components/HomeLinkGroup.astro";
+import Title from "../components/Title.astro";
 import { homeAppGroups, homeLanguages, homeMainStack } from "../lib/data/home";
+import Underline from "../components/Underline.astro";
+import HeaderItem from "../components/HeaderItem.astro";
 
 const blogs = await getCollection("blog");
 const latestNewBlog =
@@ -20,7 +23,7 @@ const latestNewBlog =
 
 <Layout title="Ushira Dineth" description="ushira.com">
 	<section class="space-y-4">
-		<h1 class="sr-only">Ushira Dineth</h1>
+		<Title>Ushira Dineth</Title>
 		<p class="text-foreground">
 			Infrastructure and Backend engineer @
 			<a href="https://surge.global/" class="underline underline-offset-4 transition-colors hover:text-muted-foreground">surge.global</a>
@@ -30,16 +33,18 @@ const latestNewBlog =
 		</ul>
 	</section>
 
-	<section class="space-y-3">
-		<h2 class="text-sm font-medium uppercase tracking-[0.05em] text-muted-foreground">Apps</h2>
-		{homeAppGroups.map((group) => <HomeLinkGroup group={group} />)}
+	<section class="space-y-2">
+		<h2 class="text-sm font-medium uppercase tracking-[0.05em] text-muted-foreground">Explore</h2>
+		<div class="flex flex-wrap gap-2 text-sm">
+			<HeaderItem href="/blog/">blog</HeaderItem>
+			<HeaderItem href="/notes/">notes</HeaderItem>
+			<HeaderItem href="/projects/">projects</HeaderItem>
+		</div>
 	</section>
 
 	<section class="space-y-3">
-		<h2 class="text-sm font-medium uppercase tracking-[0.05em] text-muted-foreground">Languages</h2>
-		<ul class="flex flex-wrap gap-x-4 gap-y-2 text-sm">
-			{homeLanguages.map((language) => <li>{language}</li>)}
-		</ul>
+		<h2 class="text-sm font-medium uppercase tracking-[0.05em] text-muted-foreground">Apps</h2>
+		{homeAppGroups.map((group) => <HomeLinkGroup group={group} />)}
 	</section>
 
 	{

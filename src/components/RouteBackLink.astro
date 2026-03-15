@@ -1,0 +1,24 @@
+---
+import { Icon } from "astro-icon/components";
+import { getBackRoute } from "../lib/navigation/backRoute";
+
+interface Props {
+	pathname: string;
+}
+
+const { pathname } = Astro.props;
+const back = getBackRoute(pathname);
+---
+
+{
+	back && (
+		<a
+			id="route-back-link"
+			href={back.href}
+			class="inline-flex w-fit items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+		>
+			<Icon name="mdi:arrow-left" class="h-4 w-4" />
+			{back.label}
+		</a>
+	)
+}

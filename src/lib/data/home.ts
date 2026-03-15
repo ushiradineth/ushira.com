@@ -35,5 +35,3 @@ export const homeAppGroups: HomeLinkGroup[] = [
 		],
 	},
 ];
-
-export const homeLanguages = ["Go", "TypeScript", "Rust", "Elixir", "Nix"];

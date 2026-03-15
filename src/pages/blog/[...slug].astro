@@ -1,7 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
 import { formatDate } from "../../lib/utils";
 import { blogWebsite, getArticleSchema, mainWebsite, personSchema } from "../../lib/data/structuredData";
 import Tag from "../../components/Tag.astro";
@@ -76,14 +75,6 @@ function getReadingTime(content: string) {
 	<CodeBlockCopy />
 
 	<div id="blog-header" class="flex w-full items-center gap-3 text-sm text-muted-foreground">
-		<a
-			class="inline-flex items-center rounded p-1 text-muted-foreground transition-colors hover:text-foreground"
-			aria-label="Back"
-			href="/blog/"
-		>
-			<Icon size="16" name="mdi:arrow-left" />
-		</a>
-		<span>|</span>
 		<p>{formatDate(post.data.date, { month: "long", year: "numeric" })} • {getReadingTime(post.body)} min read</p>
 	</div>
 

@@ -1,7 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import { Icon } from "astro-icon/components";
 import { getWebPageJsonLd } from "../../lib/data/structuredData";
 
 interface Props {
@@ -27,10 +26,6 @@ const jsonLd = getWebPageJsonLd(url, note.data.title, note.data.description);
 <Layout title={note.data.title} description={note.data.description} jsonLd={jsonLd}>
 	<div class="space-y-6">
 		<div class="space-y-3">
-			<a href="/notes/" class="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-				<Icon name="mdi:arrow-left" class="h-4 w-4" />
-				Back to Notes
-			</a>
 			<h1 class="text-2xl font-medium tracking-tight text-foreground">{note.data.title}</h1>
 			<p class="text-sm text-muted-foreground">{note.data.description}</p>
 		</div>

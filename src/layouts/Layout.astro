@@ -1,6 +1,7 @@
 ---
-import Header from "../components/Header.astro";
 import CommandPalette from "../components/CommandPalette.astro";
+import FloatingTools from "../components/FloatingTools.astro";
+import RouteBackLink from "../components/RouteBackLink.astro";
 import { ClientRouter } from "astro:transitions";
 
 import { blogWebsite, mainWebsite, personSchema } from "../lib/data/structuredData";
@@ -12,11 +13,12 @@ interface Props {
 	jsonLd?: string;
 }
 
-const pathname = Astro.url.pathname.endsWith("/") ? Astro.url.pathname.slice(0, -1) : Astro.url.pathname || "index";
+const currentPathname = Astro.url.pathname;
+const ogPathname = currentPathname.endsWith("/") ? currentPathname.slice(0, -1) : currentPathname || "index";
 
 const siteURL = Astro.site?.toString() ?? "";
 const site = siteURL[siteURL.length - 1] === "/" ? siteURL.substring(0, siteURL.length - 1) : Astro.site;
-const ogImage = new URL(`/og${pathname}.png`, site).toString();
+const ogImage = new URL(`/og${ogPathname}.png`, site).toString();
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const rssURL = new URL("/rss.xml", site).toString();
 const defaultTags = ["Ushira Dineth", "Software Engineer", "Portfolio"];
@@ -215,10 +217,11 @@ const jsonLd =
 		<ClientRouter />
 	</head>
 	<body class="text-pretty text-foreground antialiased">
-		<main role="main" id="main-content" class="mx-auto flex min-h-screen w-full max-w-[52rem] flex-col gap-8 px-6 py-12 sm:px-8">
-			<Header transition:persist />
+		<main role="main" id="main-content" class="mx-auto flex min-h-screen w-full max-w-[52rem] flex-col gap-8 px-6 pb-24 pt-12 sm:px-8 sm:pb-12">
+			<RouteBackLink pathname={currentPathname} />
 			<CommandPalette />
 			<slot />
 		</main>
+		<FloatingTools />
 	</body>
 </html>
