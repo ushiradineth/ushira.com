@@ -3,6 +3,7 @@ import Title from "../components/Title.astro";
 import Layout from "../layouts/Layout.astro";
 import { projects } from "../lib/data/projects";
 import { getWebPageJsonLd } from "../lib/data/structuredData";
+import { Icon } from "astro-icon/components";
 
 const description = "Portfolio of projects built with Kubernetes, Go, TypeScript, Terraform, and Nix";
 const url = `${import.meta.env.SITE}/projects/`;
@@ -18,7 +19,6 @@ const jsonLd = getWebPageJsonLd(url, "Projects", description);
 	<section class="space-y-4 text-sm">
 		{
 			projects.map((project) => {
-				const primaryLink = project.links[0];
 				return (
 					<article class="space-y-1 border-b border-border pb-4 last:border-0">
 						<div class="flex flex-wrap items-baseline gap-2">
@@ -26,18 +26,12 @@ const jsonLd = getWebPageJsonLd(url, "Projects", description);
 							<span class="text-xs text-muted-foreground">{project.period}</span>
 						</div>
 						<p class="text-muted-foreground">{project.description}</p>
-						<div class="flex flex-wrap items-center gap-2">
-							{primaryLink && (
-								<a
-									href={primaryLink.href}
-									target="_blank"
-									rel="noopener noreferrer"
-									class="underline underline-offset-4 hover:text-foreground"
-								>
-									project link
+						<div class="flex flex-wrap items-center gap-2 pt-1">
+							{project.links.map((link) => (
+								<a href={link.href} target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-foreground">
+									<Icon name={link.logo} class="h-4 w-4" />
 								</a>
-							)}
-							<span class="text-muted-foreground">-</span>
+							))}
 							<span class="text-xs text-muted-foreground">{project.technologies.map((tech) => tech.name).join(", ")}</span>
 						</div>
 					</article>
