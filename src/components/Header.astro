@@ -1,28 +1,34 @@
 ---
 import HeaderItem from "./HeaderItem.astro";
 import Theme from "./Theme.astro";
-import Logo from "./Logo.astro";
 ---
 
 <div id="header" class="pb-2">
-	<div class="flex items-center justify-between gap-4">
-		<a href="/" target="_self" class="text-base font-medium text-foreground">
-			<span class="hidden sm:inline">Ushira Dineth</span>
-			<Logo class="inline sm:hidden" height={28} width={28} />
+	<div class="flex items-center gap-4 sm:justify-between">
+		<a href="/" target="_self" aria-label="Go to homepage" class="hidden text-base font-medium text-foreground sm:inline">
+			<span>Ushira Dineth</span>
 		</a>
-		<div class="flex items-center gap-3 text-sm">
-			<HeaderItem href="/notes/">notes</HeaderItem>
-			<HeaderItem href="/projects/">projects</HeaderItem>
-			<HeaderItem href="/blog/">blog</HeaderItem>
-			<button
-				type="button"
-				data-command-open
-				aria-label="Open command palette"
-				class="inline-flex items-center rounded-md border border-border px-2 py-1 text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
-			>
-				<kbd data-command-shortcut class="text-[11px] leading-none">⌘ K</kbd>
-			</button>
-			<Theme />
+		<div class="flex w-full items-center justify-between text-sm sm:w-auto sm:justify-start sm:gap-3">
+			<div class="flex items-center gap-3">
+				<HeaderItem href="/notes/">notes</HeaderItem>
+				<HeaderItem href="/projects/">projects</HeaderItem>
+				<HeaderItem href="/blog/">blog</HeaderItem>
+			</div>
+			<div class="flex items-center gap-3">
+				<button
+					type="button"
+					data-command-open
+					aria-label="Open command palette"
+					class="inline-flex items-center rounded-md border border-border px-2 py-1 text-muted-foreground transition-colors hover:border-foreground/30 hover:text-foreground"
+				>
+					<svg class="h-4 w-4 sm:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+						<circle cx="11" cy="11" r="7"></circle>
+						<path d="m20 20-3.5-3.5"></path>
+					</svg>
+					<kbd data-command-shortcut class="hidden text-[11px] leading-none sm:inline">⌘ K</kbd>
+				</button>
+				<Theme />
+			</div>
 		</div>
 	</div>
 </div>
