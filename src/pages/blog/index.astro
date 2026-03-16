@@ -13,6 +13,12 @@ const allTags = [...new Set(blogPosts.flatMap((post) => post.data.tags ?? []))].
 
 const description = "Personal blog posts, notes, and other ramblings";
 const jsonLd = getBlogJsonLd();
+
+function getReadingTime(content: string) {
+	const wordsPerMinute = 200;
+	const wordCount = content.trim().split(/\s+/).length;
+	return Math.ceil(wordCount / wordsPerMinute);
+}
 ---
 
 <Layout title="Blog Posts" description={description} jsonLd={jsonLd}>
@@ -37,6 +43,7 @@ const jsonLd = getBlogJsonLd();
 			{
 				blogPosts.map((post) => {
 					const tags = post.data.tags ?? [];
+					const readingTime = getReadingTime(post.body);
 					return (
 						<article class="blog-post border-b border-border pb-4" data-tags={tags.join(",")}>
 							<div class="flex items-baseline gap-2">
@@ -46,6 +53,8 @@ const jsonLd = getBlogJsonLd();
 							</div>
 							{post.data.description && <p class="mt-2 text-sm text-muted-foreground">{post.data.description}</p>}
 							<div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+								<span class="text-muted-foreground">{readingTime} min read</span>
+								<span class="text-muted-foreground">{"|"}</span>
 								<span class="text-muted-foreground">{formatDate(post.data.date)}</span>
 								<span class="text-muted-foreground">{"|"}</span>
 								<div class="post-tags flex flex-wrap gap-2">
