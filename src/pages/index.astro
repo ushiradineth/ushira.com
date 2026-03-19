@@ -5,20 +5,15 @@ import { formatDate, isWithinDays } from "../lib/utils";
 import Contact from "../components/Contact.astro";
 import HomeLinkGroup from "../components/HomeLinkGroup.astro";
 import Title from "../components/Title.astro";
-import { homeAppGroups, homeLanguages, homeMainStack } from "../lib/data/home";
-import Underline from "../components/Underline.astro";
+import { homeAppGroups, homeMainStack } from "../lib/data/home";
 import HeaderItem from "../components/HeaderItem.astro";
 
 const blogs = await getCollection("blog");
-const latestNewBlog =
-	blogs
-		.filter((post) => {
-			const { date } = post.data;
-			if (!date || Number.isNaN(date.getTime())) return false;
-			if (date.getTime() > Date.now()) return false;
-			return isWithinDays(date, 30);
-		})
-		.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())[0] ?? null;
+const hasNewBlog = blogs.some((post) => {
+	const { date } = post.data;
+	if (!date || Number.isNaN(date.getTime())) return false;
+	return isWithinDays(date, 30);
+});
 ---
 
 <Layout title="Ushira Dineth" description="ushira.com">
@@ -36,9 +31,14 @@ const latestNewBlog =
 	<section class="space-y-2">
 		<h2 class="text-sm font-medium uppercase tracking-[0.05em] text-muted-foreground">Explore</h2>
 		<div class="flex flex-wrap gap-2 text-sm">
-			<HeaderItem href="/blog/">blog</HeaderItem>
-			<HeaderItem href="/notes/">notes</HeaderItem>
 			<HeaderItem href="/projects/">projects</HeaderItem>
+			<HeaderItem href="/notes/">notes</HeaderItem>
+			<HeaderItem href="/blog/">
+				<span class="relative inline-block pr-1">
+					blog
+					{hasNewBlog && <span class="absolute -right-0.5 h-1.5 w-1.5 rounded-full bg-amber-400 shadow-sm" aria-hidden="true" />}
+				</span>
+			</HeaderItem>
 		</div>
 	</section>
 
@@ -46,18 +46,6 @@ const latestNewBlog =
 		<h2 class="text-sm font-medium uppercase tracking-[0.05em] text-muted-foreground">Apps</h2>
 		{homeAppGroups.map((group) => <HomeLinkGroup group={group} />)}
 	</section>
-
-	{
-		latestNewBlog && (
-			<p class="text-sm text-muted-foreground">
-				Latest post:{" "}
-				<a class="underline underline-offset-4 hover:text-foreground" href={`/blog/${latestNewBlog.slug}/`}>
-					{latestNewBlog.data.title}
-				</a>
-				({latestNewBlog.data.date ? formatDate(latestNewBlog.data.date) : ""})
-			</p>
-		)
-	}
 
 	<Contact />
 

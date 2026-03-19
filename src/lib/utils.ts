@@ -12,12 +12,11 @@ export function isWithinDays(date: Date, days: number): boolean {
 	if (Number.isNaN(date.getTime())) {
 		return false;
 	}
-	if (date.getTime() > now.getTime()) {
-		return false;
-	}
 	const diffMs = now.getTime() - date.getTime();
+
 	const threshold = days * 24 * 60 * 60 * 1000;
-	return diffMs <= threshold;
+
+	return Math.abs(diffMs) <= threshold;
 }
 
 export function fuzzyScore(query: string, target: string): number {
