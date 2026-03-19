@@ -6,6 +6,7 @@ order: 5
 ---
 
 import NoteCard from "../../components/NoteCard.astro";
+import Callout from "../../components/Callout.astro";
 
 <NoteCard icon="mdi:alert-circle" title="Document DBs">
 	I want my data to have structure and consistency. I understand that Document DBs are great for some use cases, but I will continue to
@@ -28,8 +29,4 @@ import NoteCard from "../../components/NoteCard.astro";
 	Just use turborepo.
 </NoteCard>
 
-<div class="rounded-lg border border-border bg-muted/20 p-6">
-	<p class="text-sm text-muted-foreground">
-		These are personal preferences based on my workflow and experiences. Your mileage may vary. I'm not here to convince you.
-	</p>
-</div>
+<Callout>These are personal preferences based on my workflow and experiences. Your mileage may vary. I'm not here to convince you.</Callout>
