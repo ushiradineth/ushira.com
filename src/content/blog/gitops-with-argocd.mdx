@@ -1,7 +1,7 @@
 ---
 slug: "gitops-with-argocd"
 title: "GitOps for Kubernetes with ArgoCD"
-description: "Automating application delivery with GitOps patterns and ArgoCD."
+description: "How I run Kubernetes delivery with GitOps, ArgoCD, and image automation."
 date: 2024-02-20
 tags: ["gitops", "argocd", "terraform", "kubernetes", "cicd"]
 ---
@@ -15,17 +15,17 @@ import terraformFlow from "../../images/blog/gitops-with-argocd/terraform-flow.p
 
 ## Prerequisites
 
-Before continuing in this article, you should have the following:
+Before you dive in, you should have:
 
-- A running Kubernetes cluster with necessary tools and configurations.
-- Basic understanding of Git and CI/CD.
-- Understanding of [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) would be advantageous.
+- A running Kubernetes cluster and basic tooling
+- Working knowledge of Git and CI/CD
+- Optional but helpful: [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
 
 ---
 
 ## GitOps
 
-GitOps is a methodology that leverages [Git](https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F) to manage and automate the deployment and configuration of infrastructure and applications. The core idea is to declare the desired state of the system in a Git repository, and a tool, such as [ArgoCD](https://argo-cd.readthedocs.io/en/stable/), continuously reconciles the actual state with the declared state.
+GitOps means Git is the source of truth for both app and infra state. You declare the desired state in a repository, then a controller like [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) keeps the cluster aligned with that state.
 
 <FigureImage
 	src={gitopsFlow}
@@ -33,12 +33,12 @@ GitOps is a methodology that leverages [Git](https://git-scm.com/book/en/v2/Get
 	caption="Figure 1: GitOps workflow - declarative configuration management with Git as source of truth."
 />
 
-### Key Concepts of GitOps
+### Key concepts
 
-- **Declarative Configuration**: The desired state of the system, including application configurations and infrastructure definitions, is declared in version controlled repositories.
-- **Version Control**: Git repositories serve as the single source of truth for configurations. Every change, whether to the application code, infrastructure, or configurations, is versioned in Git.
-- **Automated Synchronization**: Tools like ArgoCD continuously monitor the Git repository for changes. Upon detecting changes, they automatically synchronize the actual state of the system with the declared state in Git.
-- **Reconciliation Loop**: The continuous reconciliation loop ensures the deployed system always converges to the desired state declared in the Git repository.
+- Declarative config: manifests define what should exist.
+- Versioned changes: every infrastructure or app config change is tracked in Git.
+- Automatic sync: controllers detect drift and apply desired state.
+- Reconciliation loop: desired state and live state keep converging.
 
 <FigureImage
 	src={reconciliationLoop}
@@ -46,15 +46,15 @@ GitOps is a methodology that leverages [Git](https://git-scm.com/book/en/v2/Get
 	caption="Figure 2: Reconciliation loop - continuous synchronization between desired and actual state."
 />
 
-### Strategies of GitOps
+### Push vs pull
 
-GitOps strategies dictate how infrastructure and applications are managed using Git. These strategies, namely, *push* and *pull*, offer different workflows for deployment. In this context, synchronization and governance are essential components ensuring that the desired state in Git repositories aligns with the operational state of target environments.
+Most teams use one of two strategies: _push_ or _pull_.
 
-#### Push Strategy
+#### Push strategy
 
-- Changes are initiated by pushing updates to the Git repository.
-- Automated processes detect changes and apply them to the target environment.
-- For example, Terraform applies infrastructure changes defined in configuration files stored in a Git repository.
+- A pipeline pushes changes to the target environment.
+- You control exactly when apply happens.
+- Common example: Terraform apply in CI.
 
 <FigureImage
 	src={terraformFlow}
@@ -62,32 +62,32 @@ GitOps strategies dictate how infrastructure and applications are managed using 
 	caption="Figure 3: Terraform push-based flow - automated infrastructure changes triggered by Git commits."
 />
 
-#### Pull Strategy
+#### Pull strategy
 
-- Target environment continuously pulls its desired state from a Git repository.
-- Continuous reconciliation ensures the target environment aligns with the desired state.
-- For example, ArgoCD monitors Kubernetes manifests stored in a Git repository and automatically applies changes to the target Kubernetes cluster.
+- The target environment continuously pulls desired state from Git.
+- Drift is corrected automatically through reconciliation.
+- Common example: ArgoCD watching Kubernetes manifests.
 
 #### Comparison
 
-| Push Strategy                                               | Pull Strategy                                                                                         |
-| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Fine-grained control over when changes are applied          | Changes are applied periodically, unless webhooks are configured                                      |
-| Simple to implement and understand                          | Comparavely complex architecture                                                                      |
-| Immediate feedback on the success or failure of the changes | Feedback is given when changes are periodically applied, with automatic rollback when failed          |
-| Desired state and actual state may not always be in-sync    | Ensures the target environment is always in sync with the desired state defined in the Git repository |
+| Push Strategy                                               | Pull Strategy                                                                                |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Fine-grained control over when changes are applied          | Changes are applied periodically, unless webhooks are configured                             |
+| Simple to implement and understand                          | Slightly more complex architecture                                                           |
+| Immediate feedback on the success or failure of the changes | Feedback is given when changes are periodically applied, with automatic rollback when failed |
+| Desired and actual state can drift                          | Desired and actual state stay aligned through reconciliation                                 |
 
 ---
 
 ## ArgoCD
 
-- [ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/) is an open-source, declarative, GitOps continuous delivery tool designed for Kubernetes. Built on the principles of GitOps, ArgoCD facilitates the automated deployment, monitoring, and management of applications within Kubernetes clusters.
-- ArgoCD provides both a web dashboard and a CLI which can be used to manage applications, check synchronization status, and revert to previous states.
-- It seamlessly integrates with popular tools like Helm charts and Kustomize, offering flexibility in defining and managing configurations. This adaptability makes ArgoCD a powerful solution for Kubernetes environments, simplifying the usual complexities of application deployment and management.
-- ArgoCD configuration data is highly available since it uses Redis as a throw-away cache and all resources are persisted in the Kubernetes’ etcd data store. The Redis cache can be rebuilt without loss of service from etcd. Read more about high availability in ArgoCD [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/high_availability).
-- Using a pull-based approach for continuous delivery and GitOps, ArgoCD will observe the Git Repository every three minutes, compare the desired state (Git Repository) to the actual state (Kubernetes Cluster), and then sync any changes if detected. This pull-based model ensures the cluster’s state is always in sync with the declared state in the Git repository, allowing for automated and declarative management of applications and infrastructure.
+- [ArgoCD](https://argo-cd.readthedocs.io/en/stable/getting_started/) is a GitOps CD tool for Kubernetes.
+- It gives you both a UI and CLI to inspect sync state, deploy, and roll back.
+- It works well with Helm and Kustomize.
+- State is persisted in etcd. Redis is cache only, so it can be rebuilt. More details [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/high_availability).
+- In pull mode, ArgoCD polls Git, compares desired state with cluster state, and syncs when needed.
 
-Here’s how it works:
+Here is how it works:
 
 <FigureImage
 	src={argocdFlow}
@@ -95,9 +95,9 @@ Here’s how it works:
 	caption="Figure 4: ArgoCD pull-based flow - continuous monitoring and synchronization from Git to Kubernetes cluster."
 />
 
-ArgoCD takes declarative configuration as a core principle, and it achieves this through the use of custom resources like Application and ApplicationSet. These resources allow users to create application configurations in a declarative manner. Check out the sample Application below and for further information, refer to [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/).
+ArgoCD uses `Application` and `ApplicationSet` resources to keep deployments declarative. Here is a basic example. Official docs are [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/).
 
-### Install ArgoCD Helm Chart
+### Install ArgoCD helm chart
 
 #### Using Helm CLI
 
@@ -120,69 +120,71 @@ resource "helm_release" "argocd" {
 }
 ```
 
-### Create ArgoCD Application
+### Create an ArgoCD application
 
-You can also apply the Argo Application using `kubectl` or using the `kubernetes_manifest` resource on Terraform.
+You can also apply this with `kubectl` or the Terraform `kubernetes_manifest` resource.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
- name: guestbook
- namespace: argocd
+  name: guestbook
+  namespace: argocd
 spec:
- project: default
- source:
-  repoURL: https://github.com/argoproj/argocd-example-apps.git
-  targetRevision: HEAD
-  path: guestbook
- destination:
-  server: https://kubernetes.default.svc
-  namespace: guestbook
- syncPolicy:
-  automated:
-        prune: true
-   selfHeal: true
-   allowEmpty: false
-  syncOptions:
-   - Validate=true
-   - CreateNamespace=true
-   - PrunePropagationPolicy=foreground
-   - PruneLast=true
+  project: default
+  source:
+    repoURL: https://github.com/argoproj/argocd-example-apps.git
+    targetRevision: HEAD
+    path: guestbook
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: guestbook
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
 ```
 
-The provided setup will deploy the ArgoCD Example App, utilizing a designated Git Repository with the latest commit on the main branch as the targeted revision. Additionally, a specific application path has been specified, indicating the code that ArgoCD should deploy. Repository credentials can be configured using secrets;a sample configuration is available [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/argocd-repo-creds-yaml/). You can utilize the following annotation to reference the secret.
+This setup deploys the ArgoCD example app from a specific repository path and target revision. If the repo is private, configure credentials with a secret. A sample is available [here](https://argo-cd.readthedocs.io/en/stable/operator-manual/argocd-repo-creds-yaml/).
+
+You can reference that secret with:
 
 ```yaml
 "argocd-image-updater.argoproj.io/write-back-method" = "git:secret:argocd/${local.repo_secret_name}"
 ```
 
-In addition, the following options are used to ensure precision and control through Sync Policies in ArgoCD:
+The sync options add guardrails and make behavior explicit:
 
-- **Automated Sync:**
-  - `prune`: Removes resources from the cluster that are no longer defined in the Git repository.
-  - `selfHeal`: Attempts to bring the cluster state in line with the desired state.
-  - `allowEmpty`: Prevents synchronization if the application source is empty.
+- Automated sync:
+  - `prune`: removes resources no longer defined in Git.
+  - `selfHeal`: reverts manual cluster changes to match desired state.
+  - `allowEmpty`: blocks sync if the source is empty.
 
-- **Sync Options:**
-  - `Validate = true`: Validates the manifests before applying them to the cluster.
-  - `PrunePropagationPolicy = foreground`: Ensures that pruning occurs in the foreground.
-  - `CreateNamespace = true`: Creates the specified namespace if it doesn’t exist.
-  - `PruneLast = true`: Prunes resources in the last step of synchronization.
+- Sync options:
+  - `Validate=true`: validates manifests before applying.
+  - `PrunePropagationPolicy=foreground`: runs pruning in the foreground.
+  - `CreateNamespace=true`: creates the namespace if it does not exist.
+  - `PruneLast=true`: prunes resources last during sync.
 
 ---
 
-## GitOps Workflow with ArgoCD
+## GitOps workflow with ArgoCD
 
-- Configuration in Git: The DevOps Team commits changes to Git repositories, specifying desired configurations for applications and infrastructure.
-- Synchronization: ArgoCD continuously synchronizes the Kubernetes cluster with the Git repository, applying changes and maintaining the desired state.
-- Rollback and History: ArgoCD keeps a history of deployments, allowing for easy rollback to previous versions in case of issues or for auditing purposes.
+- Configuration in Git: teams commit desired app and infra state.
+- Synchronization: ArgoCD reconciles that state into the cluster.
+- Rollback and history: deployment history stays available for audit and recovery.
 
 ---
 
 ## Argo Image Updater
 
-[Argo Image Updater](https://argocd-image-updater.readthedocs.io/en/stable/) is an extension for ArgoCD that automates the updating of container images in Kubernetes manifests. This tool is vital for maintaining the latest versions of application images and ensuring seamless deployments across environments. Here’s how it works:
+[Argo Image Updater](https://argocd-image-updater.readthedocs.io/en/stable/) updates image tags in GitOps manifests automatically. This helps keep environments fresh without hand-editing tags.
 
 <FigureImage
 	src={argocdImageUpdaterFlow}
@@ -190,7 +192,7 @@ In addition, the following options are used to ensure precision and control thro
 	caption="Figure 5: ArgoCD Image Updater flow - automated container image updates in Kubernetes manifests."
 />
 
-### Install Argo Image Updater Helm Chart
+### Install Argo Image Updater helm chart
 
 #### Using Helm CLI
 
@@ -223,9 +225,9 @@ resource "helm_release" "argo_image_updater" {
 }
 ```
 
-### Image updater Values file
+### Image updater values file
 
-– This example uses AWS ECR as the image repository. Make sure to replace the [image repository configuration](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) with the one you use.
+This example uses AWS ECR as the image registry. Replace the [registry configuration](https://argocd-image-updater.readthedocs.io/en/stable/configuration/registries/) for your setup.
 
 ```yaml
 metrics:
@@ -233,25 +235,25 @@ metrics:
 
 config:
   registries:
-  - name: ECR
-    api_url: https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-    prefix: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-    default: true
-    ping: yes
-    insecure: no
-    credentials: ext:/scripts/ecr-login.sh
-    credsexpire: 11h
+    - name: ECR
+      api_url: https://${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+      prefix: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+      default: true
+      ping: yes
+      insecure: no
+      credentials: ext:/scripts/ecr-login.sh
+      credsexpire: 11h
 
- # Email used to Commit image updates to the GitOps repository
- gitCommitMail: ${BITBUCKET_PUSH_EMAIL}
+  # Email used to commit image updates to the GitOps repository
+  gitCommitMail: ${BITBUCKET_PUSH_EMAIL}
 
-authScripts
+authScripts:
   enabled: true
   scripts:
     ecr-login.sh: |
       #!/bin/sh
-      aws ecr --region $AWS_REGION get-authorization-token --output text
---query 'authorizationData[].authorizationToken' | base64 -d
+      aws ecr --region $AWS_REGION get-authorization-token --output text \
+        --query 'authorizationData[].authorizationToken' | base64 -d
 
 extraEnv:
   - name: AWS_REGION
@@ -260,41 +262,38 @@ extraEnv:
 serviceAccount:
   create: true
   annotations:
-    eks.amazonaws.com/role-arn:
-arn:aws:iam::{AWS_ACCOUNT_ID}:role/{IAM_ROLE_NAME}
+    eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/${IAM_ROLE_NAME}
 ```
 
-The following annotations are used to define which value to update in the helm repository. This annotation is defined in the ArgoCD Application resource.
+These annotations tell Argo Image Updater which image and Helm value to update. Add them to the ArgoCD `Application` resource.
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
- name: guestbook
- namespace: argocd
- annotations:
-  "argocd-image-updater.argoproj.io/image-list":
-"=${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazona
-ws.com/"
-  "argocd-image-updater.argoproj.io/admin-api.helm.image-tag":
-".image.tag"
-spec:
- ...
+  name: guestbook
+  namespace: argocd
+  annotations:
+    "argocd-image-updater.argoproj.io/image-list": "=${var.aws_account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/"
+    "argocd-image-updater.argoproj.io/admin-api.helm.image-tag": ".image.tag"
+spec: ...
 ```
 
-### Image Update Policies
+### Image update policies
 
-- In the ArgoCD Application manifest, annotations play a crucial role in defining image update policies through regular expressions, specifically with the `allow-tags` property. These policies, such as `<image>.allow-tags` govern the selection of image tags permitted for deployment in distinct environments. More annotation policies can be found [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/images/).
-- These policies provide a robust mechanism to control and restrict which image tags can be deployed in each environment. For example, in a development instance, the ArgoCD Application might only pull the latest images based on a pattern like `2.X.X.-SNAPSHOT` based on the regular expression provided through an annotation like the following:
+- In an `Application` manifest, annotations define image update policy with regex rules like `<image>.allow-tags`. Full list [here](https://argocd-image-updater.readthedocs.io/en/stable/configuration/images/).
+- This lets you control which tags are valid per environment. For example, development can accept only snapshot tags:
 
 ```yaml
 argocd-image-updater.argoproj.io/.allow-tags: "regexp:2\.\d+\.\d+-SNAPSHOT"
 ```
 
-- ArgoCD Applications seamlessly incorporate image update policies, using annotations and regular expressions, to regulate the deployment of specific image tags. The power of these policies lies in their environment-specific nature, enabling control over image versions in various environments.
+I recommend making these rules explicit early. It avoids accidental promotion of the wrong tag class.
 
 ---
 
 ## Summary
 
-GitOps, with tools like ArgoCD, revolutionizes Kubernetes infrastructure management through its declarative approach and automated synchronization, ensuring the actual system state aligns with the desired state defined in Git repositories. ArgoCD’s seamless integration and pull-based model facilitate continuous deployment and management of applications within Kubernetes clusters. With the inclusion of Argo Image Updater, the workflow gains automated image update capabilities, further enhancing deployment efficiency and reliability. Overall, GitOps with ArgoCD offers a streamlined, consistent, and agile solution for Kubernetes operations, driving efficiency and scalability in modern software delivery pipelines.
+GitOps with ArgoCD gives you a cleaner operating model for Kubernetes. Desired state stays in Git, reconciliation handles drift, and rollbacks are straightforward.
+
+When you add Argo Image Updater, image promotion also becomes policy-driven instead of manual. Less operational noise, more predictable deploys.

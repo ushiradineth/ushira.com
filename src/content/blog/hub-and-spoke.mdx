@@ -1,9 +1,9 @@
 ---
 slug: "hub-and-spoke"
 title: "Hub-and-Spoke Architecture with Zero Trust Networking"
-description: "Simplifying Networking, Security, and Cost at Scale."
+description: "How I simplified networking, access control, and cost with a hub-and-spoke model."
 tags: ["cloud", "networking", "security", "kubernetes"]
-date: 2026-03-15
+date: 2026-03-24
 ---
 
 import FigureImage from "../../components/FigureImage.astro";
@@ -14,7 +14,7 @@ import monolithicTrafficFlow from "../../images/blog/hub-and-spoke/monolithic-tr
 import cloudflareZtn from "../../images/blog/hub-and-spoke/cloudflare-ztn.png";
 import finalArchitecture from "../../images/blog/hub-and-spoke/final-architecture.png";
 import gcpExample from "../../images/blog/hub-and-spoke/gcp-example.png";
-import hubAndSpokeSurge from "../../images/blog/hub-and-spoke/hub-and-spoke-surge.png";
+import azureExample from "../../images/blog/hub-and-spoke/azure-example.png";
 import transitiveBefore from "../../images/blog/hub-and-spoke/transitive-before.png";
 import transitiveAfter from "../../images/blog/hub-and-spoke/transitive-after.png";
 
@@ -22,15 +22,15 @@ import transitiveAfter from "../../images/blog/hub-and-spoke/transitive-after.pn
 
 Most teams start with per-environment networks; Dev, QA, and Prod each with their own NAT, firewall, DNS, and load balancers. This approach is simple at first but quickly becomes costly, inconsistent, and difficult to secure.
 
-In this post, I’ll walk through how we have adopted a **hub-and-spoke network architecture secured with Cloudflare Zero Trust (ZTN)** for a enterprise client at Surge Global. I’ll cover why we chose this model, how traffic flows, the security benefits, and real-world deployments, including industry practices from **Google Cloud and Surge Global**.
+In this post, I walk through how to adopt a **hub-and-spoke network architecture secured with Cloudflare Zero Trust (ZTN)**. I cover why teams choose this model, how traffic flows, and the security benefits in production.
 
-This is a write-up of a session I conducted at Surge Global in 2025
+This is a write-up of a session I ran in 2025.
 
 ---
 
 ## The Problem: Per-Environment Networking
 
-**Each environment duplicating infrastructure looks like this:**
+Each environment duplicating infrastructure looks like this:
 
 - NAT, firewall, load balancer, DNS repeated in every environment
 - Multiple ingress/egress points to manage
@@ -50,15 +50,15 @@ What seems easy for a small setup becomes a bottleneck at scale.
 
 ## The Solution: Hub-and-Spoke Architecture
 
-**In a hub-and-spoke model:**
+In a hub-and-spoke model:
 
-- **Hub** contains shared services (NAT, firewall, DNS, load balancer).
-- **Spokes** are isolated environments (Dev, QA, Prod) that remain private.
+- The hub contains shared services: NAT, firewall, DNS, load balancer.
+- Spokes are isolated environments (Dev, QA, Prod) that stay private.
 - All ingress and egress flows through the hub.
 
-**Benefits:**
+Benefits:
 
-- Centralised firewall and NAT management
+- Centralized firewall and NAT management
 - Uniform policies
 - Reduced cost (one NAT, one firewall instead of many)
 - Easier audits and observability
@@ -71,9 +71,9 @@ What seems easy for a small setup becomes a bottleneck at scale.
 
 ---
 
-## Traffic Flows
+## Traffic flows
 
-**Per-Environment (Monolithic) Model**
+### Per-environment model
 
 - Public traffic hits environment-specific load balancers.
 - Applications egress through separate NATs.
@@ -85,7 +85,7 @@ What seems easy for a small setup becomes a bottleneck at scale.
  caption="Figure 3: Per-environment traffic flow - multiple load balancers and NAT gateways per environment."
 />
 
-**Hub-and-Spoke Model**
+### Hub-and-spoke model
 
 - Public traffic flows → hub load balancer → spokes.
 - Outbound traffic flows → spokes → hub NAT → internet.
@@ -99,13 +99,13 @@ What seems easy for a small setup becomes a bottleneck at scale.
 
 ---
 
-## Introducing Cloudflare Zero Trust
+## Cloudflare Zero Trust
 
-**Zero Trust changes the game:**
+Cloudflare Zero Trust replaces traditional VPN-based access with identity and context-aware policies:
 
-- Removes the need for public IPs
-- Provides identity- and context-aware access
-- Replaces VPNs with granular, policy-driven access
+- No public IPs needed for internal services
+- Access authenticated per user, device, and policy
+- Granular access control instead of broad VPN tunnels
 
 <FigureImage
  src={cloudflareZtn}
@@ -115,19 +115,21 @@ What seems easy for a small setup becomes a bottleneck at scale.
 
 With Cloudflare ZTN, neither the hub nor the spokes need public exposure. Access flows through Cloudflare’s global edge, authenticated per user/device/policy.
 
+In practice, this gave me tighter access control and much cleaner audit trails than a shared VPN model.
+
 ---
 
-## Deploying the Cloudflare Connector
+## Deploying the Cloudflare connector
 
-**Getting started is simple. Run the cloudflared daemon on a hub VM:**
+Run the `cloudflared` daemon on a hub VM:
 
 ```bash
 sudo cloudflared service install <token>
 ```
 
-Then apply a tight firewall rule to allow `cloudflared` to connect only to Cloudflare endpoints (TCP/UDP 7844).
+Then apply a strict firewall rule so `cloudflared` can only reach Cloudflare endpoints on TCP/UDP 7844.
 
-From there, internal spokes no longer need public IPs; developer and admin access goes through Cloudflare, while production traffic can keep using the external load balancer.
+From there, internal spokes no longer need public IPs. Developer and admin access goes through Cloudflare, while production traffic can continue through the external load balancer.
 
 ```hcl
 {
@@ -160,9 +162,9 @@ See the [Cloudflare Docs – Tunnel with Firewall](https://developers.cloudflare
 
 ---
 
-## Final Architecture
+## Final architecture
 
-**The final state looks like this:**
+The final state looks like this:
 
 - Hub centralises NAT, firewall, and load balancers
 - Spokes are fully private
@@ -177,53 +179,57 @@ See the [Cloudflare Docs – Tunnel with Firewall](https://developers.cloudflare
 
 This pattern isolates environments, simplifies operations, and eliminates public exposure.
 
+You trade a bit of routing complexity for a much cleaner security and operations model.
+
 ---
 
-## Real-World Examples
+## Industry references
 
-### Surge Global
-
-<FigureImage
- src={hubAndSpokeSurge}
- alt="Diagram of the hub-and-spoke deployment used in a Surge Global enterprise project"
- caption="Figure 7: Hub-and-spoke deployment from an enterprise project at Surge Global."
-/>
-
-We deployed this model at an Enterprise project at Surge Global, our first company project to use hub-and-spoke. It centralised firewall/NAT/DNS, used Cloudflare ZTN for non-prod environments, and reduced both cost and operational overhead.
-
-### Industry Reference
+### Google Cloud
 
 <FigureImage
  src={gcpExample}
  alt="GCP reference architecture showing Fortinet firewalls securing the hub"
- caption="Figure 8: GCP reference architecture - Fortinet firewalls securing the hub, similar to large-scale enterprise and government environments."
+ caption="Figure 7: GCP reference architecture - Fortinet firewalls securing the hub, similar to large-scale environments."
 />
 
-Google Cloud publishes a reference hub-and-spoke model with Fortinet appliances protecting the hub. This design mirrors what the **Surge Global Project** runs today, showing that hub-and-spoke + Zero Trust is now an **industry standard** for secure, large-scale environments.
+Google Cloud publishes a reference hub-and-spoke model with Fortinet appliances protecting the hub.
 
 See the [Google Cloud – Fortinet Reference Architecture](https://cloud.google.com/architecture/partners/fortigate-architecture-in-cloud#architecture).
+
+### Microsoft Azure
+
+<FigureImage
+ src={azureExample}
+ alt="Azure reference architecture showing Azure Firewalls securing the hub"
+ caption="Figure 8: Azure reference architecture - Azure Firewalls securing the hub, similar to large-scale environments."
+/>
+
+Azure publishes a reference hub-and-spoke model with Azure Firewall appliances, Bastion, and VPN gateways protecting the hub.
+
+See the [Hub-spoke network topology in Azure](https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/hybrid-networking/hub-spoke).
 
 ---
 
 ## Tradeoffs
 
-**No design is free:**
+No design is free:
 
 - Routing is more complex than per-environment
 - Hub is a critical dependency → must be highly available
 - Steeper learning curve for teams
-- Centralisation means changes affect all environments
+- Centralization means changes affect all environments
 
 ---
 
-## Key Considerations
+## Key considerations
 
-**When deploying hub-and-spoke, plan for:**
+When deploying hub-and-spoke, plan for:
 
-- **IP address space** (avoid overlaps)
-- **Non-transitive peering** (spoke-to-spoke must go via hub, or use Shared VPC / PSC / NCC)
-- **Scaling limits** (peering, firewall throughput, `cloudflared` sizing)
-- **High availability** (multi-zone, multi-region hub design)
+- IP address space (avoid overlaps)
+- Non-transitive peering (spoke-to-spoke must go via hub, or use Shared VPC / PSC / NCC)
+- Scaling limits (peering, firewall throughput, `cloudflared` sizing)
+- High availability (multi-zone, multi-region hub design)
 
 <FigureImage
  src={transitiveBefore}
@@ -239,13 +245,13 @@ See the [Google Cloud – Fortinet Reference Architecture](https://cloud.google.
 
 ---
 
-## Hands-On Resources
+## Hands-on resources
 
-**To make this concrete, I’ve published **Terraform examples** that show three ways to deploy Cloudflare Tunnels in hub-and-spoke:**
+I published Terraform examples that show three ways to deploy Cloudflare Tunnels in hub-and-spoke:
 
-- **Full IaC with Kubernetes** (complete automation)
-- **Manual + Kubernetes** (use existing tunnel, deploy cloudflared only)
-- **Manual VM on GCP** (run cloudflared on Compute Engine)
+- Full IaC with Kubernetes (complete automation)
+- Manual + Kubernetes (use existing tunnel, deploy cloudflared only)
+- Manual VM on GCP (run cloudflared on Compute Engine)
 
 [Cloudflare Zero Trust Terraform templates (GitHub)](https://github.com/ushiradineth/blog-assets/tree/main/hub-and-spoke)
 
@@ -259,3 +265,7 @@ See the [Google Cloud – Fortinet Reference Architecture](https://cloud.google.
 - [GCP Hub-and-Spoke in practice with Fortinet](https://cloud.google.com/architecture/partners/fortigate-architecture-in-cloud)
 - [Azure Landing Zone – Hub-and-Spoke Architecture](https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke)
 - [Cloudflare Zero Trust Terraform templates (GitHub)](https://github.com/ushiradineth/blog-assets/tree/main/hub-and-spoke)
+
+## Closing note
+
+Hub-and-spoke with Zero Trust is not magic, but it is practical. If your environments are growing and your network policy is getting noisy, this pattern is worth piloting.
