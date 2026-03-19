@@ -217,7 +217,11 @@ const jsonLd =
 		<ClientRouter />
 	</head>
 	<body class="text-pretty text-foreground antialiased">
-		<main role="main" id="main-content" class="mx-auto flex min-h-screen w-full max-w-[52rem] flex-col gap-8 px-6 pb-24 pt-12 sm:px-8 sm:pb-12">
+		<main
+			role="main"
+			id="main-content"
+			class="mx-auto flex min-h-screen w-full max-w-[52rem] flex-col gap-8 px-6 pb-24 pt-12 sm:px-8 sm:pb-12"
+		>
 			<RouteBackLink pathname={currentPathname} />
 			<CommandPalette />
 			<slot />
