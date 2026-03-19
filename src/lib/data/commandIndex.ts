@@ -42,14 +42,6 @@ const staticCommands: CommandItem[] = [
 		group: "Pages",
 		keywords: ["portfolio", "work"],
 	},
-	{
-		id: "page-resume",
-		title: "Resume",
-		description: "Career summary and downloadable CV",
-		href: "/resume/",
-		group: "Pages",
-		keywords: ["cv", "experience", "profile"],
-	},
 ];
 
 export async function getCommandIndex(): Promise<CommandItem[]> {

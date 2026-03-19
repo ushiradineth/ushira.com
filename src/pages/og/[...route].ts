@@ -14,10 +14,6 @@ const pages = {
 	notes: {
 		title: "notes",
 	},
-	resume: {
-		title: "Resume",
-		description: "Resume of Ushira Dineth",
-	},
 };
 
 const blogPosts: CollectionEntry<"blog">[] = await getCollection("blog");
