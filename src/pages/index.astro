@@ -1,8 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import { formatDate, isWithinDays } from "../lib/utils";
-import Contact from "../components/Contact.astro";
+import { isWithinDays } from "../lib/utils";
 import HomeLinkGroup from "../components/HomeLinkGroup.astro";
 import Title from "../components/Title.astro";
 import { homeAppGroups, homeMainStack } from "../lib/data/home";
@@ -34,7 +33,7 @@ const hasNewBlog = blogs.some((post) => {
 			<HeaderItem href="/projects/">projects</HeaderItem>
 			<HeaderItem href="/notes/">notes</HeaderItem>
 			<HeaderItem href="/blog/">
-				<span class="relative inline-block pr-1">
+				<span class="relative pr-1">
 					blog
 					{hasNewBlog && <span class="absolute -right-0.5 h-1.5 w-1.5 rounded-full bg-amber-400 shadow-sm" aria-hidden="true" />}
 				</span>
@@ -42,12 +41,17 @@ const hasNewBlog = blogs.some((post) => {
 		</div>
 	</section>
 
-	<section class="space-y-3">
-		<h2 class="text-sm font-medium uppercase tracking-[0.05em] text-muted-foreground">Apps</h2>
+	<section class="flex flex-col space-y-3 gap-4">
 		{homeAppGroups.map((group) => <HomeLinkGroup group={group} />)}
 	</section>
 
-	<Contact />
+	<p class="text-sm text-muted-foreground">
+		Share context in your first message and read
+		<a href="https://nohello.net/en/" target="_blank" rel="noopener noreferrer" class="font-medium underline underline-offset-4">
+			nohello.net
+		</a>
+		before reaching out.
+	</p>
 
 	<div id="link-preview" class="preview-card" aria-hidden="true">
 		<img id="link-preview-image" alt="" loading="lazy" />
