@@ -18,7 +18,7 @@ export const GET: APIRoute = async ({ site }) => {
 
 	const items = blogPosts
 		.map((post) => {
-			const postUrl = new URL(`/blog/${post.slug}/`, siteUrl).toString();
+			const postUrl = new URL(`/blog/${post.id}/`, siteUrl).toString();
 			const pubDate = post.data.date.toUTCString();
 			const categories = post.data.tags.map((tag) => `<category>${escapeXml(tag)}</category>`).join("");
 			const description = post.data.description ? `<![CDATA[${post.data.description}]]>` : "";

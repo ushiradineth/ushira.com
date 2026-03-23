@@ -37,13 +37,13 @@ export const personSchema: WithContext<Person> = {
 };
 
 export function getArticleSchema(post: CollectionEntry<"blog">) {
-	const imageUrl = new URL(`/og/blog/${post.slug}/`, import.meta.env.SITE).toString();
+	const imageUrl = new URL(`/og/blog/${post.id}/`, import.meta.env.SITE).toString();
 
 	const articleStructuredData: WithContext<Article> = {
 		"@context": "https://schema.org",
 		"@type": "Article",
 		headline: post.data.title,
-		url: `${import.meta.env.SITE}/blog/${post.slug}/`,
+		url: `${import.meta.env.SITE}/blog/${post.id}/`,
 		image: imageUrl,
 		description: post.data.description,
 		datePublished: post.data.date.toString(),
@@ -61,7 +61,7 @@ export function getArticleSchema(post: CollectionEntry<"blog">) {
 		},
 		mainEntityOfPage: {
 			"@type": "WebPage",
-			"@id": `${import.meta.env.SITE}/blog/${post.slug}/`,
+			"@id": `${import.meta.env.SITE}/blog/${post.id}/`,
 		},
 	};
 	return articleStructuredData;

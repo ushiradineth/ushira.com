@@ -10,7 +10,7 @@ const { label, post } = Astro.props;
 ---
 
 <a
-	href={`/blog/${post.slug}`}
+	href={`/blog/${post.id}/`}
 	class="group block border-l border-border pl-3 no-underline"
 	aria-label={`Read ${label.toLowerCase()} post: ${post.data.title}`}
 >

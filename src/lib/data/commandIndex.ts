@@ -48,19 +48,19 @@ export async function getCommandIndex(): Promise<CommandItem[]> {
 	const [blogEntries, noteEntries] = await Promise.all([getCollection("blog"), getCollection("notes")]);
 
 	const blogCommands: CommandItem[] = blogEntries.map((entry) => ({
-		id: `blog-${entry.slug}`,
+		id: `blog-${entry.id}`,
 		title: entry.data.title,
 		description: entry.data.description,
-		href: `/blog/${entry.slug}/`,
+		href: `/blog/${entry.id}/`,
 		group: "Blog",
 		keywords: ["blog", ...(entry.data.tags ?? [])],
 	}));
 
 	const noteCommands: CommandItem[] = noteEntries.map((entry) => ({
-		id: `note-${entry.slug}`,
+		id: `note-${entry.id}`,
 		title: entry.data.title,
 		description: entry.data.description,
-		href: `/notes/${entry.slug}/`,
+		href: `/notes/${entry.id}/`,
 		group: "Notes",
 		keywords: ["note"],
 	}));

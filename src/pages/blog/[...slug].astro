@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { formatDate, getReadingTime } from "../../lib/utils";
 import { blogWebsite, getArticleSchema, mainWebsite, personSchema } from "../../lib/data/structuredData";
@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 	const blogPosts = (await getCollection("blog")).sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
 	return blogPosts.map((post: CollectionEntry<"blog">) => ({
-		params: { slug: post.slug },
+		params: { slug: post.id },
 		props: {
 			post,
 			previousPost: blogPosts[blogPosts.indexOf(post) - 1] || null,
@@ -29,7 +29,7 @@ export async function getStaticPaths() {
 }
 
 const { post, previousPost, nextPost } = Astro.props;
-const { Content, headings } = await post.render();
+const { Content, headings } = await render(post);
 
 const articleStructuredData = getArticleSchema(post);
 
@@ -53,7 +53,7 @@ const breadcrumbsStructuredData = {
 			"@type": "ListItem",
 			position: 3,
 			name: post.data.title,
-			item: `${import.meta.env.SITE}/blog/${post.slug}/`,
+			item: `${import.meta.env.SITE}/blog/${post.id}/`,
 		},
 	],
 };
@@ -69,7 +69,7 @@ const jsonLd = {
 	<CodeBlockCopy />
 
 	<div id="blog-header" class="flex w-full items-center gap-3 text-sm text-muted-foreground">
-		<p>{formatDate(post.data.date, { month: "long", year: "numeric" })} • {getReadingTime(post.body)} min read</p>
+		<p>{formatDate(post.data.date, { month: "long", year: "numeric" })} • {getReadingTime(post.body ?? "")} min read</p>
 	</div>
 
 	<div class="grid grid-cols-1 gap-3 md:grid-cols-4">

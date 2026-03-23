@@ -1,27 +1,29 @@
 {
   "name": "ushira.com",
-  "type": "module",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "eslint . --fix",
-    "format": "prettier --write .",
-    "check": "pnpm format && pnpm lint && pnpm build"
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "check": "pnpm format:check && pnpm lint && pnpm build"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.4",
-    "@astrojs/mdx": "^4.3.10",
-    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/mdx": "^5.0.2",
+    "@astrojs/sitemap": "^3.7.1",
     "@astrojs/tailwind": "^6.0.2",
-    "@astrojs/vercel": "^8.2.9",
+    "@astrojs/vercel": "^10.0.2",
     "@iconify-json/mdi": "^1.2.3",
-    "astro": "^5.14.4",
+    "astro": "^6.0.8",
     "astro-icon": "^1.1.5",
-    "astro-og-canvas": "^0.7.2",
+    "astro-og-canvas": "^0.10.1",
     "astro-robots-txt": "^1.0.0",
     "astro-seo": "^0.8.4",
     "canvaskit-wasm": "^0.40.0",
@@ -37,13 +39,8 @@
   "devDependencies": {
     "@iconify-json/simple-icons": "^1.2.64",
     "@tailwindcss/typography": "^0.5.19",
-    "@typescript-eslint/eslint-plugin": "^8.51.0",
-    "@typescript-eslint/parser": "^8.51.0",
     "baseline-browser-mapping": "^2.10.0",
-    "eslint": "^9.39.2",
-    "eslint-plugin-astro": "^1.5.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "prettier": "^3.7.4",
-    "prettier-plugin-astro": "^0.14.1"
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0"
   }
 }

@@ -37,11 +37,11 @@ const jsonLd = getBlogJsonLd();
 			{
 				blogPosts.map((post) => {
 					const tags = post.data.tags ?? [];
-					const readingTime = getReadingTime(post.body);
+					const readingTime = getReadingTime(post.body ?? "");
 					return (
 						<article class="blog-post border-b border-border pb-4" data-tags={tags.join(",")}>
 							<div class="flex items-baseline gap-2">
-								<a href={`/blog/${post.slug}/`} class="font-medium text-foreground underline-offset-4 hover:underline">
+								<a href={`/blog/${post.id}/`} class="font-medium text-foreground underline-offset-4 hover:underline">
 									{post.data.title}
 								</a>
 							</div>

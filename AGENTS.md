@@ -11,9 +11,9 @@ Run commands from repo root with `pnpm`.
 - Install deps: `pnpm install`
 - Build (CI-quality compile): `pnpm build` (`astro check && astro build`)
 - Preview production build: `pnpm preview`
-- Lint: `pnpm lint` (`eslint . --fix`)
-- Format: `pnpm format` (`prettier --write .`)
-- Full check: `pnpm check` (`pnpm format && pnpm lint && pnpm build`)
+- Lint: `pnpm lint` (`oxlint`)
+- Format: `pnpm format` (`oxfmt`)
+- Full check: `pnpm check` (`pnpm format:check && pnpm lint && pnpm build`)
 
 Do not run `pnpm dev` unless the user explicitly asks. The user owns the dev server lifecycle.
 
@@ -31,10 +31,10 @@ CI status: `confidence: low`
 
 ## Project Structure
 
-- App framework: Astro 5 static site with Vercel adapter
+- App framework: Astro 6 static site with Vercel adapter
 - Main source: `src/`
 - Pages/routes: `src/pages/` (`/blog/[...slug]`, `/og/[...route].ts`, `/rss.xml.ts`)
-- Content collection: `src/content/blog/*.mdx` with schema in `src/content/config.ts`
+- Content collection: `src/content/blog/*.mdx` with schema in `src/content.config.ts`
 - Layout/theme entry: `src/layouts/Layout.astro`
 - Shared data: `src/lib/data/` (`structuredData.ts`, `projects.ts`, `work.ts`, `socials.ts`, `wakapi.ts`)
 - Static assets: `public/`
@@ -43,14 +43,14 @@ CI status: `confidence: low`
 
 Tooling-backed style:
 
-- Prettier is canonical (`.prettierrc.json`): tabs, `printWidth: 140`, semicolons, double quotes
-- ESLint enforces TS + Astro + a11y rules (`eslint.config.js`)
+- Oxfmt is canonical (`.oxfmtrc.json`): tabs, `printWidth: 140`, semicolons, double quotes
+- Oxlint enforces TS + Astro + a11y rules (`.oxlintrc.json`)
 - TypeScript strict config via `astro/tsconfigs/strict` (`tsconfig.json`)
 
 Conventions to preserve:
 
 - Keep Astro pages/components in `.astro`, typed helpers/data in `.ts`
-- Keep blog frontmatter aligned with `src/content/config.ts` required fields (`title`, `description`, `date`, `tags`)
+- Keep blog frontmatter aligned with `src/content.config.ts` required fields (`title`, `description`, `date`, `tags`)
 - Reuse existing theme tokens and typography setup in `src/layouts/Layout.astro` and `tailwind.config.mjs`
 
 Style example:

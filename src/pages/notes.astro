@@ -22,7 +22,7 @@ const notes = (await getCollection("notes")).sort((a, b) => a.data.order - b.dat
 			notes.map((note) => (
 				<article class="border-b border-border pb-3 last:border-0">
 					<h2>
-						<a href={`/notes/${note.slug}/`} class="font-medium text-foreground underline-offset-4 hover:underline">
+						<a href={`/notes/${note.id}/`} class="font-medium text-foreground underline-offset-4 hover:underline">
 							{note.data.title}
 						</a>
 					</h2>

@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { getWebPageJsonLd } from "../../lib/data/structuredData";
 
@@ -11,15 +11,15 @@ export async function getStaticPaths() {
 	const notes = await getCollection("notes");
 
 	return notes.map((note: CollectionEntry<"notes">) => ({
-		params: { slug: note.slug },
+		params: { slug: note.id },
 		props: { note },
 	}));
 }
 
 const { note } = Astro.props;
-const { Content } = await note.render();
+const { Content } = await render(note);
 
-const url = `${import.meta.env.SITE}/notes/${note.slug}/`;
+const url = `${import.meta.env.SITE}/notes/${note.id}/`;
 const jsonLd = getWebPageJsonLd(url, note.data.title, note.data.description);
 ---
 

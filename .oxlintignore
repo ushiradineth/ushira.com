@@ -1,0 +1,9 @@
+dist/**
+.astro/**
+.agents/**
+.veil/**
+node_modules/**
+.vercel/**
+.conform.*
+*.config.mjs
+*.config.ts
