@@ -30,7 +30,7 @@ const indentMap: Record<number, string> = {
 					<a
 						href={`#${heading.slug}`}
 						data-slug={heading.slug}
-						class={`flex items-start ${indentClass} text-muted-foreground transition-colors hover:text-primary underline-offset-4`}
+						class={`flex items-start ${indentClass} text-muted-foreground transition-colors hover:text-primary underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
 					>
 						<span class="min-w-0 break-words">{heading.text}</span>
 					</a>
@@ -43,7 +43,11 @@ const indentMap: Record<number, string> = {
 <!--Needs to re-run on each page load to evaluate the headings per blog-->
 <script is:inline>
 	function initTOCObserver() {
-		const tocLinks = document.querySelectorAll("#toc a");
+		const toc = document.getElementById("toc");
+		if (!toc || toc.dataset.initialized === "true") return;
+		toc.dataset.initialized = "true";
+
+		const tocLinks = toc.querySelectorAll("a");
 		const headings = Array.from(document.querySelectorAll("article h2, article h3, article h4"));
 
 		if (!headings.length) return;
@@ -67,7 +71,7 @@ const indentMap: Record<number, string> = {
 
 		headings.forEach((heading) => observer.observe(heading));
 
-		// Manual highlight when a link is clicked
+		// Manual scroll keeps TOC jumps tight despite global anchor offset styles.
 		tocLinks.forEach((link) => {
 			link.addEventListener("click", (e) => {
 				e.preventDefault();
@@ -76,10 +80,9 @@ const indentMap: Record<number, string> = {
 				const target = document.getElementById(slug);
 				if (!target) return;
 
-				const routeBackOffset = document.getElementById("route-back-link")?.offsetHeight ?? 0;
-				const top = target.getBoundingClientRect().top + window.scrollY - routeBackOffset - 24;
-
+				const top = target.getBoundingClientRect().top + window.scrollY - 16;
 				window.scrollTo({ top, behavior: "smooth" });
+				window.history.replaceState({}, "", `#${slug}`);
 
 				// Highlight manually (temporary until IntersectionObserver kicks in)
 				tocLinks.forEach((l) => l.classList.remove("underline"));
@@ -88,5 +91,10 @@ const indentMap: Record<number, string> = {
 		});
 	}
 
-	initTOCObserver();
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initTOCObserver);
+	} else {
+		initTOCObserver();
+	}
+	document.addEventListener("astro:page-load", initTOCObserver);
 </script>
