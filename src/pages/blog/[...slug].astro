@@ -1,7 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import { formatDate } from "../../lib/utils";
+import { formatDate, getReadingTime } from "../../lib/utils";
 import { blogWebsite, getArticleSchema, mainWebsite, personSchema } from "../../lib/data/structuredData";
 import Tag from "../../components/Tag.astro";
 import BlogTableOfContents from "../../components/BlogTableOfContents.astro";
@@ -62,12 +62,6 @@ const jsonLd = {
 	"@context": "https://schema.org",
 	"@graph": [articleStructuredData, breadcrumbsStructuredData, blogWebsite, mainWebsite, personSchema],
 };
-
-function getReadingTime(content: string) {
-	const wordsPerMinute = 200;
-	const wordCount = content.trim().split(/\s+/).length;
-	return Math.ceil(wordCount / wordsPerMinute);
-}
 ---
 
 <Layout title={post.data.title} description={post.data.description} tags={post.data.tags} jsonLd={JSON.stringify(jsonLd)}>

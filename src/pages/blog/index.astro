@@ -2,7 +2,7 @@
 import Title from "../../components/Title.astro";
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import { formatDate } from "../../lib/utils";
+import { formatDate, getReadingTime } from "../../lib/utils";
 import Tag from "../../components/Tag.astro";
 import { getBlogJsonLd } from "../../lib/data/structuredData";
 
@@ -13,12 +13,6 @@ const allTags = [...new Set(blogPosts.flatMap((post) => post.data.tags ?? []))].
 
 const description = "Personal blog posts, notes, and other ramblings";
 const jsonLd = getBlogJsonLd();
-
-function getReadingTime(content: string) {
-	const wordsPerMinute = 200;
-	const wordCount = content.trim().split(/\s+/).length;
-	return Math.ceil(wordCount / wordsPerMinute);
-}
 ---
 
 <Layout title="Blog Posts" description={description} jsonLd={jsonLd}>
@@ -31,7 +25,7 @@ function getReadingTime(content: string) {
 		<div class="flex flex-wrap gap-x-3 gap-y-2 border-b border-border pb-3">
 			{
 				allTags.map((tag) => (
-					<Tag class="tag-filter" data-tag={tag}>
+					<Tag class="tag-filter" data-tag={tag} aria-pressed="false">
 						#{tag}
 					</Tag>
 				))
@@ -94,11 +88,15 @@ function getReadingTime(content: string) {
 		function updateTagButtons() {
 			tagFilters.forEach((btn) => {
 				const tag = btn.getAttribute("data-tag");
-				if (tag === "clear") return;
+				if (tag === "clear") {
+					btn.removeAttribute("aria-pressed");
+					return;
+				}
 				const isActive = tag === activeTag;
 				btn.classList.toggle("active", isActive);
 				btn.classList.toggle("text-foreground", isActive);
 				btn.classList.toggle("text-muted-foreground", !isActive);
+				btn.setAttribute("aria-pressed", isActive ? "true" : "false");
 			});
 			clearButton?.classList.toggle("hidden", !activeTag);
 		}

@@ -19,6 +19,11 @@ export function isWithinDays(date: Date, days: number): boolean {
 	return Math.abs(diffMs) <= threshold;
 }
 
+export function getReadingTime(content: string, wordsPerMinute = 200): number {
+	const wordCount = content.trim().split(/\s+/).length;
+	return Math.ceil(wordCount / wordsPerMinute);
+}
+
 export function fuzzyScore(query: string, target: string): number {
 	const normalizedQuery = query.trim().toLowerCase();
 	const normalizedTarget = target.trim().toLowerCase();
