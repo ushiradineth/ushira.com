@@ -5,16 +5,8 @@ interface Props {
 }
 
 const { href, target } = Astro.props;
-const isActive = Astro.url.pathname === href;
 ---
 
-<a
-	href={href}
-	target={target}
-	class:list={[
-		"underline-offset-4 transition-colors hover:text-foreground hover:underline",
-		isActive ? "text-foreground underline" : "text-muted-foreground",
-	]}
->
+<a href={href} target={target} class={"underline-offset-4 transition-colors hover:text-foreground hover:underline text-foreground"}>
 	<slot />
 </a>
