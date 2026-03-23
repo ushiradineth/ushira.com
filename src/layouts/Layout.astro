@@ -1,6 +1,7 @@
 ---
 import CommandPalette from "../components/CommandPalette.astro";
 import FloatingTools from "../components/FloatingTools.astro";
+import LinkPreview from "../components/LinkPreview.astro";
 import RouteBackLink from "../components/RouteBackLink.astro";
 import { ClientRouter } from "astro:transitions";
 
@@ -227,5 +228,6 @@ const jsonLd =
 			<slot />
 		</main>
 		<FloatingTools />
+		<LinkPreview />
 	</body>
 </html>

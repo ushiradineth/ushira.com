@@ -1,0 +1,230 @@
+<div id="link-preview" class="preview-card" aria-hidden="true">
+	<img id="link-preview-image" alt="" loading="lazy" />
+</div>
+
+<script>
+	type LinkPreviewWindow = Window & {
+		__linkPreviewCache?: Map<string, string>;
+		__linkPreviewCleanup?: () => void;
+		__linkPreviewPageLoadBound?: boolean;
+	};
+
+	const previewWindow = window as LinkPreviewWindow;
+
+	function mshot(url: string) {
+		return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=640`;
+	}
+
+	function getPreviewUrl(link: HTMLAnchorElement) {
+		if (link.dataset.preview === "off") return null;
+
+		const rawUrl = link.dataset.previewUrl?.trim() || link.getAttribute("href")?.trim();
+		const isExplicitPreview = Boolean(link.dataset.previewUrl?.trim());
+		if (!rawUrl || rawUrl.startsWith("#")) return null;
+
+		try {
+			const url = new URL(rawUrl, window.location.origin);
+			if (!/^https?:$/.test(url.protocol)) return null;
+			if (!isExplicitPreview && url.origin === window.location.origin) return null;
+
+			if (url.hash && url.pathname === window.location.pathname && url.search === window.location.search) {
+				return null;
+			}
+
+			return url.toString();
+		} catch {
+			return null;
+		}
+	}
+
+	function mountLinkPreview() {
+		const preview = document.getElementById("link-preview");
+		const image = document.getElementById("link-preview-image") as HTMLImageElement | null;
+		if (!preview || !image) return () => undefined;
+
+		if (!window.matchMedia("(hover: hover)").matches) return () => undefined;
+
+		const cache = (previewWindow.__linkPreviewCache ??= new Map());
+		let currentToken = 0;
+		let activeLink: HTMLAnchorElement | null = null;
+
+		const position = (event: MouseEvent) => {
+			const x = Math.min(window.innerWidth - 340, event.clientX + 20);
+			const y = Math.min(window.innerHeight - 240, event.clientY + 20);
+			preview.style.left = `${Math.max(16, x)}px`;
+			preview.style.top = `${Math.max(16, y)}px`;
+		};
+
+		const hide = () => {
+			currentToken += 1;
+			activeLink = null;
+			preview.classList.remove("visible");
+			preview.classList.remove("loading");
+			image.classList.remove("ready");
+			image.removeAttribute("src");
+		};
+
+		const preload = (url: string) => {
+			const src = mshot(url);
+			if (cache.has(src)) return Promise.resolve(src);
+
+			return new Promise<string>((resolve) => {
+				const preloader = new Image();
+				preloader.decoding = "async";
+				preloader.src = src;
+				preloader.onload = () => {
+					cache.set(src, src);
+					resolve(src);
+				};
+				preloader.onerror = () => resolve(src);
+			});
+		};
+
+		const loadPreview = (url: string, token: number) => {
+			const src = mshot(url);
+
+			if (cache.has(src)) {
+				if (token !== currentToken) return;
+				image.src = src;
+				image.classList.add("ready");
+				preview.classList.add("visible");
+				preview.classList.remove("loading");
+				return;
+			}
+
+			void preload(url).then((resolvedSrc) => {
+				if (token !== currentToken) return;
+				image.src = resolvedSrc;
+				image.classList.add("ready");
+				preview.classList.add("visible");
+				preview.classList.remove("loading");
+			});
+		};
+
+		const warmupUrls = new Set<string>();
+		document.querySelectorAll<HTMLAnchorElement>("a[href]").forEach((link) => {
+			const previewUrl = getPreviewUrl(link);
+			if (!previewUrl || warmupUrls.size >= 12) return;
+			warmupUrls.add(previewUrl);
+		});
+
+		warmupUrls.forEach((url) => {
+			void preload(url);
+		});
+
+		const onMouseOver = (event: MouseEvent) => {
+			const target = event.target as Element | null;
+			const link = target?.closest("a[href]") as HTMLAnchorElement | null;
+			if (!link || activeLink === link) return;
+
+			const previewUrl = getPreviewUrl(link);
+			if (!previewUrl) {
+				hide();
+				return;
+			}
+
+			activeLink = link;
+			currentToken += 1;
+			image.classList.remove("ready");
+			preview.classList.add("loading");
+			position(event);
+			loadPreview(previewUrl, currentToken);
+		};
+
+		const onMouseMove = (event: MouseEvent) => {
+			if (!activeLink) return;
+			position(event);
+		};
+
+		const onMouseOut = (event: MouseEvent) => {
+			if (!activeLink) return;
+
+			const target = event.target as Element | null;
+			const relatedTarget = event.relatedTarget as Element | null;
+			if (!target) {
+				hide();
+				return;
+			}
+
+			const fromLink = target.closest("a[href]") as HTMLAnchorElement | null;
+			if (fromLink !== activeLink) return;
+			if (relatedTarget && fromLink.contains(relatedTarget)) return;
+
+			hide();
+		};
+
+		document.addEventListener("mouseover", onMouseOver);
+		document.addEventListener("mousemove", onMouseMove);
+		document.addEventListener("mouseout", onMouseOut);
+
+		return () => {
+			document.removeEventListener("mouseover", onMouseOver);
+			document.removeEventListener("mousemove", onMouseMove);
+			document.removeEventListener("mouseout", onMouseOut);
+			hide();
+		};
+	}
+
+	function initLinkPreview() {
+		previewWindow.__linkPreviewCleanup?.();
+		previewWindow.__linkPreviewCleanup = mountLinkPreview();
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initLinkPreview, { once: true });
+	} else {
+		initLinkPreview();
+	}
+
+	if (!previewWindow.__linkPreviewPageLoadBound) {
+		document.addEventListener("astro:page-load", initLinkPreview);
+		previewWindow.__linkPreviewPageLoadBound = true;
+	}
+</script>
+
+<style is:global>
+	.preview-card {
+		position: fixed;
+		z-index: 1000;
+		pointer-events: none;
+		opacity: 0;
+		transform: translateY(8px);
+		transition:
+			opacity 0.15s ease,
+			transform 0.15s ease;
+		border-radius: 4px;
+		overflow: hidden;
+		box-shadow: 0 8px 32px rgb(0 0 0 / 0.12);
+		border: 1px solid var(--border);
+		background: var(--secondary);
+		min-width: 320px;
+		min-height: 213px;
+	}
+
+	.preview-card.visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.preview-card img {
+		display: block;
+		width: 320px;
+		height: 213px;
+		object-fit: cover;
+		background: var(--secondary);
+		opacity: 0;
+		transition: opacity 0.12s ease;
+	}
+
+	.preview-card.loading {
+		background: var(--muted);
+	}
+
+	.preview-card img.ready {
+		opacity: 1;
+	}
+
+	.dark .preview-card {
+		box-shadow: 0 8px 32px rgb(0 0 0 / 0.4);
+	}
+</style>
