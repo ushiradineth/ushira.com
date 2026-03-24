@@ -13,24 +13,39 @@ const cleanHeadings = headings.map((heading) => ({
 	text: heading.text.replace(/\s*#\s*$/, "").trim(),
 }));
 
-const indentMap: Record<number, string> = {
-	2: "pl-0",
-	3: "pl-4",
-	4: "pl-8",
+const visibleHeadings = cleanHeadings.filter((heading) => heading.depth >= 2 && heading.depth <= 4 && heading.text.length > 0);
+
+const levelStylesByDepth: Record<number, { indentClass: string; levelClass: string; markerClass: string }> = {
+	2: {
+		indentClass: "ml-0",
+		levelClass: "text-xs tracking-[0.12em]",
+		markerClass: "text-muted-foreground/80",
+	},
+	3: {
+		indentClass: "ml-6",
+		levelClass: "text-[0.72rem] tracking-[0.16em]",
+		markerClass: "text-muted-foreground/65",
+	},
+	4: {
+		indentClass: "ml-10",
+		levelClass: "text-[0.69rem] tracking-[0.18em]",
+		markerClass: "text-muted-foreground/50",
+	},
 };
+
 ---
 
-<div class="flex flex-col gap-4">
-	<h2 class="text-sm font-semibold text-muted-foreground">Table of Contents</h2>
-	<nav id="toc" class="flex flex-col gap-1.5 text-sm">
+<div class="hide-scrollbar max-h-[calc(100vh-6.5rem)] overflow-y-auto">
+	<nav id="toc" class="mt-6 flex flex-col gap-2 text-[0.8125rem]">
 		{
-			cleanHeadings.map((heading) => {
-				const indentClass = indentMap[heading.depth] ?? "pl-0";
+			visibleHeadings.map((heading) => {
+				const levelStyles = levelStylesByDepth[heading.depth] ?? levelStylesByDepth[2];
+				const marker = "-";
 				return (
 					<a
 						href={`#${heading.slug}`}
 						data-slug={heading.slug}
-						class={`flex items-start ${indentClass} text-muted-foreground transition-colors hover:text-primary underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+						class={`group flex items-start py-1 pl-3 ${levelStyles.indentClass} ${levelStyles.levelClass} uppercase text-muted-foreground transition-colors hover:text-foreground aria-[current=location]:font-semibold aria-[current=location]:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
 					>
 						<span class="min-w-0 break-words">{heading.text}</span>
 					</a>
@@ -48,7 +63,7 @@ const indentMap: Record<number, string> = {
 		toc.dataset.initialized = "true";
 
 		const tocLinks = toc.querySelectorAll("a");
-		const headings = Array.from(document.querySelectorAll("article h2, article h3, article h4"));
+		const headings = Array.from(document.querySelectorAll("#blog-body h2, #blog-body h3, #blog-body h4"));
 
 		if (!headings.length) return;
 
@@ -62,14 +77,31 @@ const indentMap: Record<number, string> = {
 					const id = visible[0].target.getAttribute("id");
 
 					tocLinks.forEach((link) => {
-						link.classList.toggle("underline", link.dataset.slug === id);
+						if (link.dataset.slug === id) {
+							link.setAttribute("aria-current", "location");
+						} else {
+							link.removeAttribute("aria-current");
+						}
 					});
 				}
 			},
-			{ threshold: 0.1, rootMargin: "0px 0px -60% 0px" },
+			{ threshold: 0.2, rootMargin: "-10% 0px -55% 0px" },
 		);
 
 		headings.forEach((heading) => observer.observe(heading));
+
+		const setCurrentBySlug = (slug) => {
+			tocLinks.forEach((link) => {
+				if (link.dataset.slug === slug) {
+					link.setAttribute("aria-current", "location");
+				} else {
+					link.removeAttribute("aria-current");
+				}
+			});
+		};
+
+		const initialSlug = window.location.hash.replace(/^#/, "");
+		if (initialSlug) setCurrentBySlug(initialSlug);
 
 		// Manual scroll keeps TOC jumps tight despite global anchor offset styles.
 		tocLinks.forEach((link) => {
@@ -83,10 +115,7 @@ const indentMap: Record<number, string> = {
 				const top = target.getBoundingClientRect().top + window.scrollY - 16;
 				window.scrollTo({ top, behavior: "smooth" });
 				window.history.replaceState({}, "", `#${slug}`);
-
-				// Highlight manually (temporary until IntersectionObserver kicks in)
-				tocLinks.forEach((l) => l.classList.remove("underline"));
-				link.classList.add("underline");
+				setCurrentBySlug(slug);
 			});
 		});
 	}

@@ -72,8 +72,8 @@ const jsonLd = {
 		<p>{formatDate(post.data.date, { month: "long", year: "numeric" })} • {getReadingTime(post.body ?? "")} min read</p>
 	</div>
 
-	<div class="grid grid-cols-1 gap-3 md:grid-cols-4">
-		<div class="col-span-1 space-y-4 md:col-span-3">
+	<div class="relative">
+		<div class="space-y-4">
 			<div class="space-y-2">
 				<h1 class="text-2xl font-medium tracking-tight">{post.data.title}</h1>
 				{post.data.description && <p class="text-sm text-muted-foreground">{post.data.description}</p>}
@@ -93,7 +93,7 @@ const jsonLd = {
 
 			<article
 				id="blog-body"
-				class="hide-scrollbar prose prose-sm max-w-none dark:prose-invert prose-headings:font-medium prose-headings:tracking-tight prose-h2:text-xl prose-h3:text-lg"
+				class="hide-scrollbar prose prose-sm max-w-none dark:prose-invert prose-headings:font-medium prose-headings:tracking-tight prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h4:font-medium"
 			>
 				<Content />
 			</article>
@@ -107,8 +107,13 @@ const jsonLd = {
 				)
 			}
 		</div>
-		<aside id="blog-index" class="sticky top-16 hidden h-fit shrink-0 overflow-x-hidden border-l border-border pl-4 md:block">
-			<BlogTableOfContents headings={headings} />
-		</aside>
+
+		{
+			headings.length > 1 && (
+				<aside id="blog-index" aria-label="Table of contents" class="hidden w-60 xl:fixed xl:right-8 xl:top-24 xl:block 2xl:right-16">
+					<BlogTableOfContents headings={headings} />
+				</aside>
+			)
+		}
 	</div>
 </Layout>
