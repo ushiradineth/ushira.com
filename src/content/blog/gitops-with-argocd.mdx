@@ -7,11 +7,6 @@ tags: ["gitops", "argocd", "terraform", "kubernetes", "cicd"]
 ---
 
 import FigureImage from "../../components/FigureImage.astro";
-import gitopsFlow from "../../images/blog/gitops-with-argocd/gitops-flow.png";
-import argocdFlow from "../../images/blog/gitops-with-argocd/argocd-flow.png";
-import argocdImageUpdaterFlow from "../../images/blog/gitops-with-argocd/argocd-image-updater-flow.png";
-import reconciliationLoop from "../../images/blog/gitops-with-argocd/reconciliation-loop.png";
-import terraformFlow from "../../images/blog/gitops-with-argocd/terraform-flow.png";
 
 ## Prerequisites
 
@@ -28,7 +23,7 @@ Before you dive in, you should have:
 GitOps means Git is the source of truth for both app and infra state. You declare the desired state in a repository, then a controller like [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) keeps the cluster aligned with that state.
 
 <FigureImage
-	src={gitopsFlow}
+	src="https://assets.ushira.com/gitops-with-argocd/gitops-flow.png"
 	alt="Diagram explaining the GitOps workflow"
 	caption="Figure 1: GitOps workflow - declarative configuration management with Git as source of truth."
 />
@@ -41,7 +36,7 @@ GitOps means Git is the source of truth for both app and infra state. You declar
 - Reconciliation loop: desired state and live state keep converging.
 
 <FigureImage
-	src={reconciliationLoop}
+	src="https://assets.ushira.com/gitops-with-argocd/reconciliation-loop.png"
 	alt="Diagram of the GitOps reconciliation loop"
 	caption="Figure 2: Reconciliation loop - continuous synchronization between desired and actual state."
 />
@@ -57,7 +52,7 @@ Most teams use one of two strategies: _push_ or _pull_.
 - Common example: Terraform apply in CI.
 
 <FigureImage
-	src={terraformFlow}
+	src="https://assets.ushira.com/gitops-with-argocd/terraform-flow.png"
 	alt="Diagram of the Terraform push-based GitOps flow"
 	caption="Figure 3: Terraform push-based flow - automated infrastructure changes triggered by Git commits."
 />
@@ -90,7 +85,7 @@ Most teams use one of two strategies: _push_ or _pull_.
 Here is how it works:
 
 <FigureImage
-	src={argocdFlow}
+	src="https://assets.ushira.com/gitops-with-argocd/argocd-flow.png"
 	alt="Diagram of the ArgoCD pull-based GitOps flow"
 	caption="Figure 4: ArgoCD pull-based flow - continuous monitoring and synchronization from Git to Kubernetes cluster."
 />
@@ -187,7 +182,7 @@ The sync options add guardrails and make behavior explicit:
 [Argo Image Updater](https://argocd-image-updater.readthedocs.io/en/stable/) updates image tags in GitOps manifests automatically. This helps keep environments fresh without hand-editing tags.
 
 <FigureImage
-	src={argocdImageUpdaterFlow}
+	src="https://assets.ushira.com/gitops-with-argocd/argocd-image-updater-flow.png"
 	alt="Diagram of the ArgoCD Image Updater workflow"
 	caption="Figure 5: ArgoCD Image Updater flow - automated container image updates in Kubernetes manifests."
 />

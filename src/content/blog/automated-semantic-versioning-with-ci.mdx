@@ -7,12 +7,6 @@ tags: ["git", "bash", "cicd", "automation"]
 ---
 
 import FigureImage from "../../components/FigureImage.astro";
-import gitflow from "../../images/blog/automated-semantic-versioning-with-ci/gitflow.png";
-import developBranchPipeline from "../../images/blog/automated-semantic-versioning-with-ci/develop-branch-pipeline.png";
-import initiateReleaseBranchPipeline from "../../images/blog/automated-semantic-versioning-with-ci/initiate-release-branch-pipeline.png";
-import mainBranchPipeline from "../../images/blog/automated-semantic-versioning-with-ci/main-branch-pipeline.png";
-import releaseBranchPipeline from "../../images/blog/automated-semantic-versioning-with-ci/release-branch-pipeline.png";
-import versionBumpPipeline from "../../images/blog/automated-semantic-versioning-with-ci/version-bump-pipeline.png";
 
 All code used in this write-up lives on [GitHub](https://github.com/ushiradineth/semver_ci).
 
@@ -21,7 +15,7 @@ All code used in this write-up lives on [GitHub](https://github.com/ushiradineth
 ## Branching strategy
 
 <FigureImage
-	src={gitflow}
+	src="https://assets.ushira.com/automated-semantic-versioning-with-ci/gitflow.png"
 	alt="Diagram illustrating the GitFlow branching model"
 	caption="Figure 1: GitFlow branching model - main branches and their relationships."
 />
@@ -57,7 +51,7 @@ Reference: [Semantic Versioning](https://semver.org/)
 Each branch has its own pipeline behavior.
 
 <FigureImage
-	src={mainBranchPipeline}
+	src="https://assets.ushira.com/automated-semantic-versioning-with-ci/main-branch-pipeline.png"
 	alt="Flowchart of the main branch pipeline"
 	caption="Figure 2: Main branch pipeline - production deployment workflow with version management."
 />
@@ -69,7 +63,7 @@ File: [semver_ci/bitbucket-pipelines.yml](https://github.com/ushiradineth/semver
 ### `release/*` pipeline
 
 <FigureImage
-	src={releaseBranchPipeline}
+	src="https://assets.ushira.com/automated-semantic-versioning-with-ci/release-branch-pipeline.png"
 	alt="Flowchart of the release branch pipeline"
 	caption="Figure 3: Release branch pipeline - release candidate versioning and deployment."
 />
@@ -79,7 +73,7 @@ When a `release/*` branch is created, the pipeline turns `-SNAPSHOT` into `-rc1`
 ### `develop` pipeline
 
 <FigureImage
-	src={developBranchPipeline}
+	src="https://assets.ushira.com/automated-semantic-versioning-with-ci/develop-branch-pipeline.png"
 	alt="Flowchart of the develop branch pipeline"
 	caption="Figure 4: Develop branch pipeline - snapshot build workflow for active development."
 />
@@ -93,7 +87,7 @@ Merging `feature/*` or `main` into `develop` triggers the snapshot flow. `versio
 ### `version-bump` pipeline
 
 <FigureImage
-	src={versionBumpPipeline}
+	src="https://assets.ushira.com/automated-semantic-versioning-with-ci/version-bump-pipeline.png"
 	alt="Flowchart of the version-bump pipeline"
 	caption="Figure 5: Version-bump pipeline - manual version increment workflow for major, minor, or patch updates."
 />
@@ -103,7 +97,7 @@ Merging `feature/*` or `main` into `develop` triggers the snapshot flow. `versio
 ### `initiate-release-branch` pipeline
 
 <FigureImage
-	src={initiateReleaseBranchPipeline}
+	src="https://assets.ushira.com/automated-semantic-versioning-with-ci/initiate-release-branch-pipeline.png"
 	alt="Flowchart of the initiate-release-branch pipeline"
 	caption="Figure 6: Initiate-release-branch pipeline - automated release branch creation from develop."
 />

@@ -7,16 +7,6 @@ date: 2026-03-24
 ---
 
 import FigureImage from "../../components/FigureImage.astro";
-import currentArchitecture from "../../images/blog/hub-and-spoke/current-architecture.png";
-import hubAndSpoke from "../../images/blog/hub-and-spoke/hub-and-spoke.png";
-import hubAndSpokeTrafficFlow from "../../images/blog/hub-and-spoke/hub-and-spoke-traffic-flow.png";
-import monolithicTrafficFlow from "../../images/blog/hub-and-spoke/monolithic-traffic-flow.png";
-import cloudflareZtn from "../../images/blog/hub-and-spoke/cloudflare-ztn.png";
-import finalArchitecture from "../../images/blog/hub-and-spoke/final-architecture.png";
-import gcpExample from "../../images/blog/hub-and-spoke/gcp-example.png";
-import azureExample from "../../images/blog/hub-and-spoke/azure-example.png";
-import transitiveBefore from "../../images/blog/hub-and-spoke/transitive-before.png";
-import transitiveAfter from "../../images/blog/hub-and-spoke/transitive-after.png";
 
 ## Introduction
 
@@ -39,7 +29,7 @@ Each environment duplicating infrastructure looks like this:
 - Higher costs and configuration drift risks
 
 <FigureImage
-	src={currentArchitecture}
+	src="https://assets.ushira.com/hub-and-spoke/current-architecture.png"
 	alt="Traditional per-environment networking diagram showing duplicated resources across Dev, QA, and Prod"
 	caption="Figure 1: Traditional per-environment networking - duplicated resources across Dev, QA, and Prod."
 />
@@ -64,7 +54,7 @@ Benefits:
 - Easier audits and observability
 
 <FigureImage
-	src={hubAndSpoke}
+	src="https://assets.ushira.com/hub-and-spoke/hub-and-spoke.png"
 	alt="Diagram of a hub centralising shared networking and security while spokes remain private"
 	caption="Figure 2: Hub centralises shared networking and security, while spokes remain private and isolated."
 />
@@ -80,7 +70,7 @@ Benefits:
 - Each environment manages its own firewall rules.
 
 <FigureImage
-	src={monolithicTrafficFlow}
+	src="https://assets.ushira.com/hub-and-spoke/monolithic-traffic-flow.png"
 	alt="Diagram of per-environment traffic flow with multiple load balancers and NAT gateways"
 	caption="Figure 3: Per-environment traffic flow - multiple load balancers and NAT gateways per environment."
 />
@@ -92,7 +82,7 @@ Benefits:
 - Developers and admins authenticate via Zero Trust before reaching any spoke.
 
 <FigureImage
-	src={hubAndSpokeTrafficFlow}
+	src="https://assets.ushira.com/hub-and-spoke/hub-and-spoke-traffic-flow.png"
 	alt="Diagram of hub-and-spoke traffic flow with a single entry and exit point through the hub"
 	caption="Figure 4: Hub-and-spoke traffic flow - single entry and exit point through the hub."
 />
@@ -108,7 +98,7 @@ Cloudflare Zero Trust replaces traditional VPN-based access with identity and co
 - Granular access control instead of broad VPN tunnels
 
 <FigureImage
-	src={cloudflareZtn}
+	src="https://assets.ushira.com/hub-and-spoke/cloudflare-ztn.png"
 	alt="Diagram showing Cloudflare Zero Trust acting as the identity-aware access layer"
 	caption="Figure 5: Cloudflare Zero Trust acts as the identity-aware access layer, replacing public IPs and VPNs."
 />
@@ -172,7 +162,7 @@ The final state looks like this:
 - End users reach production apps only via the external load balancer
 
 <FigureImage
-	src={finalArchitecture}
+	src="https://assets.ushira.com/hub-and-spoke/final-architecture.png"
 	alt="Diagram of the final hub-and-spoke architecture secured with Cloudflare Zero Trust"
 	caption="Figure 6: Final architecture - unified hub handling all ingress and egress, secured with Cloudflare Zero Trust."
 />
@@ -188,7 +178,7 @@ You trade a bit of routing complexity for a much cleaner security and operations
 ### Google Cloud
 
 <FigureImage
-	src={gcpExample}
+	src="https://assets.ushira.com/hub-and-spoke/gcp-example.png"
 	alt="GCP reference architecture showing Fortinet firewalls securing the hub"
 	caption="Figure 7: GCP reference architecture - Fortinet firewalls securing the hub, similar to large-scale environments."
 />
@@ -200,7 +190,7 @@ See the [Google Cloud – Fortinet Reference Architecture](https://cloud.google.
 ### Microsoft Azure
 
 <FigureImage
-	src={azureExample}
+	src="https://assets.ushira.com/hub-and-spoke/azure-example.png"
 	alt="Azure reference architecture showing Azure Firewalls securing the hub"
 	caption="Figure 8: Azure reference architecture - Azure Firewalls securing the hub, similar to large-scale environments."
 />
@@ -232,13 +222,13 @@ When deploying hub-and-spoke, plan for:
 - High availability (multi-zone, multi-region hub design)
 
 <FigureImage
-	src={transitiveBefore}
+	src="https://assets.ushira.com/hub-and-spoke/transitive-before.png"
 	alt="Diagram of non-transitive connectivity before redesign where spokes cannot communicate directly"
 	caption="Figure 9: Non-transitive connectivity before redesign - spokes cannot communicate directly."
 />
 
 <FigureImage
-	src={transitiveAfter}
+	src="https://assets.ushira.com/hub-and-spoke/transitive-after.png"
 	alt="Diagram showing non-transitive connectivity resolved via hub routing with spoke-to-spoke traffic flowing through the hub"
 	caption="Figure 10: Non-transitive connectivity resolved via hub routing - spoke-to-spoke traffic flows through hub."
 />
